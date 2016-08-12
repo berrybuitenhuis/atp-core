@@ -21,7 +21,7 @@ class Form {
             $output[$data[0]] = ($urlEncode === true) ? urlencode($data[1]) : $data[1];
         }
         
-        return $data;
+        return $output;
     }
     
 }
