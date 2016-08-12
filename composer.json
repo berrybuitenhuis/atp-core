@@ -5,10 +5,12 @@
     "description": "ATP-Core - General/basic functions for ATP",
     "keywords": [],
     "homepage": "",
-    "authors": {
-        "name": "Berry Buitenhuis",
-        "email": "berrybuitenhuis@gmail.com"
-    },
+    "authors": [
+        {
+            "name": "Berry Buitenhuis",
+            "email": "berrybuitenhuis@gmail.com"
+        }
+    ],
     "require": {
         "php": ">=5.3.0"
     },
