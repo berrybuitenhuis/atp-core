@@ -775,7 +775,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
 
         // Set default data (if not available)
         if (property_exists($object, 'created')) $this->inputData['created'] = new \DateTime();
-        if (property_exists($object, 'deleted')) $this->inputData['deleted'] = false;
+        if (property_exists($object, 'status')) $this->inputData['status'] = true;
 
         // Hydrate object, apply inputfilter, and save it
         if ($this->filterAndPersist($this->inputData, $object)) {
