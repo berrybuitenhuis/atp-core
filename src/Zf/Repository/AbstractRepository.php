@@ -818,7 +818,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
 
             // Set default data (if not available)
             if (property_exists($objects[$key], 'created')) $this->inputData['created'] = new \DateTime();
-            if (property_exists($objects[$key], 'deleted')) $this->inputData['deleted'] = false;
+            if (property_exists($objects[$key], 'status')) $this->inputData['status'] = true;
             $recordData[$key] = $this->inputData;
         }
 
@@ -984,7 +984,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
 
         // check if object really has to move of only update status
         if ($remove === false) {
-            $result = $this->update($id, ['deleted'=>true], 'array');
+            $result = $this->update($id, ['status'=>false], 'array');
             return $result;
         } else {
             // remove the object from the repository or return error if something went wrong
