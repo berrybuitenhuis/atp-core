@@ -544,6 +544,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
      * @param $paginator
      * @param $debug
      * @return array/object
+     * @throws \Exception
      */
     public function getByFilter($filter = NULL, $groupBy = null, $having = null, $orderBy = null, $limit = NULL, $paginator = false, $debug = false)
     {
@@ -574,11 +575,52 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                 }
             }
         }
-        // Set filter (if available)
+        // Set customized filter (if available)
         if (!empty($filter)) {
-            $query->where($filter['filter']);
-            if ($paginator) $queryPaginator->where($filter['filter']);
-            $parameters = (empty($parameters)) ? $filter['parameters'] : array_merge($parameters, $filter['parameters']);
+            $allowedOperators = ['eq','neq','like','lt','lte','gt','gte','isnull','isnotnull','in','notin'];
+            // Set AND-conditions (if available)
+            if (isset($filter['AND'])) {
+                $filterConditions = $query->expr()->andX();
+                // Iterate conditions
+                foreach ($filter['AND'] AS $filterParams) {
+                    $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
+                    $operator = $filterParams[1];
+                    $value = $filterParams[2];
+
+                    // Check if operator is allowed
+                    if (!in_array($operator, $allowedOperators)) throw new \Exception("Not allowed operator: " . $operator);
+                    // Set filter-condition
+                    $filterConditions->add($query->expr()->{$operator}($field, $value));
+                }
+                // Add filter-conditions to query
+                $query->andWhere($filterConditions);
+                if ($paginator) $queryPaginator->andWhere($filterConditions);
+            }
+            // Set OR-conditions (if available)
+            if (isset($filter['OR'])) {
+                $filterConditions = $query->expr()->orX();
+                // Iterate conditions
+                foreach ($filter['OR'] AS $filterParams) {
+                    $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
+                    $operator = $filterParams[1];
+                    $value = $filterParams[2];
+
+                    // Check if operator is allowed
+                    if (!in_array($operator, $allowedOperators)) throw new \Exception("Not allowed operator: " . $operator);
+                    // Set filter-condition
+                    $filterConditions->add($query->expr()->{$operator}($field, $value));
+                }
+                // Add filter-conditions to query
+                $query->orWhere($filterConditions);
+                if ($paginator) $queryPaginator->orWhere($filterConditions);
+            }
+        }
+        // Set default-filter
+        $defaultFilter = $this->options->defaultFilter();
+        if (!empty($defaultFilter)) {
+            $query->andWhere($defaultFilter['filter']);
+            if ($paginator) $queryPaginator->andWhere($defaultFilter['filter']);
+            $parameters = (empty($parameters)) ? $defaultFilter['parameters'] : array_merge($parameters, $defaultFilter['parameters']);
         }
         // Set group-by (if available)
         if (!empty($groupBy)) {
