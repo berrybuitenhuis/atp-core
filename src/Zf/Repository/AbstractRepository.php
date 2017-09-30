@@ -548,6 +548,9 @@ abstract class AbstractRepository implements InputFilterAwareInterface
      */
     public function getByFilter($filter = NULL, $groupBy = null, $having = null, $orderBy = null, $limit = NULL, $paginator = false, $debug = false)
     {
+        // Get default-filter
+        $defaultFilter = $this->options->defaultFilter();
+
         // Build query
         $query = $this->om->createQueryBuilder();
         if ($paginator) $queryPaginator = $this->om->createQueryBuilder();
@@ -560,18 +563,49 @@ abstract class AbstractRepository implements InputFilterAwareInterface
         $query->from($this->objectName, 'f');
         if ($paginator) $queryPaginator->from($this->objectName, 'f');
         // Set joins (if available/needed)
-        if (!empty($filter) && !empty($this->getFilterAssociations())) {
+        if ((!empty($filter) || !empty($defaultFilter) || !empty($orderBy)) && !empty($this->getFilterAssociations())) {
+            $joins = [];
             foreach ($this->getFilterAssociations() AS $filterAssociation) {
-                if (stristr($filter['filter'], $filterAssociation['alias'] . ".")) {
-                    $query->leftJoin($filterAssociation['join'], $filterAssociation['alias']);
-                    if ($paginator) $queryPaginator->leftJoin($filterAssociation['join'], $filterAssociation['alias']);
+                $match = false;
+                if (!empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($filter["AND"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
+                    $match = true;
+                } elseif (!empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($filter["OR"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
+                    $match = true;
+                } elseif (stristr($defaultFilter['filter'], $filterAssociation['alias'] . ".") && !in_array($filterAssociation['alias'], $joins)) {
+                    $match = true;
                 } elseif (!empty($orderBy)) {
                     foreach ($orderBy AS $orderByField) {
-                        if (stristr($orderByField['field'], $filterAssociation['alias'] . ".")) {
-                            $query->leftJoin($filterAssociation['join'], $filterAssociation['alias']);
-                            if ($paginator) $queryPaginator->leftJoin($filterAssociation['join'], $filterAssociation['alias']);
+                        if (stristr($orderByField['field'], $filterAssociation['alias'] . ".") && !in_array($filterAssociation['alias'], $joins)) {
+                            $match = true;
                         }
                     }
+                }
+
+                if ($match === true) {
+                    // Loop associations (to set filter-association-joins) till base (f.xx) reached (ORDER OF ADDING JOINS TO QUERY IS IMPORTANT, THEREFORE NOT ADD DIRECTLY TO QUERY!)
+                    $filterAssociationJoins = [];
+                    $association = $filterAssociation;
+                    while (substr($association['join'], 0, 2) != "f.") {
+                        $alias = current(explode(".", $association['join']));
+                        $key = array_search($alias, array_column($this->getFilterAssociations(), 'alias'));
+                        $association = $this->getFilterAssociations()[$key];
+                        if (!in_array($association['alias'], $joins)) {
+                            $joins[] = $association['alias'];
+                            $filterAssociationJoins[] = $association;
+                        }
+                    }
+                    // Set filter-association-joins (reverse order), if available for filter-association
+                    if (!empty($filterAssociationJoins)) {
+                        krsort($filterAssociationJoins);
+                        foreach ($filterAssociationJoins AS $filterAssociationJoin) {
+                            $query->leftJoin($filterAssociationJoin['join'], $filterAssociationJoin['alias']);
+                            if ($paginator) $queryPaginator->leftJoin($filterAssociationJoin['join'], $filterAssociationJoin['alias']);
+                        }
+                    }
+                    // Set association
+                    $joins[] = $filterAssociation['alias'];
+                    $query->leftJoin($filterAssociation['join'], $filterAssociation['alias']);
+                    if ($paginator) $queryPaginator->leftJoin($filterAssociation['join'], $filterAssociation['alias']);
                 }
             }
         }
@@ -616,7 +650,6 @@ abstract class AbstractRepository implements InputFilterAwareInterface
             }
         }
         // Set default-filter
-        $defaultFilter = $this->options->defaultFilter();
         if (!empty($defaultFilter)) {
             $query->andWhere($defaultFilter['filter']);
             if ($paginator) $queryPaginator->andWhere($defaultFilter['filter']);
