@@ -94,7 +94,7 @@ class Input
         $params->debug = (isset($params->debug) && ($params->debug == 'true' || $params->debug == 1)) ? true : false;
         $params->customRequestId = (isset($params->customRequestId) && !empty($params->customRequestId)) ? $params->customRequestId : null;
 
-        return $output;
+        return $params;
     }
 
 }
