@@ -15,11 +15,19 @@ class RepositoryFactory implements FactoryInterface
         /** @var $config \Zend\Config\Config */
         $config = $container->get('Config');
 
+        // Set options-name (replace repository)
+        $optionsName = str_replace("\Repository\\", "\Options\\", $requestedName);
+        $optionsName = preg_replace("~Repository(?!.*Repository)~", "", $optionsName);
+        $options = (class_exists($optionsName)) ? $container->get($optionsName): null;
+
+        /** @var $repository */
         $repository = new $requestedName(
             $objectManager,
-            $config
+            $config,
+            $options
         );
 
+        // Return
         return $repository;
     }
 
