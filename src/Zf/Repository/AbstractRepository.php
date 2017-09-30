@@ -624,9 +624,10 @@ abstract class AbstractRepository implements InputFilterAwareInterface
         }
         // Set group-by (if available)
         if (!empty($groupBy)) {
-            foreach ($groupBy AS $group) {
-                $query->addGroupBy($group);
-                if ($paginator) $queryPaginator->addGroupBy($group);
+            foreach ($groupBy AS $groupByField) {
+                $groupByField = (stristr($groupByField, ".")) ? $groupByField : "f." . $groupByField;
+                $query->addGroupBy($groupByField);
+                if ($paginator) $queryPaginator->addGroupBy($groupByField);
             }
         }
         // Set having (if available)
@@ -638,8 +639,9 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                 $queryPaginator->addSelect($having['fields']);
                 // Prevent error "In aggregated query without GROUP BY"
                 if (empty($groupBy)) {
-                    foreach ($having['groupBy'] AS $group) {
-                        $queryPaginator->addGroupBy($group);
+                    foreach ($having['groupBy'] AS $groupByField) {
+                        $groupByField = (stristr($groupByField, ".")) ? $groupByField : "f." . $groupByField;
+                        $queryPaginator->addGroupBy($groupByField);
                     }
                 }
             }
@@ -648,8 +650,9 @@ abstract class AbstractRepository implements InputFilterAwareInterface
         // Set order-by (if available)
         if (!empty($orderBy)) {
             foreach ($orderBy AS $order) {
+                $orderField = (stristr($order['field'], ".")) ? $order['field'] : "f." . $order['field'];
                 $direction = (!empty($order['direction'])) ? $order['direction'] : null;
-                $query->addOrderBy($order['field'], $direction);
+                $query->addOrderBy($orderField, $direction);
             }
         }
         // Set limit (if available)
