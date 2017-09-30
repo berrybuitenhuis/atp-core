@@ -549,7 +549,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
     public function getByFilter($filter = NULL, $groupBy = null, $having = null, $orderBy = null, $limit = NULL, $paginator = false, $debug = false)
     {
         // Get default-filter
-        $defaultFilter = $this->options->defaultFilter();
+        $defaultFilter = $this->options->getDefaultFilter();
 
         // Build query
         $query = $this->om->createQueryBuilder();
