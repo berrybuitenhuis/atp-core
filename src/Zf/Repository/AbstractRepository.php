@@ -326,20 +326,21 @@ abstract class AbstractRepository implements InputFilterAwareInterface
      * Transform object-data into usable data
      *
      * @param array $data
+     * @param array $fields
      * @return array
      */
-    public function transformData($data)
+    public function transformData($data, $fields = NULL)
     {
         if (isset($data['results']) && is_array($data['results'])) {
             foreach ($data['results'] AS $k => $record) {
-                $data['results'][$k] = $this->transformRecord($record);
+                $data['results'][$k] = $this->transformRecord($record, $fields);
             }
         } elseif (is_array($data) && !isset($data['id'])) {
             foreach ($data AS $k => $record) {
-                $data[$k] = $this->transformRecord($record);
+                $data[$k] = $this->transformRecord($record, $fields);
             }
         } else {
-            $data = $this->transformRecord($data);
+            $data = $this->transformRecord($data, $fields);
         }
         return $data;
     }
@@ -348,10 +349,11 @@ abstract class AbstractRepository implements InputFilterAwareInterface
      * Transform object-record into usable record
      *
      * @param array $record
+     * @param array $fields
      * @return array
      */
 
-    public abstract function transformRecord($record);
+    public abstract function transformRecord($record, $fields = NULL);
 
     /**
      * Transform object-values into usable values
@@ -491,6 +493,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
      * Return a list of objects from the repository
      *
      * @param string $output
+     * @param array $fields
      * @param array $filter
      * @param array $groupBy
      * @param array $having
@@ -501,7 +504,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
      * @param boolean $debug
      * @return array/object
      */
-    public function getList($output = 'object', $filter = NULL, $groupBy = null, $having = null, $orderBy = NULL, $limitRecords = 25, $offset = 0, $paginator = false, $debug = false)
+    public function getList($output = 'object', $fields = NULL, $filter = NULL, $groupBy = null, $having = null, $orderBy = NULL, $limitRecords = 25, $offset = 0, $paginator = false, $debug = false)
     {
         if (!empty($limitRecords)) $limit['limit'] = (int) $limitRecords;
         else $limit['limit'] = 25;
@@ -525,7 +528,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
             }
 
             // Return result
-            if (method_exists($this, 'transformData')) return $this->transformData($records);
+            if (method_exists($this, 'transformData')) return $this->transformData($records, $fields);
             else return $records;
         } else {
             // Return result
