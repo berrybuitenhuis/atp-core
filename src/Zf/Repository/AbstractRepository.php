@@ -570,9 +570,9 @@ abstract class AbstractRepository implements InputFilterAwareInterface
             $joins = [];
             foreach ($this->getFilterAssociations() AS $filterAssociation) {
                 $match = false;
-                if (!empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($filter["AND"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
+                if (!empty($filter["AND"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($filter["AND"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
-                } elseif (!empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($filter["OR"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
+                } elseif (!empty($filter["OR"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($filter["OR"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
                 } elseif (stristr($defaultFilter['filter'], $filterAssociation['alias'] . ".") && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
