@@ -396,6 +396,73 @@ abstract class AbstractRepository implements InputFilterAwareInterface
     }
 
     /**
+     * Get array of customized request-fields by application and user
+     *
+     * @param array $dataFields
+     * @param array $customFields
+     * @return array
+     */
+    public function getRequestedFields($dataFields, $customFields)
+    {
+        $requestedFields = ["fields"=>[], "entities"=>[]];
+        foreach ($customFields AS $customField) {
+            // Add specific fields of entity to requestedFields
+            if (stristr($customField,"-")) {
+                // Get fields (explode by "-")
+                $fieldParts = explode("-", $customField);
+                $configuredFields = $dataFields["entities"];
+                foreach($fieldParts AS $k1 => $v1) {
+                    // Check if field-part is entity
+                    if (isset($configuredFields[$v1])) {
+                        // Check if fieldPart is last, then set entity (array of properties) to fieldParts
+                        if (count($fieldParts) == ($k1 + 1)) {
+                            array_push($fieldParts, $configuredFields[$v1]);
+                        }
+                        $configuredFields = $configuredFields[$v1];
+                    } elseif (in_array($v1, $configuredFields)) {
+                        // Check if field-part is property, then set property (array) to fieldParts
+                        $fieldParts[$k1] = [$v1];
+                    } else {
+                        // Field-part is no entity or property (so unset fieldParts, maybe not configured or misspelled)
+                        unset($fieldParts);
+                        break;
+                    }
+                }
+
+                if (is_array($fieldParts) && !empty($fieldParts)) {
+                    // Sort in reverse order to set proper values
+                    krsort($fieldParts);
+
+                    $tmpRequestedFields = [];
+                    foreach ($fieldParts AS $fieldPart) {
+                        if (empty($tmpRequestedFields)) {
+                            // Set first values to array
+                            $tmpRequestedFields = $fieldPart;
+                        } else {
+                            // Preserve existing values (empty array for new structure, set to variable by fieldPart-name)
+                            $values = $tmpRequestedFields;
+                            unset($tmpRequestedFields);
+                            $tmpRequestedFields[$fieldPart] = $values;
+                        }
+                    }
+
+                    // Set/merge to requestedFields
+                    $requestedFields["entities"] = (!empty($requestedFields["entities"])) ? array_merge_recursive($requestedFields["entities"], $tmpRequestedFields) : $tmpRequestedFields;
+                }
+            } elseif (in_array(strtolower($customField), $dataFields['fields'])) {
+                // Add field to requestedFields
+                $requestedFields["fields"][] = strtolower($customField);
+            } elseif (array_key_exists($customField, $dataFields['entities'])) {
+                // Add entire entity to requestedFields (no fields of entity specified)
+                $requestedFields["entities"][$customField] = $dataFields['entities'][$customField];
+            }
+        }
+
+        // Return
+        return $requestedFields;
+    }
+
+    /**
      * Check if object exists
      *
      * @param $id
