@@ -527,7 +527,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
         }
 
         // return error if object not found
-        if ($object == null) {
+        if ($object == null || $object === false) {
             $this->setMessages(['notFound' => $this->objectName. ' not found']);
             return false;
         }
