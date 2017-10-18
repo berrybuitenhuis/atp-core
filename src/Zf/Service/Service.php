@@ -14,9 +14,9 @@ class Service
      */
     private $errorData = [];
 
-    public function get($id, $output = 'object', $refresh = false)
+    public function get($id, $output = 'object', $refresh = false, $fields = NULL)
     {
-        $res = $this->repository->get($id, $output, $refresh);
+        $res = $this->repository->get($id, $output, $refresh, $fields);
         if ($res === false) {
             $this->setMessages($this->repository->getMessages());
             $this->setErrorData($this->repository->getErrorData());

@@ -505,9 +505,10 @@ abstract class AbstractRepository implements InputFilterAwareInterface
      * @param $id
      * @param $output
      * @param $refresh
+     * @param array $fields
      * @return object|array
      */
-    public function get($id, $output = 'object', $refresh = false)
+    public function get($id, $output = 'object', $refresh = false, $fields = NULL)
     {
         // get object from the repository specified by primary key
         $object = $this->om
@@ -565,7 +566,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
             }
 
             // Return result
-            if (method_exists($this, 'transformData')) return $this->transformData($records);
+            if (method_exists($this, 'transformData')) return $this->transformData($records, $fields);
             else return $records;
         } else {
             return $objects;
