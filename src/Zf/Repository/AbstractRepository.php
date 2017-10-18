@@ -519,11 +519,11 @@ abstract class AbstractRepository implements InputFilterAwareInterface
             $object = $this->om
                 ->getRepository($this->objectName)
                 ->find($id);
-        }
 
-        // refresh entity (clear all local changes)
-        if ($refresh === true) {
-            $this->om->refresh($object);
+            // refresh entity (clear all local changes)
+            if ($refresh === true) {
+                $this->om->refresh($object);
+            }
         }
 
         // return error if object not found
