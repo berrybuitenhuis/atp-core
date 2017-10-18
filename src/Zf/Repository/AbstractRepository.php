@@ -511,9 +511,15 @@ abstract class AbstractRepository implements InputFilterAwareInterface
     public function get($id, $output = 'object', $refresh = false, $fields = NULL)
     {
         // get object from the repository specified by primary key
-        $object = $this->om
-            ->getRepository($this->objectName)
-            ->find($id);
+        if ($output == 'array') {
+            $filter = ["AND"=>[["id", "eq", $id]]];
+            $objects = $this->getByFilter($filter, null, null, null, 1, false);
+            $object = current($objects);
+        } else {
+            $object = $this->om
+                ->getRepository($this->objectName)
+                ->find($id);
+        }
 
         // refresh entity (clear all local changes)
         if ($refresh === true) {
@@ -531,7 +537,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
             $record = $this->getHydrator()->extract($object);
 
             // Return result
-            if (method_exists($this, 'transformData')) return $this->transformData($record);
+            if (method_exists($this, 'transformData')) return $this->transformData($record, $fields);
             else return $record;
         } else {
             return $object;
@@ -543,9 +549,10 @@ abstract class AbstractRepository implements InputFilterAwareInterface
      *
      * @param $output
      * @param $refresh
+     * @param array $fields
      * @return object|array
      */
-    public function getAll($output = 'object', $refresh = false)
+    public function getAll($output = 'object', $refresh = false, $fields = NULL)
     {
         // get all objects from the repository
         $objects = $this->om
@@ -924,9 +931,10 @@ abstract class AbstractRepository implements InputFilterAwareInterface
      * @param $data
      * @param $output
      * @param $overrule
+     * @param array $fields
      * @return array
      */
-    public function create($data, $output = 'object', $overrule = [])
+    public function create($data, $output = 'object', $overrule = [], $fields = NULL)
     {
         // Reset errors
         $this->resetErrors();
@@ -947,7 +955,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
             if ($output == 'array') {
                 // Return result
                 $record = $this->getHydrator()->extract($object);
-                if (method_exists($this, 'transformData')) return $this->transformData($record);
+                if (method_exists($this, 'transformData')) return $this->transformData($record, $fields);
                 else return $record;
             } else {
                 return $object;
@@ -963,9 +971,10 @@ abstract class AbstractRepository implements InputFilterAwareInterface
      * @param $data
      * @param $output
      * @param $overrule
+     * @param array $fields
      * @return array
      */
-    public function createBulk($data, $output = 'object', $overrule = [])
+    public function createBulk($data, $output = 'object', $overrule = [], $fields = NULL)
     {
         // Reset errors
         $this->resetErrors();
@@ -994,7 +1003,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                 $records = [];
                 foreach ($objects AS $key => $object) {
                     $record = $this->getHydrator()->extract($object);
-                    if (method_exists($this, 'transformData')) $records[$key] = $this->transformData($record);
+                    if (method_exists($this, 'transformData')) $records[$key] = $this->transformData($record, $fields);
                     else $records[$key] = $record;
                 }
                 return $records;
@@ -1013,9 +1022,10 @@ abstract class AbstractRepository implements InputFilterAwareInterface
      * @param $data
      * @param $output
      * @param $refresh
+     * @param array $fields
      * @return array
      */
-    public function update($id, $data, $output = 'object', $refresh = false)
+    public function update($id, $data, $output = 'object', $refresh = false, $fields = NULL)
     {
         // Reset errors
         $this->resetErrors();
@@ -1047,7 +1057,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
             if ($output == 'array') {
                 // Return result
                 $record = $this->getHydrator()->extract($object);
-                if (method_exists($this, 'transformData')) return $this->transformData($record);
+                if (method_exists($this, 'transformData')) return $this->transformData($record, $fields);
                 else return $record;
             } else {
                 return $object;
@@ -1063,9 +1073,10 @@ abstract class AbstractRepository implements InputFilterAwareInterface
      * @param $data
      * @param $output
      * @param $refresh
+     * @param array $fields
      * @return array
      */
-    public function updateBulk($data, $output = 'object', $refresh = false)
+    public function updateBulk($data, $output = 'object', $refresh = false, $fields = NULL)
     {
         // Reset errors
         $this->resetErrors();
@@ -1106,7 +1117,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                 $records = [];
                 foreach ($objects AS $key => $object) {
                     $record = $this->getHydrator()->extract($object);
-                    if (method_exists($this, 'transformData')) $records[] = $this->transformData($record);
+                    if (method_exists($this, 'transformData')) $records[] = $this->transformData($record, $fields);
                     else $records[] = $record;
                 }
                 return $records;
