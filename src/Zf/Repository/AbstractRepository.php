@@ -646,6 +646,10 @@ abstract class AbstractRepository implements InputFilterAwareInterface
     {
         // Get client-filter
         $clientFilter = $this->options->getClientFilter();
+        // Get default-filter(s)
+        $defaultFilter = $this->options->getDefaultFilter($defaultFilter);
+        // Set allowed operators (for custom/default filters)
+        $allowedOperators = ['eq','neq','like','lt','lte','gt','gte','isnull','isnotnull','in','notin'];
 
         // Build query
         $query = $this->om->createQueryBuilder();
@@ -659,7 +663,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
         $query->from($this->objectName, 'f');
         if ($paginator) $queryPaginator->from($this->objectName, 'f');
         // Set joins (if available/needed)
-        if ((!empty($filter) || !empty($clientFilter) || !empty($orderBy)) && !empty($this->getFilterAssociations())) {
+        if ((!empty($filter) || !empty($clientFilter) || !empty($defaultFilter) || !empty($orderBy)) && !empty($this->getFilterAssociations())) {
             $joins = [];
             foreach ($this->getFilterAssociations() AS $filterAssociation) {
                 $match = false;
@@ -668,6 +672,8 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                 } elseif (!empty($filter["OR"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($filter["OR"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
                 } elseif (stristr($clientFilter['filter'], $filterAssociation['alias'] . ".") && !in_array($filterAssociation['alias'], $joins)) {
+                    $match = true;
+                } elseif (!empty($defaultFilter["AND"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($defaultFilter["AND"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
                 } elseif (!empty($orderBy)) {
                     foreach ($orderBy AS $orderByField) {
@@ -707,7 +713,6 @@ abstract class AbstractRepository implements InputFilterAwareInterface
         }
         // Set customized filter (if available)
         if (!empty($filter)) {
-            $allowedOperators = ['eq','neq','like','lt','lte','gt','gte','isnull','isnotnull','in','notin'];
             // Set AND-conditions (if available)
             if (isset($filter['AND'])) {
                 $filterConditions = $query->expr()->andX();
@@ -745,7 +750,25 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                 if ($paginator) $queryPaginator->orWhere($filterConditions);
             }
         }
-        // Set default-filter
+        // Set customized default-filter (if available)
+        if (!empty($defaultFilter) && !empty($defaultFilter['AND'])) {
+            $filterConditions = $query->expr()->andX();
+            // Iterate conditions
+            foreach ($defaultFilter['AND'] AS $filterParams) {
+                $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
+                $operator = $filterParams[1];
+                $value = $filterParams[2];
+
+                // Check if operator is allowed
+                if (!in_array($operator, $allowedOperators)) throw new \Exception("Not allowed operator: " . $operator);
+                // Set filter-condition
+                $filterConditions->add($query->expr()->{$operator}($field, $value));
+            }
+            // Add filter-conditions to query
+            $query->andWhere($filterConditions);
+            if ($paginator) $queryPaginator->andWhere($filterConditions);
+        }
+        // Set client-filter
         if (!empty($clientFilter)) {
             $query->andWhere($clientFilter['filter']);
             if ($paginator) $queryPaginator->andWhere($clientFilter['filter']);
