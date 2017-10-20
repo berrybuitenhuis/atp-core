@@ -726,7 +726,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                     // Check if operator is allowed
                     if (!in_array($operator, $allowedOperators)) throw new \Exception("Not allowed operator: " . $operator);
                     // Set filter-condition
-                    $filterConditions->add($query->expr()->{$operator}($field, $valueKey));
+                    $filterConditions->add($query->expr()->{$operator}($field, ':' . $valueKey));
                 }
                 // Add filter-conditions to query
                 $query->andWhere($filterConditions);
@@ -745,7 +745,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                     // Check if operator is allowed
                     if (!in_array($operator, $allowedOperators)) throw new \Exception("Not allowed operator: " . $operator);
                     // Set filter-condition
-                    $filterConditions->add($query->expr()->{$operator}($field, $valueKey));
+                    $filterConditions->add($query->expr()->{$operator}($field, ':' . $valueKey));
                 }
                 // Add filter-conditions to query
                 $query->orWhere($filterConditions);
@@ -765,7 +765,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                 // Check if operator is allowed
                 if (!in_array($operator, $allowedOperators)) throw new \Exception("Not allowed operator: " . $operator);
                 // Set filter-condition
-                $filterConditions->add($query->expr()->{$operator}($field, $valueKey));
+                $filterConditions->add($query->expr()->{$operator}($field, ':' . $valueKey));
             }
             // Add filter-conditions to query
             $query->andWhere($filterConditions);
