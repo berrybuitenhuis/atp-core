@@ -717,15 +717,16 @@ abstract class AbstractRepository implements InputFilterAwareInterface
             if (isset($filter['AND'])) {
                 $filterConditions = $query->expr()->andX();
                 // Iterate conditions
-                foreach ($filter['AND'] AS $filterParams) {
+                foreach ($filter['AND'] AS $k => $filterParams) {
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
-                    $value = $filterParams[2];
+                    $valueKey = "customAnd" . ucfirst(str_replace(".", "", $field)) . $k;
+                    $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
                     if (!in_array($operator, $allowedOperators)) throw new \Exception("Not allowed operator: " . $operator);
                     // Set filter-condition
-                    $filterConditions->add($query->expr()->{$operator}($field, $value));
+                    $filterConditions->add($query->expr()->{$operator}($field, $valueKey));
                 }
                 // Add filter-conditions to query
                 $query->andWhere($filterConditions);
@@ -735,15 +736,16 @@ abstract class AbstractRepository implements InputFilterAwareInterface
             if (isset($filter['OR'])) {
                 $filterConditions = $query->expr()->orX();
                 // Iterate conditions
-                foreach ($filter['OR'] AS $filterParams) {
+                foreach ($filter['OR'] AS $k => $filterParams) {
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
-                    $value = $filterParams[2];
+                    $valueKey = "customOr" . ucfirst(str_replace(".", "", $field)) . $k;
+                    $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
                     if (!in_array($operator, $allowedOperators)) throw new \Exception("Not allowed operator: " . $operator);
                     // Set filter-condition
-                    $filterConditions->add($query->expr()->{$operator}($field, $value));
+                    $filterConditions->add($query->expr()->{$operator}($field, $valueKey));
                 }
                 // Add filter-conditions to query
                 $query->orWhere($filterConditions);
@@ -754,15 +756,16 @@ abstract class AbstractRepository implements InputFilterAwareInterface
         if (!empty($defaultFilter) && !empty($defaultFilter['AND'])) {
             $filterConditions = $query->expr()->andX();
             // Iterate conditions
-            foreach ($defaultFilter['AND'] AS $filterParams) {
+            foreach ($defaultFilter['AND'] AS $k => $filterParams) {
                 $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                 $operator = $filterParams[1];
-                $value = $filterParams[2];
+                $valueKey = "defaultAnd" . ucfirst(str_replace(".", "", $field)) . $k;
+                $parameters[$valueKey] = $filterParams[2];
 
                 // Check if operator is allowed
                 if (!in_array($operator, $allowedOperators)) throw new \Exception("Not allowed operator: " . $operator);
                 // Set filter-condition
-                $filterConditions->add($query->expr()->{$operator}($field, $value));
+                $filterConditions->add($query->expr()->{$operator}($field, $valueKey));
             }
             // Add filter-conditions to query
             $query->andWhere($filterConditions);
