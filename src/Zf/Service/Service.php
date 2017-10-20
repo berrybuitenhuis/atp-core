@@ -24,9 +24,9 @@ class Service
         return $res;
     }
 
-    public function getList($output = 'object', $fields = NULL, $filter = NULL, $groupBy = null, $having = null, $orderBy = NULL, $limitRecords = 25, $offset = 0, $paginator = false, $debug = false)
+    public function getList($output = 'object', $fields = NULL, $defaultFilter = NULL, $filter = NULL, $groupBy = null, $having = null, $orderBy = NULL, $limitRecords = 25, $offset = 0, $paginator = false, $debug = false)
     {
-        $res = $this->repository->getList($output, $fields, $filter, $groupBy, $having, $orderBy, $limitRecords, $offset, $paginator, $debug);
+        $res = $this->repository->getList($output, $fields, $defaultFilter, $filter, $groupBy, $having, $orderBy, $limitRecords, $offset, $paginator, $debug);
         if ($res === false) {
             $this->setMessages($this->repository->getMessages());
             $this->setErrorData($this->repository->getErrorData());

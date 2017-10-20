@@ -585,6 +585,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
      *
      * @param string $output
      * @param array $fields
+     * @param array $defaultFilter
      * @param array $filter
      * @param array $groupBy
      * @param array $having
@@ -595,7 +596,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
      * @param boolean $debug
      * @return array/object
      */
-    public function getList($output = 'object', $fields = NULL, $filter = NULL, $groupBy = null, $having = null, $orderBy = NULL, $limitRecords = 25, $offset = 0, $paginator = false, $debug = false)
+    public function getList($output = 'object', $fields = NULL, $defaultFilter = NULL, $filter = NULL, $groupBy = null, $having = null, $orderBy = NULL, $limitRecords = 25, $offset = 0, $paginator = false, $debug = false)
     {
         if (!empty($limitRecords)) $limit['limit'] = (int) $limitRecords;
         else $limit['limit'] = 25;
@@ -603,7 +604,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
         if (!is_array($filter)) $filter = array();
 
         // Get results
-        $records = $this->getByFilter($filter, $groupBy, $having, $orderBy, $limit, $paginator, $debug);
+        $records = $this->getByFilter($defaultFilter, $filter, $groupBy, $having, $orderBy, $limit, $paginator, $debug);
 
         // Convert object to array (if output is array)
         if ($output == 'array') {
@@ -630,6 +631,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
     /**
      * Return objects by filter
      *
+     * @param $defaultFilter
      * @param $filter
      * @param $groupBy
      * @param $having
@@ -640,10 +642,10 @@ abstract class AbstractRepository implements InputFilterAwareInterface
      * @return array/object
      * @throws \Exception
      */
-    public function getByFilter($filter = NULL, $groupBy = null, $having = null, $orderBy = null, $limit = NULL, $paginator = false, $debug = false)
+    public function getByFilter($defaultFilter = NULL, $filter = NULL, $groupBy = null, $having = null, $orderBy = null, $limit = NULL, $paginator = false, $debug = false)
     {
-        // Get default-filter
-        $defaultFilter = $this->options->getDefaultFilter();
+        // Get client-filter
+        $clientFilter = $this->options->getClientFilter();
 
         // Build query
         $query = $this->om->createQueryBuilder();
@@ -657,7 +659,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
         $query->from($this->objectName, 'f');
         if ($paginator) $queryPaginator->from($this->objectName, 'f');
         // Set joins (if available/needed)
-        if ((!empty($filter) || !empty($defaultFilter) || !empty($orderBy)) && !empty($this->getFilterAssociations())) {
+        if ((!empty($filter) || !empty($clientFilter) || !empty($orderBy)) && !empty($this->getFilterAssociations())) {
             $joins = [];
             foreach ($this->getFilterAssociations() AS $filterAssociation) {
                 $match = false;
@@ -665,7 +667,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                     $match = true;
                 } elseif (!empty($filter["OR"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($filter["OR"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
-                } elseif (stristr($defaultFilter['filter'], $filterAssociation['alias'] . ".") && !in_array($filterAssociation['alias'], $joins)) {
+                } elseif (stristr($clientFilter['filter'], $filterAssociation['alias'] . ".") && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
                 } elseif (!empty($orderBy)) {
                     foreach ($orderBy AS $orderByField) {
@@ -744,10 +746,10 @@ abstract class AbstractRepository implements InputFilterAwareInterface
             }
         }
         // Set default-filter
-        if (!empty($defaultFilter)) {
-            $query->andWhere($defaultFilter['filter']);
-            if ($paginator) $queryPaginator->andWhere($defaultFilter['filter']);
-            $parameters = (empty($parameters)) ? $defaultFilter['parameters'] : array_merge($parameters, $defaultFilter['parameters']);
+        if (!empty($clientFilter)) {
+            $query->andWhere($clientFilter['filter']);
+            if ($paginator) $queryPaginator->andWhere($clientFilter['filter']);
+            $parameters = (empty($parameters)) ? $clientFilter['parameters'] : array_merge($parameters, $clientFilter['parameters']);
         }
         // Set group-by (if available)
         if (!empty($groupBy)) {
