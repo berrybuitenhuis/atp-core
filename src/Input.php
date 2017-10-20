@@ -86,6 +86,7 @@ class Input
     public function setParams($params)
     {
         $params->fields = (isset($params->fields)) ? json_decode($params->fields, true) : null;
+        $params->defaultFilter = (isset($params->defaultFilter)) ? json_decode($params->defaultFilter, true) : null;
         $params->filter = (isset($params->filter)) ? json_decode($params->filter, true) : null;
         $params->groupBy = (isset($params->groupBy)) ? json_decode($params->groupBy, true) : null;
         $params->having = (isset($params->having)) ? json_decode($params->having, true) : null;
