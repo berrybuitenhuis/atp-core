@@ -24,6 +24,12 @@ class Service
         return $res;
     }
 
+    public function getDefaultFilterOptions()
+    {
+        $res = $this->repository->getDefaultFilterOptions();
+        return $res;
+    }
+
     public function getList($output = 'object', $fields = NULL, $defaultFilter = NULL, $filter = NULL, $groupBy = null, $having = null, $orderBy = NULL, $limitRecords = 25, $offset = 0, $paginator = false, $debug = false)
     {
         $res = $this->repository->getList($output, $fields, $defaultFilter, $filter, $groupBy, $having, $orderBy, $limitRecords, $offset, $paginator, $debug);

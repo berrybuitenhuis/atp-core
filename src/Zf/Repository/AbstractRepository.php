@@ -124,6 +124,15 @@ abstract class AbstractRepository implements InputFilterAwareInterface
     }
 
     /**
+     * Get default filter-options
+     * @return array
+     */
+    public function getDefaultFilterOptions()
+    {
+        return $this->options->getDefaultFilterOptions();
+    }
+
+    /**
      * Get input filter
      *
      * @return object
