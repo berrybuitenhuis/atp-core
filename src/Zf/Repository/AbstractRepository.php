@@ -6,6 +6,7 @@ use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
 use Doctrine\ORM\EntityManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * Class AbstractRepository
@@ -653,15 +654,12 @@ abstract class AbstractRepository implements InputFilterAwareInterface
 
         // Build query
         $query = $this->om->createQueryBuilder();
-        if ($paginator) $queryPaginator = $this->om->createQueryBuilder();
         $parameters = [];
 
         // Set fields
         $query->select('f');
-        if ($paginator) $queryPaginator->select(array('COUNT(f.id) total'));
         // Set from
         $query->from($this->objectName, 'f');
-        if ($paginator) $queryPaginator->from($this->objectName, 'f');
         // Set joins (if available/needed)
         if ((!empty($filter) || !empty($clientFilter) || !empty($defaultFilter) || !empty($orderBy)) && !empty($this->getFilterAssociations())) {
             $joins = [];
@@ -701,13 +699,11 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                         krsort($filterAssociationJoins);
                         foreach ($filterAssociationJoins AS $filterAssociationJoin) {
                             $query->leftJoin($filterAssociationJoin['join'], $filterAssociationJoin['alias']);
-                            if ($paginator) $queryPaginator->leftJoin($filterAssociationJoin['join'], $filterAssociationJoin['alias']);
                         }
                     }
                     // Set association
                     $joins[] = $filterAssociation['alias'];
                     $query->leftJoin($filterAssociation['join'], $filterAssociation['alias']);
-                    if ($paginator) $queryPaginator->leftJoin($filterAssociation['join'], $filterAssociation['alias']);
                 }
             }
         }
@@ -730,7 +726,6 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                 }
                 // Add filter-conditions to query
                 $query->andWhere($filterConditions);
-                if ($paginator) $queryPaginator->andWhere($filterConditions);
             }
             // Set OR-conditions (if available)
             if (isset($filter['OR'])) {
@@ -749,7 +744,6 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                 }
                 // Add filter-conditions to query
                 $query->orWhere($filterConditions);
-                if ($paginator) $queryPaginator->orWhere($filterConditions);
             }
         }
         // Set customized default-filter (if available)
@@ -769,12 +763,10 @@ abstract class AbstractRepository implements InputFilterAwareInterface
             }
             // Add filter-conditions to query
             $query->andWhere($filterConditions);
-            if ($paginator) $queryPaginator->andWhere($filterConditions);
         }
         // Set client-filter
         if (!empty($clientFilter)) {
             $query->andWhere($clientFilter['filter']);
-            if ($paginator) $queryPaginator->andWhere($clientFilter['filter']);
             $parameters = (empty($parameters)) ? $clientFilter['parameters'] : array_merge($parameters, $clientFilter['parameters']);
         }
         // Set group-by (if available)
@@ -782,24 +774,11 @@ abstract class AbstractRepository implements InputFilterAwareInterface
             foreach ($groupBy AS $groupByField) {
                 $groupByField = (stristr($groupByField, ".")) ? $groupByField : "f." . $groupByField;
                 $query->addGroupBy($groupByField);
-                if ($paginator) $queryPaginator->addGroupBy($groupByField);
             }
         }
         // Set having (if available)
         if (!empty($having)) {
             $query->having($having['filter']);
-            if ($paginator) {
-                $queryPaginator->having($having['filter']);
-                // Prevent error "Unknown column in having clause"
-                $queryPaginator->addSelect($having['fields']);
-                // Prevent error "In aggregated query without GROUP BY"
-                if (empty($groupBy)) {
-                    foreach ($having['groupBy'] AS $groupByField) {
-                        $groupByField = (stristr($groupByField, ".")) ? $groupByField : "f." . $groupByField;
-                        $queryPaginator->addGroupBy($groupByField);
-                    }
-                }
-            }
             $parameters = (empty($parameters)) ? $having['parameters'] : array_merge($parameters, $having['parameters']);
         }
         // Set order-by (if available)
@@ -827,7 +806,6 @@ abstract class AbstractRepository implements InputFilterAwareInterface
         // Set parameters (if available)
         if (!empty($parameters)) {
             $query->setParameters($parameters);
-            if ($paginator) $queryPaginator->setParameters($parameters);
         }
 
         // Return DQL (in debug-mode)
@@ -837,10 +815,10 @@ abstract class AbstractRepository implements InputFilterAwareInterface
 
         // Get results
         if ($paginator) {
-            // Set paginator-results
-            $paginatorResults = $queryPaginator->getQuery()->getOneOrNullResult();
-            $paginatorData['records'] = (int) $paginatorResults['total'];
-            $paginatorData['pages'] = (int) ceil($paginatorResults['total'] / $limit['limit']);
+            // Set paginator-result
+            $paginatorResult = new Paginator($query, $fetchJoinCollection = true);
+            $paginatorData['records'] = (int) count($paginatorResult);
+            $paginatorData['pages'] = (int) ceil($paginatorData['records'] / $limit['limit']);
             $paginatorData['currentPage'] = (int) (ceil($limit['offset'] / $limit['limit']) + 1);
             $paginatorData['recordsPage'] = (int) $limit['limit'];
 
