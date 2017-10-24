@@ -523,7 +523,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
         // get object from the repository specified by primary key
         if ($output == 'array') {
             $filter = ["AND"=>[["id", "eq", $id]]];
-            $objects = $this->getByFilter($filter, null, null, null, 1, false);
+            $objects = $this->getByFilter(null, $filter, null, null, null, 1, false);
             $object = current($objects);
         } else {
             $object = $this->om
