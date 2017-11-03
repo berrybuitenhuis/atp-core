@@ -362,8 +362,52 @@ abstract class AbstractRepository implements InputFilterAwareInterface
      * @param array $fields
      * @return array
      */
+    public function transformRecord($record, $fields = NULL)
+    {
+        // Get data-fields configured by application
+        $dataFields = $this->options->getDataFields();
 
-    public abstract function transformRecord($record, $fields = NULL);
+        // Check unknown properties of record
+        foreach ($dataFields["fields"] AS $k => $v) {
+            if (!isset($record[$v])) {
+                $values = $this->transformValues($record, [$v]);
+                if (!empty($values[$v])) {
+                    $record[$v] = $values[$v];
+                }
+            }
+        }
+
+        // Get fields requested by user (if available, else all configured data-fields)
+        $dataFields["fields"] = array_map("strtolower", $dataFields["fields"]);
+        if (!empty($fields)) {
+            $requestedFields = parent::getRequestedFields($dataFields, $fields);
+        } else {
+            $requestedFields = $dataFields;
+        }
+
+        // Iterate data-fields
+        foreach ($record AS $k => $v) {
+            // Skip field if not configured for application
+            if (!in_array(strtolower($k), $requestedFields["fields"]) && !array_key_exists($k, $requestedFields["entities"])) {
+                unset($record[$k]);
+                continue;
+            }
+
+            // Set/unset values
+            if (array_key_exists($k, $requestedFields["entities"])) {
+                // Overwrite values
+                $fields = $requestedFields["entities"][$k];
+                $values = $this->transformValues($v, $fields);
+                if (!empty($values)) $record[$k] = $values;
+                else unset($record[$k]);
+            } elseif (is_object($v) && !($v instanceof \DateTime)) {
+                // Unset data-field if value is object
+                unset($record[$k]);
+            }
+        }
+
+        return $record;
+    }
 
     /**
      * Transform object-values into usable values
