@@ -380,7 +380,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
         // Get fields requested by user (if available, else all configured data-fields)
         $dataFields["fields"] = array_map("strtolower", $dataFields["fields"]);
         if (!empty($fields)) {
-            $requestedFields = parent::getRequestedFields($dataFields, $fields);
+            $requestedFields = $this->getRequestedFields($dataFields, $fields);
         } else {
             $requestedFields = $dataFields;
         }
