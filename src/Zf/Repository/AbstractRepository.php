@@ -450,13 +450,13 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                     if (is_object($data)) {
                         // Check if convert-function exists (in corresponding repository-class)
                         $func = 'conv' . ucfirst($field);
-                        if (!method_exists($data, $func)) {
+                        if (method_exists($repository, $func)) {
+                            $fieldValue = $repository::$func($data, $this->config['application']);
+                        } else {
                             // Check if get-function exists (in entity-class)
                             $func = 'get' . ucfirst($field);
-                            $fieldValue = $data->$func();
-                        } else {
-                            if (method_exists($repository, $func)) {
-                                $fieldValue = $repository::$func($data, $this->config['application']);
+                            if (method_exists($data, $func)) {
+                                $fieldValue = $data->$func();
                             }
                         }
                     } elseif (is_array($data)) {
