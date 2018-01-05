@@ -429,6 +429,16 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                 $values[$k] = $this->transformValues($v, $fields);
             }
         } else {
+            if (is_object($data)) {
+                // Get repository-class by entity-class
+                $className = (get_parent_class($data)) ? get_parent_class($data) : get_class($data);
+                $repository = str_replace("\Entity\\", "\Repository\\", $className);
+                $repository = preg_replace("~Entity(?!.*Entity)~", "Repository", $repository) . 'Repository';
+            } elseif (is_array($data)) {
+                // Get repository-class
+                $repository = get_class($this);
+            }
+
             $values = [];
             foreach ($fields AS $k => $field) {
                 if (is_array($field)) {
@@ -438,33 +448,25 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                     $fieldValue = "";
 
                     if (is_object($data)) {
-                        // Check if get-function exists (in entity-class)
-                        $func = 'get' . ucfirst($field);
+                        // Check if convert-function exists (in corresponding repository-class)
+                        $func = 'conv' . ucfirst($field);
                         if (!method_exists($data, $func)) {
-                            // Get repository-class by entity-class
-                            $className = (get_parent_class($data)) ? get_parent_class($data) : get_class($data);
-                            $repository = str_replace("\Entity\\", "\Repository\\", $className);
-                            $repository = preg_replace("~Entity(?!.*Entity)~", "Repository", $repository) . 'Repository';
-
-                            // Check if convert-function exists (in corresponding repository-class)
-                            $func = 'conv' . ucfirst($field);
+                            // Check if get-function exists (in entity-class)
+                            $func = 'get' . ucfirst($field);
+                            $fieldValue = $data->$func();
+                        } else {
                             if (method_exists($repository, $func)) {
                                 $fieldValue = $repository::$func($data, $this->config['application']);
                             }
-                        } else {
-                            $fieldValue = $data->$func();
                         }
                     } elseif (is_array($data)) {
-                        if (isset($data[$field])) {
-                            $fieldValue = $data[$field];
+                        // Check if convert-function exists (in corresponding repository-class)
+                        $func = 'conv' . ucfirst($field);
+                        if (method_exists($repository, $func)) {
+                            $fieldValue = $repository::$func($data, $this->config['application']);
                         } else {
-                            // Get repository-class
-                            $repository = get_class($this);
-
-                            // Check if convert-function exists (in corresponding repository-class)
-                            $func = 'conv' . ucfirst($field);
-                            if (method_exists($repository, $func)) {
-                                $fieldValue = $repository::$func($data, $this->config['application']);
+                            if (isset($data[$field])) {
+                                $fieldValue = $data[$field];
                             }
                         }
                     }
