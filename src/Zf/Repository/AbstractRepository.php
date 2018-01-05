@@ -369,11 +369,9 @@ abstract class AbstractRepository implements InputFilterAwareInterface
 
         // Check unknown properties of record
         foreach ($dataFields["fields"] AS $k => $v) {
-            if (!isset($record[$v])) {
-                $values = $this->transformValues($record, [$v]);
-                if (!empty($values[$v])) {
-                    $record[$v] = $values[$v];
-                }
+            $values = $this->transformValues($record, [$v]);
+            if (!empty($values[$v])) {
+                $record[$v] = $values[$v];
             }
         }
 
