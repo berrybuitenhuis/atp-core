@@ -1,7 +1,7 @@
 {
     "name": "berrybuitenhuis/atp-core",
     "type": "library",
-    "license": "Apache2",
+    "license": "MIT",
     "description": "ATP-Core - General/basic functions for ATP",
     "keywords": [],
     "homepage": "",
