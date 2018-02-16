@@ -781,7 +781,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
                     $valueKey = "customAnd" . ucfirst(str_replace(".", "", $field)) . $k;
-                    $parameters[$valueKey] = $filterParams[2];
+                    if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
                     if (!in_array($operator, $allowedOperators)) throw new \Exception("Not allowed operator: " . $operator);
@@ -799,7 +799,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
                     $valueKey = "customOr" . ucfirst(str_replace(".", "", $field)) . $k;
-                    $parameters[$valueKey] = $filterParams[2];
+                    if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
                     if (!in_array($operator, $allowedOperators)) throw new \Exception("Not allowed operator: " . $operator);
@@ -818,7 +818,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                 $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                 $operator = $filterParams[1];
                 $valueKey = "defaultAnd" . ucfirst(str_replace(".", "", $field)) . $k;
-                $parameters[$valueKey] = $filterParams[2];
+                if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                 // Check if operator is allowed
                 if (!in_array($operator, $allowedOperators)) throw new \Exception("Not allowed operator: " . $operator);
