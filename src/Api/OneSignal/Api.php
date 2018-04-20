@@ -27,7 +27,7 @@ class Api
         $this->appId = $appId;
 
         // Set client
-        $this->client = new \GuzzleHttp\Client(array('base_uri'=>$hostname, 'http_errors'=>false, 'debug'=>$debug));
+        $this->client = new \Guzzle\Http\Client($hostname, array('http_errors'=>false, 'debug'=>$debug));
 
         // Set default header for client-requests
         $this->clientHeaders = array(
@@ -107,7 +107,9 @@ class Api
         $body = $data->encode();
 
         $requestHeader = $this->clientHeaders;
-        $result = $this->client->request('POST', 'notifications', array("headers"=>$requestHeader, "body"=>$body));
+        $request = $this->client->post('/notifications', $requestHeader, $body);
+        $result = $request->send();
+
         $response = json_decode((string) $result->getBody());
         if (!isset($response->errors) || empty($response->errors)) {
             // Return

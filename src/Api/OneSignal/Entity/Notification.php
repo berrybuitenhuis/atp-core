@@ -11,7 +11,7 @@ class Notification extends Base {
     public $include_player_ids;
     /** @var array */
     public $data;
-    /** @var \AtpCore\Api\OneSignal\Entity\NotificationContent */
+    /** @var array */
     public $contents;
 
 }
