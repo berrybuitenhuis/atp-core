@@ -281,6 +281,12 @@ abstract class AbstractRepository implements InputFilterAwareInterface
         if (empty($this->messages)) {
             // Persist and flush object
             try {
+                // Convert object-data (if function available in repository)
+                if (method_exists($this, 'prepareObjectData')) {
+                    $object = $this->prepareObjectData($object);
+                }
+
+                // Persist object to database
                 $this->getObjectManager()->persist($object);
 
                 // Only flush (if permitted, used for bulk mutations)
