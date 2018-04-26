@@ -78,7 +78,7 @@ class Mail {
     {
         return $this->messages;
     }
-    
+
     public function send($domain, $from, $to, $subject, $text)
     {
         $result = $this->sendMailgun($domain, $from, $to, $subject, $text);
