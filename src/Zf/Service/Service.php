@@ -24,6 +24,16 @@ class Service
         return $res;
     }
 
+    public function getByParameters($parameters, $output = 'object', $multiple = true)
+    {
+        $res = $this->repository->getByParameters($parameters, $output, $multiple);
+        if ($res === false) {
+            $this->setMessages($this->repository->getMessages());
+            $this->setErrorData($this->repository->getErrorData());
+        }
+        return $res;
+    }
+
     public function getDefaultFilterOptions()
     {
         $res = $this->repository->getDefaultFilterOptions();
