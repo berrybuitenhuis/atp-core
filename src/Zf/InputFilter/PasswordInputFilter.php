@@ -52,7 +52,7 @@ class PasswordInputFilter
                     ],[
                         'name' => 'Regex',
                         'options' => [
-                            'pattern' => '/[~!@#$%^&*_+=;:?"\',.-]{' . $minSpecialCharacters . ',}/',
+                            'pattern' => '/[!@$%^&*()<>,.?\/[\]{}=_+-]{' . $minSpecialCharacters . ',}/',
                         ]
                     ],
                 ],
