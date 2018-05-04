@@ -79,24 +79,64 @@ class Mail {
         return $this->messages;
     }
 
-    public function send($domain, $from, $to, $subject, $text)
+    public function send($from, $to, $subject, $text)
     {
-        $result = $this->sendMailgun($domain, $from, $to, $subject, $text);
+        $result = $this->sendMailgun($from, $to, $subject, $text);
         return $result;
     }
 
-    private function sendMailgun($domain, $from, $to, $subject, $text)
+    private function sendMailgun($from, $to, $subject, $text)
     {
+        // Check email-addresses (from, to)
+        if (filter_var($from, FILTER_VALIDATE_EMAIL) === false) {
+            $this->addMessage("Invalid emailaddress (from)");
+            return false;
+        } elseif (filter_var($to, FILTER_VALIDATE_EMAIL) === false) {
+            $this->addMessage("Invalid emailaddress (to)");
+            return false;
+        }
+
         // Initialize Mailgun
         $mailgun = Mailgun::create($this->config['mailgun']['api_key']);
 
+        // Set receiver (overwrite from config)
+        if (!empty($this->config['mailgun']['default_to'])) {
+            $to = $this->config['mailgun']['default_to'];
+        }
+
+        // Set sender-domain
+        $domain = substr($from, strrpos($from, '@') + 1);
+
+        // Check sender-domain is activated (verified) for Mailgun
+        try {
+            // Get domain-item by Mailgun
+            $domainItem = $mailgun->domains()->show($domain);
+
+            // Get state of domain, if not active (not verified) unset FROM-address to default
+            if ($domainItem->getDomain()->getState() != 'active') {
+                $from = $this->config['mailgun']['default_from'];
+                $domain = substr($from, strrpos($from, '@') + 1);
+            }
+        } catch (\Mailgun\Exception\HttpClientException $e) {
+            $from = $this->config['mailgun']['default_from'];
+            $domain = substr($from, strrpos($from, '@') + 1);
+        }
+
         // Compose/send message
-        $mailgun->messages()->send($domain, [
-            'from'    => $from,
-            'to'      => $to,
-            'subject' => $subject,
-            'text'    => $text
-        ]);
+        try {
+            $mailgun->messages()->send($domain, [
+                'from'    => $from,
+                'to'      => $to,
+                'subject' => $subject,
+                'text'    => $text
+            ]);
+        } catch (\Mailgun\Exception\HttpClientException $e) {
+            $this->addMessage($e->getResponseBody());
+            return false;
+        }
+
+        // Return
+        return true;
     }
 }
 
