@@ -101,7 +101,7 @@ class Mail {
 
         // Set sender (overwrite from config)
         if (!empty($this->config['mailgun']['default_from'])) {
-            $to = $this->config['mailgun']['default_from'];
+            $from = $this->config['mailgun']['default_from'];
         }
 
         // Set receiver (overwrite from config)
