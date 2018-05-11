@@ -99,6 +99,11 @@ class Mail {
         // Initialize Mailgun
         $mailgun = Mailgun::create($this->config['mailgun']['api_key']);
 
+        // Set sender (overwrite from config)
+        if (!empty($this->config['mailgun']['default_from'])) {
+            $to = $this->config['mailgun']['default_from'];
+        }
+
         // Set receiver (overwrite from config)
         if (!empty($this->config['mailgun']['default_to'])) {
             $to = $this->config['mailgun']['default_to'];
@@ -112,13 +117,13 @@ class Mail {
             // Get domain-item by Mailgun
             $domainItem = $mailgun->domains()->show($domain);
 
-            // Get state of domain, if not active (not verified) unset FROM-address to default
+            // Get state of domain, if not active (not verified) unset FROM-address to fallback-sender
             if ($domainItem->getDomain()->getState() != 'active') {
-                $from = $this->config['mailgun']['default_from'];
+                $from = $this->config['mailgun']['fallback_from'];
                 $domain = substr($from, strrpos($from, '@') + 1);
             }
         } catch (\Mailgun\Exception\HttpClientException $e) {
-            $from = $this->config['mailgun']['default_from'];
+            $from = $this->config['mailgun']['fallback_from'];
             $domain = substr($from, strrpos($from, '@') + 1);
         }
 
