@@ -938,6 +938,8 @@ abstract class AbstractRepository implements InputFilterAwareInterface
             } else {
                 return $data;
             }
+        } elseif ($output == 'boolean') {
+            return true;
         } else {
             if ($multiple === false) {
                 return current($objects);
