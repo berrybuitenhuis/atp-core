@@ -749,9 +749,13 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                     $match = true;
                 } elseif (!empty($filter["OR"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($filter["OR"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
-                } elseif (stristr($clientFilter['filter'], $filterAssociation['alias'] . ".") && !in_array($filterAssociation['alias'], $joins)) {
+                } elseif (stristr($clientFilter["filter"], $filterAssociation['alias'] . ".") && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
                 } elseif (!empty($defaultFilter["AND"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($defaultFilter["AND"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
+                    $match = true;
+                } elseif (!empty($defaultFilter["OR"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($defaultFilter["OR"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
+                    $match = true;
+                } elseif (!empty($defaultFilter["filter"]) && stristr($defaultFilter["filter"], $filterAssociation['alias'] . ".") && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
                 } elseif (!empty($orderBy)) {
                     foreach ($orderBy AS $orderByField) {
@@ -827,22 +831,48 @@ abstract class AbstractRepository implements InputFilterAwareInterface
             }
         }
         // Set customized default-filter (if available)
-        if (!empty($defaultFilter) && !empty($defaultFilter['AND'])) {
-            $filterConditions = $query->expr()->andX();
-            // Iterate conditions
-            foreach ($defaultFilter['AND'] AS $k => $filterParams) {
-                $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
-                $operator = $filterParams[1];
-                $valueKey = "defaultAnd" . ucfirst(str_replace(".", "", $field)) . $k;
-                if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
+        if (!empty($defaultFilter)) {
+            // Set AND-conditions (if available)
+            if (isset($defaultFilter['AND'])) {
+                $filterConditions = $query->expr()->andX();
+                // Iterate conditions
+                foreach ($defaultFilter['AND'] AS $k => $filterParams) {
+                    $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
+                    $operator = $filterParams[1];
+                    $valueKey = "defaultAnd" . ucfirst(str_replace(".", "", $field)) . $k;
+                    if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
-                // Check if operator is allowed
-                if (!in_array(strtolower($operator), $allowedOperators)) throw new \Exception("Not allowed operator: " . $operator);
-                // Set filter-condition
-                $filterConditions->add($query->expr()->{$operator}($field, ':' . $valueKey));
+                    // Check if operator is allowed
+                    if (!in_array(strtolower($operator), $allowedOperators)) throw new \Exception("Not allowed operator: " . $operator);
+                    // Set filter-condition
+                    $filterConditions->add($query->expr()->{$operator}($field, ':' . $valueKey));
+                }
+                // Add filter-conditions to query
+                $query->andWhere($filterConditions);
             }
-            // Add filter-conditions to query
-            $query->andWhere($filterConditions);
+            // Set OR-conditions (if available)
+            if (isset($defaultFilter['OR'])) {
+                $filterConditions = $query->expr()->andX();
+                // Iterate conditions
+                foreach ($defaultFilter['OR'] AS $k => $filterParams) {
+                    $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
+                    $operator = $filterParams[1];
+                    $valueKey = "defaultOr" . ucfirst(str_replace(".", "", $field)) . $k;
+                    if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
+
+                    // Check if operator is allowed
+                    if (!in_array(strtolower($operator), $allowedOperators)) throw new \Exception("Not allowed operator: " . $operator);
+                    // Set filter-condition
+                    $filterConditions->add($query->expr()->{$operator}($field, ':' . $valueKey));
+                }
+                // Add filter-conditions to query
+                $query->orWhere($filterConditions);
+            }
+            // Set filter (if available)
+            if (isset($defaultFilter['filter'])) {
+                $query->andWhere($defaultFilter['filter']);
+                $parameters = (empty($parameters)) ? $defaultFilter['parameters'] : array_merge($parameters, $defaultFilter['parameters']);
+            }
         }
         // Set client-filter
         if (!empty($clientFilter)) {
