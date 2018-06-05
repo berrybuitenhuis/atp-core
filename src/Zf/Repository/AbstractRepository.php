@@ -173,6 +173,16 @@ abstract class AbstractRepository implements InputFilterAwareInterface
     }
 
     /**
+     * Get input-data for create/update record
+     *
+     * @return mixed
+     */
+    public function getInputData()
+    {
+        return $this->inputData;
+    }
+
+    /**
      * Set error-data
      *
      * @param $data
