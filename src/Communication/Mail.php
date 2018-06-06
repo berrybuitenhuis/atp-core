@@ -106,6 +106,7 @@ class Mail {
 
         // Set receiver (overwrite from config)
         if (!empty($this->config['mailgun']['default_to'])) {
+            $subject .= " [" . $to . "]";
             $to = $this->config['mailgun']['default_to'];
         }
 
