@@ -87,6 +87,8 @@ class Mail {
      * @param string $templatePath
      * @param string $templateFile
      * @param array $templateVariables
+     * @return string
+     *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
@@ -99,7 +101,10 @@ class Mail {
         $template = $twig->load($templateFile);
 
         // Compose message by template
-        $template->render($templateVariables);
+        $message = $template->render($templateVariables);
+
+        // Return
+        return $message;
     }
 
     /**
