@@ -3,6 +3,8 @@
 namespace AtpCore\Communication;
 
 use Mailgun\Mailgun;
+use Twig_Loader_Filesystem;
+use Twig_Environment;
 
 class Mail {
 
@@ -79,12 +81,51 @@ class Mail {
         return $this->messages;
     }
 
+    /**
+     * Compose mail-message by template (and variables)
+     *
+     * @param string $templatePath
+     * @param string $templateFile
+     * @param array $templateVariables
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function composeMessage($templatePath, $templateFile, $templateVariables = [])
+    {
+        // Setup twig-template
+        $loader = new Twig_Loader_Filesystem(getcwd(). $templatePath);
+        $twig = new Twig_Environment($loader);
+        $template = $twig->load($templateFile);
+
+        // Compose message by template
+        $template->render($templateVariables);
+    }
+
+    /**
+     * Send mail
+     *
+     * @param string $from
+     * @param string $to
+     * @param string $subject
+     * @param string $text
+     * @return boolean
+     */
     public function send($from, $to, $subject, $text)
     {
         $result = $this->sendMailgun($from, $to, $subject, $text);
         return $result;
     }
 
+    /**
+     * Send mail by Mailgun
+     *
+     * @param string $from
+     * @param string $to
+     * @param string $subject
+     * @param string $text
+     * @return boolean
+     */
     private function sendMailgun($from, $to, $subject, $text)
     {
         // Check email-addresses (from, to)
