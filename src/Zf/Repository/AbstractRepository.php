@@ -741,7 +741,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
         // Set from
         $query->from($this->objectName, 'f');
         // Set joins (if available/needed)
-        if ((!empty($filter) || !empty($clientFilter) || !empty($defaultFilter) || !empty($orderBy)) && !empty($this->getFilterAssociations())) {
+        if ((!empty($filter) || !empty($clientFilter) || !empty($defaultFilter) || !empty($orderBy) || !empty($groupBy)) && !empty($this->getFilterAssociations())) {
             $joins = [];
             foreach ($this->getFilterAssociations() AS $filterAssociation) {
                 $match = false;
@@ -760,6 +760,12 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                 } elseif (!empty($orderBy)) {
                     foreach ($orderBy AS $orderByField) {
                         if (stristr($orderByField['field'], $filterAssociation['alias'] . ".") && !in_array($filterAssociation['alias'], $joins)) {
+                            $match = true;
+                        }
+                    }
+                } elseif (!empty($groupBy)) {
+                    foreach ($groupBy AS $groupByField) {
+                        if (stristr($groupByField, $filterAssociation['alias'] . ".") && !in_array($filterAssociation['alias'], $joins)) {
                             $match = true;
                         }
                     }
