@@ -17,7 +17,9 @@
         "guzzlehttp/psr7": "^1.4",
         "mailgun/mailgun-php": "^2.5",
         "php-http/curl-client": "^v1.7",
-        "twig/twig": "^v2.4"
+        "twig/twig": "^v2.4",
+        "zendframework/zendservice-apple-apns": "1.2.0",
+        "zendframework/zendservice-google-gcm": "1.0.3"
     },
     "autoload": {
         "psr-4": {
