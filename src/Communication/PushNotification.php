@@ -164,42 +164,6 @@ class PushNotification {
                 $this->addMessage($e->getMessage());
                 return false;
             }
-        } elseif (strtolower($platform) == 'android') {
-            $client = new GcmClient();
-
-            $tmp = new \Zend\Http\Client(null, array(
-                'adapter' => 'Zend\Http\Client\Adapter\Socket',
-                'sslverifypeer' => false
-            ));
-            $client->setHttpClient($tmp);
-            $client->setApiKey($config['android']['apiKey']);
-
-            $msg = new GcmMessage();
-
-            // up to 100 registration ids can be sent to at once
-            $msg->setRegistrationIds(array($token));
-
-            // optional fields
-            $msg->setData(array(
-                'message' => $message,
-                'extra_data' => $options,
-            ));
-            $msg->setDelayWhileIdle(false);
-            $msg->setTimeToLive(600);
-            $msg->setDryRun(false);
-
-            try {
-                $response = $client->send($msg);
-            } catch (GcmRuntimeException $e) {
-                $this->addMessage($e->getMessage());
-                return false;
-            }
-
-            if ($response->getSuccessCount() == 1) {
-                return true;
-            } else {
-                return false;
-            }
         } elseif (strtolower($platform) == 'onesignal') {
             $notificationFields = array(
                 'app_id' => $config['oneSignal']['appId'],
