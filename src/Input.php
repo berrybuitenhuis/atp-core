@@ -36,20 +36,15 @@ class Input
      * Decode x-form-encoded data
      *
      * @param string $dataString, example test=1&test2=3&data=1+2
-     * @param boolean $urlDecode, url-decode value
      * @return array
      */
-    public function formDecode($dataString, $urlDecode = false)
+    public function formDecode($dataString)
     {
         if (empty($dataString)) return array();
         if (self::isJson($dataString)) return json_decode($dataString, true);
 
-        $output = array();
-        $dataElements = explode("&", $dataString);
-        foreach ($dataElements AS $dataElement) {
-            $data = explode("=", $dataElement);
-            $output[$data[0]] = ($urlDecode === true) ? urldecode($data[1]) : $data[1];
-        }
+        // Parse string into variables
+        parse_str($dataString, $output);
 
         return $output;
     }
