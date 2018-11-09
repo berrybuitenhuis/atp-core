@@ -38,7 +38,7 @@ class Input
      * @param string $dataString, example test=1&test2=3&data=1+2
      * @return array
      */
-    public function formDecode($dataString)
+    public static function formDecode($dataString)
     {
         if (empty($dataString)) return array();
         if (self::isJson($dataString)) return json_decode($dataString, true);
@@ -78,7 +78,7 @@ class Input
      * @param $params
      * @return array
      */
-    public function setParams($params)
+    public static function setParams($params)
     {
         $params->fields = (isset($params->fields)) ? json_decode($params->fields, true) : null;
         $params->defaultFilter = (isset($params->defaultFilter)) ? json_decode($params->defaultFilter, true) : null;
