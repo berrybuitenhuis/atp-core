@@ -7,7 +7,7 @@ use Zend\Router\Http\Segment;
 class Route
 {
 
-    public function getChildRoutes($controllerAliases)
+    public static function getChildRoutes($controllerAliases)
     {
         // Create child-routes
         $childRoutes = [];
