@@ -15,7 +15,7 @@ class PasswordInputFilter
      * @param integer $minLength
      * @return void|InputFilter
      */
-    public function getFilter($name, $required = false, $minLength = 8, $minUppercase = 1, $minLowercase = 1, $minDigits = 1, $minSpecialCharacters = 1)
+    public static function getFilter($name, $required = false, $minLength = 8, $minUppercase = 1, $minLowercase = 1, $minDigits = 1, $minSpecialCharacters = 1)
     {
         if ($name == null) {
             return;

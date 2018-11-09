@@ -55,7 +55,7 @@ class Input
      * @param string $dataString
      * @return boolean
      */
-    public function isJson($dataString)
+    public static function isJson($dataString)
     {
         return is_string($dataString) && is_array(json_decode($dataString, true)) && (json_last_error() == JSON_ERROR_NONE) ? true : false;
     }
