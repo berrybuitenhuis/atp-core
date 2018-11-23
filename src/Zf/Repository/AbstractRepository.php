@@ -679,7 +679,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
      */
     public function getList($output = 'object', $fields = NULL, $defaultFilter = NULL, $filter = NULL, $groupBy = null, $having = null, $orderBy = NULL, $limitRecords = 25, $offset = 0, $paginator = false, $debug = false)
     {
-        if (!empty($limitRecords)) $limit['limit'] = (int) $limitRecords;
+        if (!empty((int) $limitRecords)) $limit['limit'] = (int) $limitRecords;
         else $limit['limit'] = 25;
         $limit['offset'] = $offset;
         if (!is_array($filter)) $filter = array();
