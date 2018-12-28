@@ -526,7 +526,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                     }
                 }
 
-                if (is_array($fieldParts) && !empty($fieldParts)) {
+                if (isset($fieldParts) && is_array($fieldParts) && !empty($fieldParts)) {
                     // Sort in reverse order to set proper values
                     krsort($fieldParts);
 
