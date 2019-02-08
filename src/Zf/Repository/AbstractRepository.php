@@ -939,7 +939,11 @@ abstract class AbstractRepository implements InputFilterAwareInterface
             $paginatorData['recordsPage'] = (int) $limit['limit'];
 
             // Get "page"-results
-            $results = $query->getQuery()->getResult();
+            if ($paginatorData['records'] > 0) {
+                $results = $query->getQuery()->getResult();
+            } else {
+                $results = [];
+            }
 
             // Return
             return array("paginator"=>$paginatorData, "results"=>$results);
