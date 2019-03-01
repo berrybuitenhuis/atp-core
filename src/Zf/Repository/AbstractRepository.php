@@ -49,6 +49,11 @@ abstract class AbstractRepository implements InputFilterAwareInterface
     private $messages;
 
     /**
+     * @var Method-check
+     */
+    private $methodCheck;
+
+    /**
      * @var Error-data
      */
     private $errorData;
@@ -65,6 +70,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
         }
         $this->messages = [];
         $this->errorData = [];
+        $this->methodCheck = [];
     }
 
     /**
@@ -461,10 +467,17 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                 } else {
                     $fieldValue = "";
 
+                    // Method-check
+                    $func = 'conv' . ucfirst($field);
+                    if (!isset($this->methodCheck[$repository]) || !isset($this->methodCheck[$repository][$func])) {
+                        if (!isset($this->methodCheck[$repository])) $this->methodCheck[$repository] = [];
+                        $this->methodCheck[$repository][$func] = method_exists($repository, $func);
+                    }
+                    $methodConvCheck = $this->methodCheck[$repository][$func];
+
                     if (is_object($data)) {
                         // Check if convert-function exists (in corresponding repository-class)
-                        $func = 'conv' . ucfirst($field);
-                        if (method_exists($repository, $func)) {
+                        if ($methodConvCheck == true) {
                             $fieldValue = $repository::$func($data, $this->config['application']);
                         } else {
                             // Check if get-function exists (in entity-class)
@@ -475,8 +488,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                         }
                     } elseif (is_array($data)) {
                         // Check if convert-function exists (in corresponding repository-class)
-                        $func = 'conv' . ucfirst($field);
-                        if (method_exists($repository, $func)) {
+                        if ($methodConvCheck == true) {
                             $fieldValue = $repository::$func($data, $this->config['application']);
                         } else {
                             if (isset($data[$field])) {
