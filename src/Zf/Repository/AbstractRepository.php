@@ -761,11 +761,15 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                     $match = true;
                 } elseif (!empty($filter["OR"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($filter["OR"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
+                } elseif (!empty($filter["OR_AND"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($filter["OR_AND"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
+                    $match = true;
                 } elseif (!empty($clientFilter["filter"]) && stristr($clientFilter["filter"], $filterAssociation['alias'] . ".") && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
                 } elseif (!empty($defaultFilter["AND"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($defaultFilter["AND"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
                 } elseif (!empty($defaultFilter["OR"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($defaultFilter["OR"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
+                    $match = true;
+                } elseif (!empty($defaultFilter["OR_AND"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($defaultFilter["OR_AND"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
                 } elseif (!empty($defaultFilter["filter"]) && stristr($defaultFilter["filter"], $filterAssociation['alias'] . ".") && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
@@ -847,6 +851,24 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                 // Add filter-conditions to query
                 $query->orWhere($filterConditions);
             }
+            // Set OR-conditions (if available)
+            if (isset($filter['OR_AND'])) {
+                $filterConditions = $query->expr()->andX();
+                // Iterate conditions
+                foreach ($filter['OR_AND'] AS $k => $filterParams) {
+                    $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
+                    $operator = $filterParams[1];
+                    $valueKey = "customOrAnd" . ucfirst(str_replace(".", "", $field)) . $k;
+                    if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
+
+                    // Check if operator is allowed
+                    if (!in_array(strtolower($operator), $allowedOperators)) throw new \Exception("Not allowed operator: " . $operator);
+                    // Set filter-condition
+                    $filterConditions->add($query->expr()->{$operator}($field, ':' . $valueKey));
+                }
+                // Add filter-conditions to query
+                $query->orWhere($filterConditions);
+            }
         }
         // Set customized default-filter (if available)
         if (!empty($defaultFilter)) {
@@ -876,6 +898,24 @@ abstract class AbstractRepository implements InputFilterAwareInterface
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
                     $valueKey = "defaultOr" . ucfirst(str_replace(".", "", $field)) . $k;
+                    if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
+
+                    // Check if operator is allowed
+                    if (!in_array(strtolower($operator), $allowedOperators)) throw new \Exception("Not allowed operator: " . $operator);
+                    // Set filter-condition
+                    $filterConditions->add($query->expr()->{$operator}($field, ':' . $valueKey));
+                }
+                // Add filter-conditions to query
+                $query->orWhere($filterConditions);
+            }
+            // Set OR-conditions (if available)
+            if (isset($defaultFilter['OR_AND'])) {
+                $filterConditions = $query->expr()->andX();
+                // Iterate conditions
+                foreach ($defaultFilter['OR_AND'] AS $k => $filterParams) {
+                    $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
+                    $operator = $filterParams[1];
+                    $valueKey = "defaultOrAnd" . ucfirst(str_replace(".", "", $field)) . $k;
                     if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
