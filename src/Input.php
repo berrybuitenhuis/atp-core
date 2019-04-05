@@ -87,7 +87,7 @@ class Input
         $params->having = (isset($params->having)) ? json_decode($params->having, true) : null;
         $params->orderBy = (isset($params->orderBy)) ? json_decode($params->orderBy, true) : null;
         $params->limit = (isset($params->limit)) ? (int) $params->limit : null;
-        $params->offset = (isset($params->page)) ? ($params->page - 1) * $params->limit : null;
+        $params->offset = (isset($params->page) && (int) $params->page > 1) ? ((int) $params->page - 1) * $params->limit : null;
         $params->debug = (isset($params->debug) && ($params->debug == 'true' || $params->debug == 1)) ? true : false;
         $params->customRequestId = (isset($params->customRequestId) && !empty($params->customRequestId)) ? $params->customRequestId : null;
 
