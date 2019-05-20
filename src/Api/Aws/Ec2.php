@@ -4,7 +4,7 @@
  */
 namespace AtpCore\Api\Aws;
 
-class Api
+class Ec2
 {
 
     private $config;
