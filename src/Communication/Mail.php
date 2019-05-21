@@ -114,11 +114,12 @@ class Mail {
      * @param string $to
      * @param string $subject
      * @param string $text
+     * @param string $html
      * @return boolean
      */
-    public function send($from, $to, $subject, $text)
+    public function send($from, $to, $subject, $text, $html = null)
     {
-        $result = $this->sendMailgun($from, $to, $subject, $text);
+        $result = $this->sendMailgun($from, $to, $subject, $text, $html);
         return $result;
     }
 
@@ -129,9 +130,10 @@ class Mail {
      * @param string $to
      * @param string $subject
      * @param string $text
+     * @param string $html
      * @return boolean
      */
-    private function sendMailgun($from, $to, $subject, $text)
+    private function sendMailgun($from, $to, $subject, $text, $html = null)
     {
         // Check email-addresses (from, to)
         if (filter_var($from, FILTER_VALIDATE_EMAIL) === false) {
@@ -180,7 +182,8 @@ class Mail {
                 'from'    => $from,
                 'to'      => $to,
                 'subject' => $subject,
-                'text'    => $text
+                'text'    => $text,
+                'html'    => $html,
             ]);
         } catch (\Mailgun\Exception\HttpClientException $e) {
             $this->addMessage($e->getResponseBody());
