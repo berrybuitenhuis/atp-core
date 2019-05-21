@@ -130,19 +130,18 @@ class Sqs
     /**
      * Send message to queue
      * @param string $queueName
-     * @param string $message
+     * @param string|array $message
      */
     public function sendMessage($queueName, $message)
     {
         $queueUrl = $this->getQueueUrl($queueName);
         if ($queueUrl !== false) {
-            $message = [
-                            "QueueUrl" => $queueUrl,
-                            "MessageBody" => $message
-            ];
+            $sqsMessage = [];
+            $sqsMessage["QueueUrl"] = $queueUrl;
+            $sqsMessage["MessageBody"] = (is_array($message)) ? json_encode($message) : $message;
 
             try {
-                $this->client->sendMessage($message);
+                $this->client->sendMessage($sqsMessage);
                 return true;
             } catch (\Exception $e) {
                 $this->setErrorData($e->getMessage());
