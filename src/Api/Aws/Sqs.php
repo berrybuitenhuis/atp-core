@@ -96,6 +96,8 @@ class Sqs
 
     /**
      * Get list of queues
+     * 
+     * @return \Aws\Result
      */
     public function getQueueList()
     {
@@ -104,7 +106,9 @@ class Sqs
 
     /**
      * Get queue-details by name
+     *
      * @param string $queueName
+     * @return bool|\Aws\Result
      */
     public function getQueue($queueName)
     {
@@ -117,8 +121,40 @@ class Sqs
     }
 
     /**
-     * Get URL for specific queue
+     * Get message from queue
+     *
      * @param string $queueName
+     * @param int $maxMessages
+     * @return bool|array
+     */
+    public function getQueueMessages($queueName, $maxMessages = 10)
+    {
+        $queueUrl = $this->getQueueUrl($queueName);
+        if ($queueUrl !== false) {
+            try {
+                $result = $this->client->receiveMessage([
+                    'AttributeNames' => ['SentTimestamp'],
+                    'MaxNumberOfMessages' => $maxMessages,
+                    'MessageAttributeNames' => ['All'],
+                    'QueueUrl' => $queueUrl,
+                    'WaitTimeSeconds' => 0,
+                ]);
+
+                // Return
+                return $result->get('Messages');
+            } catch (\Exception $e) {
+                // Return
+                $this->setErrorData($e->getMessage());
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Get URL for specific queue
+
+     * @param string $queueName
+     * @return bool|string
      */
     public function getQueueUrl($queueName)
     {
@@ -128,9 +164,28 @@ class Sqs
     }
 
     /**
+     * Delete message from queue
+     *
+     * @param string $queueName
+     * @param string $receiptHandle
+     */
+    public function deleteQueueMessage($queueName, $receiptHandle)
+    {
+        $queueUrl = $this->getQueueUrl($queueName);
+        if ($queueUrl !== false) {
+            $this->client->deleteMessage([
+                'QueueUrl' => $queueUrl,
+                'ReceiptHandle' => $receiptHandle
+            ]);
+        }
+    }
+
+    /**
      * Send message to queue
+     *
      * @param string $queueName
      * @param string|array $message
+     * @return bool
      */
     public function sendMessage($queueName, $message)
     {
