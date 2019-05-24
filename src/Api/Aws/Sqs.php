@@ -96,7 +96,7 @@ class Sqs
 
     /**
      * Get list of queues
-     * 
+     *
      * @return \Aws\Result
      */
     public function getQueueList()
