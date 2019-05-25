@@ -4,10 +4,11 @@
  */
 namespace AtpCore\Api\OneSignal;
 
+use AtpCore\Api\OneSignal\Entity\Notification;
+
 class Api
 {
 
-    private $appId;
     private $client;
     private $clientHeaders;
     private $messages;
@@ -18,14 +19,10 @@ class Api
      *
      * @param string $hostname
      * @param string $apiKey
-     * @param string $appId
      * @param boolean $debug
      */
-    public function __construct($hostname, $apiKey, $appId, $debug = false)
+    public function __construct($hostname, $apiKey, $debug = false)
     {
-        // Set application
-        $this->appId = $appId;
-
         // Set client
         $this->client = new \Guzzle\Http\Client($hostname, array('http_errors'=>false, 'debug'=>$debug));
 
@@ -34,7 +31,6 @@ class Api
             'Authorization' => 'Basic ' . $apiKey,
             'Content-Type' => 'application/json',
         );
-        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
 
         // Set error-messages
         $this->messages = array();
@@ -95,13 +91,12 @@ class Api
     }
 
     /**
-     * Create (send) notification
+     * Send notification
      *
-     * @param int $stocknumber
-     * @param string $site
-     * @return boolean|array
+     * @param Notification $data
+     * @return boolean|object
      */
-    public function createNotification(\AtpCore\Api\OneSignal\Entity\Notification $data)
+    public function send(\AtpCore\Api\OneSignal\Entity\Notification $data)
     {
         // Convert input-data into body
         $body = $data->encode();

@@ -2,15 +2,6 @@
 
 namespace AtpCore\Communication;
 
-use ZendService\Apple\Apns\Client\Message as ApnsClient;
-use ZendService\Apple\Apns\Message as ApnsMessage;
-use ZendService\Apple\Apns\Response\Message as ApnsResponse;
-use ZendService\Apple\Exception\RuntimeException as ApnsRuntimeException;
-
-use ZendService\Google\Gcm\Client as GcmClient;
-use ZendService\Google\Gcm\Message as GcmMessage;
-use ZendService\Google\Exception\RuntimeException as GcmRuntimeException;
-
 class PushNotification {
 
     private $config;
@@ -87,6 +78,7 @@ class PushNotification {
 
     /**
      * Send push-notification to iOS/Android device
+     *
      * @param string $platform
      * @param string $token
      * @param string $message
@@ -97,74 +89,11 @@ class PushNotification {
     {
         $config = $this->config['push_notification'];
 
-        if (strtolower($platform) == 'ios') {
-            $host = ($config['ios']['host'] == 'production') ? ApnsClient::PRODUCTION_URI : ApnsClient::SANDBOX_URI;
-            $certificate = $config['ios']['certificatePath'];
-            $password = $config['ios']['certificatePassword'];
+        if (strtolower($platform) == 'onesignal') {
+            // Initialize client
+            $client = new \AtpCore\Api\OneSignal\Api($config['oneSignal']['host'], $config['oneSignal']['apiKey']);
 
-            $client = new ApnsClient();
-            $client->open($host, $certificate, $password);
-
-            $uniqueId = mt_rand(1,9999);
-            $msg = new ApnsMessage();
-            $msg->setId($uniqueId);
-            $msg->setToken($token);
-            $msg->setBadge(1);
-            //$msg->setSound('bingbong.aiff');
-            $msg->setAlert($message);
-            $msg->setCustom(array("extra_data"=>$options));
-
-            try {
-                $response = $client->send($msg);
-                $client->close();
-                if ($response->getCode() != ApnsResponse::RESULT_OK) {
-                    switch ($response->getCode()) {
-                        case ApnsResponse::RESULT_PROCESSING_ERROR:
-                            // you may want to retry
-                            $this->addMessage('RESULT_PROCESSING_ERROR');
-                            return false;
-                        case ApnsResponse::RESULT_MISSING_TOKEN:
-                            // you were missing a token
-                            $this->addMessage('RESULT_MISSING_TOKEN');
-                            return false;
-                        case ApnsResponse::RESULT_MISSING_TOPIC:
-                            // you are missing a message id
-                            $this->addMessage('RESULT_MISSING_TOPIC');
-                            return false;
-                        case ApnsResponse::RESULT_MISSING_PAYLOAD:
-                            // you need to send a payload
-                            $this->addMessage('RESULT_MISSING_PAYLOAD');
-                            return false;
-                        case ApnsResponse::RESULT_INVALID_TOKEN_SIZE:
-                            // the token provided was not of the proper size
-                            $this->addMessage('RESULT_INVALID_TOKEN_SIZE');
-                            return false;
-                        case ApnsResponse::RESULT_INVALID_TOPIC_SIZE:
-                            // the topic was too long
-                            $this->addMessage('RESULT_INVALID_TOPIC_SIZE');
-                            return false;
-                        case ApnsResponse::RESULT_INVALID_PAYLOAD_SIZE:
-                            // the payload was too large
-                            $this->addMessage('RESULT_INVALID_PAYLOAD_SIZE');
-                            return false;
-                        case ApnsResponse::RESULT_INVALID_TOKEN:
-                            // the token was invalid; remove it from your system
-                            $this->addMessage('RESULT_INVALID_TOKEN');
-                            return false;
-                        case ApnsResponse::RESULT_UNKNOWN_ERROR:
-                            // apple didn't tell us what happened
-                            $this->addMessage('RESULT_UNKNOWN_ERROR');
-                            return false;
-                    }
-                } else {
-                    return true;
-                }
-            } catch (ApnsRuntimeException $e) {
-                $client->close();
-                $this->addMessage($e->getMessage());
-                return false;
-            }
-        } elseif (strtolower($platform) == 'onesignal') {
+            // Setup notification
             $notificationFields = array(
                 'app_id' => $config['oneSignal']['appId'],
                 'include_player_ids' => array($token),
@@ -173,26 +102,18 @@ class PushNotification {
             );
             $notification = new \AtpCore\Api\OneSignal\Entity\Notification($notificationFields);
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $config['oneSignal']['host'] . "notifications");
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8',
-                'Authorization: Basic ' . $config['oneSignal']['apiKey']));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-            curl_setopt($ch, CURLOPT_HEADER, FALSE);
-            curl_setopt($ch, CURLOPT_POST, TRUE);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $notification->encode());
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-
-            $response = curl_exec($ch);
-            curl_close($ch);
-
-            $response = json_decode($response);
-            if (isset($response->recipients) && $response->recipients == 1) {
-                return true;
-            } else {
-                $this->addMessage(current($response->errors));
-                return false;
+            // Send notification
+            $result = $client->send($notification);
+            if ($result === false) {
+                $this->setErrorData($client->getErrorData());
+                $this->setMessages($client->getMessages());
             }
+
+            // Return
+            return $result;
+        } else {
+            $this->addMessage("Unknown platform");
+            return false;
         }
     }
 
