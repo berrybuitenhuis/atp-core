@@ -80,18 +80,21 @@ class PushNotification {
      * Send push-notification to iOS/Android device
      *
      * @param string $platform
-     * @param string $token
+     * @param string|array $tokens
      * @param string $message
      * @param array $options
      * @return bool
      */
-    public function send($platform = 'ios', $token, $message, $options = NULL)
+    public function send($platform = 'ios', $tokens, $message, $options = NULL)
     {
         if (strtolower($platform) == 'onesignal') {
             // Set receiver (overwrite from config)
             if (!empty($this->config['oneSignal']['default_to'])) {
-                $token = $this->config['oneSignal']['default_to'];
+                $tokens = array($this->config['oneSignal']['default_to']);
             }
+
+            // Convert token to array
+            if (!is_array($tokens) && is_string($tokens)) $tokens = array($tokens);
 
             // Initialize client
             $client = new \AtpCore\Api\OneSignal\Api($this->config['oneSignal']['host'], $this->config['oneSignal']['apiKey']);
@@ -99,7 +102,7 @@ class PushNotification {
             // Setup notification
             $notificationFields = array(
                 'app_id' => $this->config['oneSignal']['appId'],
-                'include_player_ids' => array($token),
+                'include_player_ids' => $tokens,
                 'data' => $options,
                 'contents' => array("en"=>$message, "nl"=>$message)
             );
