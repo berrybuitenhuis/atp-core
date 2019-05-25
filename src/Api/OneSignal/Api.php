@@ -24,7 +24,7 @@ class Api
     public function __construct($hostname, $apiKey, $debug = false)
     {
         // Set client
-        $this->client = new \Guzzle\Http\Client($hostname, array('http_errors'=>false, 'debug'=>$debug));
+        $this->client = new \GuzzleHttp\Client(array('base_uri'=>$hostname, 'http_errors'=>false, 'debug'=>$debug));
 
         // Set default header for client-requests
         $this->clientHeaders = array(
@@ -102,15 +102,13 @@ class Api
         $body = $data->encode();
 
         $requestHeader = $this->clientHeaders;
-        $request = $this->client->post('/notifications', $requestHeader, $body);
-        $result = $request->send();
-
+        $result = $this->client->post('notifications', ['headers'=>$requestHeader, 'body'=>$body]);
         $response = json_decode((string) $result->getBody());
+
+        // Return
         if (!isset($response->errors) || empty($response->errors)) {
-            // Return
             return $response;
         } else {
-            // Return
             $this->setErrorData($response);
             $this->setMessages($response->errors);
             return false;

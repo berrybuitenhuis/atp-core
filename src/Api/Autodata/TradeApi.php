@@ -137,13 +137,12 @@ class TradeApi
 
         $requestHeader = ["Content-Type: application/json"];
         $result = $this->client->post('oauth/access_token', ['headers'=>$requestHeader, 'body'=>json_encode($body)]);
-
         $response = json_decode((string) $result->getBody());
+
+        // Return
         if (!isset($response->errors) || empty($response->errors)) {
-            // Return
             return $response->token_type . " " . $response->access_token;
         } else {
-            // Return
             $this->setErrorData($response);
             $this->setMessages($response->errors);
             return false;
