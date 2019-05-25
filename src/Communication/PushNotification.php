@@ -90,6 +90,11 @@ class PushNotification {
         $config = $this->config['push_notification'];
 
         if (strtolower($platform) == 'onesignal') {
+            // Set receiver (overwrite from config)
+            if (!empty($config['oneSignal']['default_to'])) {
+                $token = $config['oneSignal']['default_to'];
+            }
+
             // Initialize client
             $client = new \AtpCore\Api\OneSignal\Api($config['oneSignal']['host'], $config['oneSignal']['apiKey']);
 
