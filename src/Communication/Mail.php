@@ -4,6 +4,7 @@ namespace AtpCore\Communication;
 
 use Mailgun\Mailgun;
 use Twig_Loader_Filesystem;
+use Twig_Loader_Array;
 use Twig_Environment;
 
 class Mail {
@@ -105,6 +106,30 @@ class Mail {
 
         // Return
         return $message;
+    }
+
+    /**
+     * Compose text
+     *
+     * @param string $text
+     * @param array $variables
+     * @return string
+     *
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function composeText($text, $variables = [])
+    {
+        // Setup twig-loader
+        $loader = new Twig_Loader_Array(['text' => $text]);
+        $twig = new Twig_Environment($loader);
+
+        // Compose text
+        $text = $twig->render('text', $variables);
+
+        // Return
+        return $text;
     }
 
     /**
