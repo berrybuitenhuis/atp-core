@@ -54,7 +54,7 @@ class Date
         }
 
         // Return (new) date
-        return $date->add($interval);
+        return $newDate;
     }
 
     /**
