@@ -97,46 +97,46 @@ class Date
             // Check Easter (Pasen)
             $easter = new \DateTime();
             $easter->setTimestamp(easter_date($date->format("Y")));
-            if ($date == $easter) return true;
+            if ($date->format("Y-m-d") == $easter->format("Y-m-d")) return true;
             $easterMonday = clone $easter;
             $easterMonday->add(new \DateInterval('P1D'));
-            if ($date == $easterMonday) return true;
+            if ($date->format("Y-m-d") == $easterMonday->format("Y-m-d")) return true;
 
             // Check Ascension Day (Hemelvaartsdag)
             $ascensionDay = clone $easter;
             $ascensionDay->add(new \DateInterVal('P39D'));
-            if ($date == $ascensionDay) return true;
+            if ($date->format("Y-m-d") == $ascensionDay->format("Y-m-d")) return true;
 
             // Check Pentecost (Pinksteren)
             $pentecost = clone $ascensionDay;
             $pentecost->add(new \DateInterVal('P10D'));
-            if ($date == $pentecost) return true;
+            if ($date->format("Y-m-d") == $pentecost->format("Y-m-d")) return true;
             $pentecostMonday = clone $pentecost;
             $pentecostMonday->add(new \DateInterVal('P1D'));
-            if ($date == $pentecostMonday) return true;
+            if ($date->format("Y-m-d") == $pentecostMonday->format("Y-m-d")) return true;
 
             // Check Kingsday (Koningsdag)
             $kingsDay = new \DateTime($date->format("Y") . "-04-27");
             if ($kingsDay->format('D') === 'Sun') {
                 $kingsDay->sub(new \DateInterval('P1D'));
             }
-            if ($date == $kingsDay) return true;
+            if ($date->format("Y-m-d") == $kingsDay->format("Y-m-d")) return true;
 
             // Check Liberation Day (Bevrijdingsdag)
             if (($date->format("Y") % 5) == 0) {
                 $liberationDay = new \DateTime($date->format("Y") . "-05-05");
-                if ($date == $liberationDay) return true;
+                if ($date->format("Y-m-d") == $liberationDay->format("Y-m-d")) return true;
             }
 
             // Check Christmas Days (Kerstmis)
             $christmasDay = new \DateTime($date->format("Y") . "-12-25");
-            if ($date == $christmasDay) return true;
+            if ($date->format("Y-m-d") == $christmasDay->format("Y-m-d")) return true;
             $christmasDay2 = new \DateTime($date->format("Y") . "-12-26");
-            if ($date == $christmasDay2) return true;
+            if ($date->format("Y-m-d") == $christmasDay2->format("Y-m-d")) return true;
 
             // Check New Years Day(Nieuwjaarsdag)
             $newYearsDay = new \DateTime($date->format("Y") . "-01-01");
-            if ($date == $newYearsDay) return true;
+            if ($date->format("Y-m-d") == $newYearsDay->format("Y-m-d")) return true;
         }
 
         // Return
