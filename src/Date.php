@@ -5,6 +5,67 @@ namespace AtpCore;
 class Date
 {
 
+    /**
+     * Add interval (minutes, hours, days) to date-time
+     *
+     * @param \DateTime $date
+     * @param int $interval
+     * @param string $format
+     * @param array $weekendDays
+     * @return false|string
+     */
+    public function addInterval(\DateTime $date, $interval, $format = "seconds", $weekendDays = null)
+    {
+        // Set interval (in seconds) by format
+        switch (strtolower($format)) {
+            case "seconds":
+            case "seconden":
+            case "sec":
+                $numberOfDays = floor($interval / (60*60*24));
+                $intervalSeconds = $interval - ($numberOfDays * 60*60*24);
+                break;
+            case "minutes":
+            case "minuten":
+            case "min":
+                $numberOfDays = floor($interval / (60*24));
+                $intervalSeconds = ($interval - ($numberOfDays * 60*24)) * 60;
+                break;
+            case "hours":
+            case "uren":
+            case "u":
+                $numberOfDays = floor($interval / 24);
+                $intervalSeconds = ($interval - ($numberOfDays * 24)) * (60*60);
+                break;
+            case "days":
+            case "dagen":
+            case "d":
+                $numberOfDays = $interval;
+                $intervalSeconds = 0;
+                break;
+        }
+
+        // Add (number of) days to date
+        $newDate = $this->addWorkDays($date, $numberOfDays, $weekendDays);
+
+        // Add remainder seconds
+        if ($intervalSeconds > 0) {
+            $interval = new \DateInterval("PT" . $intervalSeconds . "S");
+            $newDate->add($interval);
+        }
+
+        // Return (new) date
+        return $date->add($interval);
+    }
+
+    /**
+     * Add number of workdays to date
+     *
+     * @param \DateTime $date
+     * @param int $numberOfDays
+     * @param array $weekendDays
+     * @return \DateTime
+     * @throws \Exception
+     */
     public function addWorkDays(\DateTime $date, $numberOfDays, $weekendDays = null)
     {
         for ($i = 1; $i <= $numberOfDays; $i++) {
@@ -18,6 +79,14 @@ class Date
         return $date;
     }
 
+    /**
+     * Check if date is day-off
+     *
+     * @param \DateTime $date
+     * @param array $weekendDays
+     * @return boolean
+     * @throws \Exception
+     */
     public function isDayOff (\DateTime $date, $weekendDays = null)
     {
         if (!is_array($weekendDays)) $weekendDays = array("sun");
