@@ -136,7 +136,7 @@ class Mail {
      * Send mail
      *
      * @param string $from
-     * @param string $to
+     * @param string|array $to
      * @param string $subject
      * @param string $text
      * @param string $html
@@ -152,7 +152,7 @@ class Mail {
      * Send mail by Mailgun
      *
      * @param string $from
-     * @param string $to
+     * @param string|array $to
      * @param string $subject
      * @param string $text
      * @param string $html
@@ -164,9 +164,16 @@ class Mail {
         if (filter_var($from, FILTER_VALIDATE_EMAIL) === false) {
             $this->addMessage("Invalid emailaddress (from)");
             return false;
-        } elseif (filter_var($to, FILTER_VALIDATE_EMAIL) === false) {
+        } elseif (!is_array($to) && filter_var($to, FILTER_VALIDATE_EMAIL) === false) {
             $this->addMessage("Invalid emailaddress (to)");
             return false;
+        } elseif (is_array($to)) {
+            foreach ($to AS $recipient) {
+                if (filter_var($recipient, FILTER_VALIDATE_EMAIL) === false) {
+                    $this->addMessage("Invalid emailaddress (to)");
+                    return false;
+                }
+            }
         }
 
         // Initialize Mailgun
@@ -179,7 +186,7 @@ class Mail {
 
         // Set receiver (overwrite from config)
         if (!empty($this->config['mailgun']['default_to'])) {
-            $subject .= " [" . $to . "]";
+            $subject .= " [" . implode(", ", $to) . "]";
             $to = $this->config['mailgun']['default_to'];
         }
 
@@ -205,7 +212,7 @@ class Mail {
         try {
             $mailgun->messages()->send($domain, [
                 'from'    => $from,
-                'to'      => $to,
+                'to'      => (is_array($to)) ? implode(",", $to) : $to,
                 'subject' => $subject,
                 'text'    => $text,
                 'html'    => $html,
