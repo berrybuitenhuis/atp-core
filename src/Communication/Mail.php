@@ -166,6 +166,9 @@ class Mail {
         if (filter_var($from, FILTER_VALIDATE_EMAIL) === false) {
             $this->addMessage("Invalid emailaddress (from)");
             return false;
+        } elseif (!empty($from_alternative) && filter_var($from_alternative, FILTER_VALIDATE_EMAIL) === false) {
+            $this->addMessage("Invalid emailaddress (from_alternative)");
+            return false;
         } elseif (!is_array($to) && filter_var($to, FILTER_VALIDATE_EMAIL) === false) {
             $this->addMessage("Invalid emailaddress (to)");
             return false;
