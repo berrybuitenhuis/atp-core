@@ -136,15 +136,16 @@ class Mail {
      * Send mail
      *
      * @param string $from
+     * @param string $from_alternative if from-address not active
      * @param string|array $to
      * @param string $subject
      * @param string $text
      * @param string $html
      * @return boolean
      */
-    public function send($from, $to, $subject, $text, $html = null)
+    public function send($from, $from_alternative, $to, $subject, $text, $html = null)
     {
-        $result = $this->sendMailgun($from, $to, $subject, $text, $html);
+        $result = $this->sendMailgun($from, $from_alternative, $to, $subject, $text, $html);
         return $result;
     }
 
@@ -152,13 +153,14 @@ class Mail {
      * Send mail by Mailgun
      *
      * @param string $from
+     * @param string $from_alternative if from-address not active
      * @param string|array $to
      * @param string $subject
      * @param string $text
      * @param string $html
      * @return boolean
      */
-    private function sendMailgun($from, $to, $subject, $text, $html = null)
+    private function sendMailgun($from, $from_alternative, $to, $subject, $text, $html = null)
     {
         // Check email-addresses (from, to)
         if (filter_var($from, FILTER_VALIDATE_EMAIL) === false) {
@@ -182,6 +184,18 @@ class Mail {
         // Set sender (overwrite from config)
         if (!empty($this->config['mailgun']['default_from'])) {
             $from = $this->config['mailgun']['default_from'];
+        } else {
+            $tmp = explode("@", $from);
+
+            // Check if sender-mailaddress is verified (by DNS - https://documentation.mailgun.com/en/latest/quickstart-sending.html#verify-your-domain)
+            try {
+                $domain = $mailgun->domains()->show($tmp[1]);
+                if ($domain->getDomain()->getState() != 'active') {
+                    $from = $from_alternative;
+                }
+            } catch (\Exception $e) {
+                $from = $from_alternative;
+            }
         }
 
         // Set receiver (overwrite from config)
