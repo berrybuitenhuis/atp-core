@@ -3,9 +3,9 @@
 namespace AtpCore\Communication;
 
 use Mailgun\Mailgun;
-use Twig_Loader_Filesystem;
-use Twig_Loader_Array;
-use Twig_Environment;
+use Twig\Loader\FilesystemLoader;
+use Twig\Loader\ArrayLoader;
+use Twig\Environment;
 
 class Mail {
 
@@ -90,15 +90,15 @@ class Mail {
      * @param array $templateVariables
      * @return string
      *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function composeMessage($templatePath, $templateFile, $templateVariables = [])
     {
         // Setup twig-template
-        $loader = new Twig_Loader_Filesystem(getcwd(). $templatePath);
-        $twig = new Twig_Environment($loader);
+        $loader = new FilesystemLoader(getcwd(). $templatePath);
+        $twig = new Environment($loader);
         $template = $twig->load($templateFile);
 
         // Compose message by template
@@ -115,15 +115,15 @@ class Mail {
      * @param array $variables
      * @return string
      *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function composeText($text, $variables = [])
     {
         // Setup twig-loader
-        $loader = new Twig_Loader_Array(['text' => $text]);
-        $twig = new Twig_Environment($loader);
+        $loader = new ArrayLoader(['text' => $text]);
+        $twig = new Environment($loader);
 
         // Compose text
         $text = $twig->render('text', $variables);
