@@ -12,6 +12,7 @@ class Mail {
     private $config;
     private $messages;
     private $errorData;
+    private $mailgun;
 
     /**
      * Constructor
@@ -27,6 +28,9 @@ class Mail {
         // Set error-messages
         $this->messages = array();
         $this->errorData = array();
+
+        // Set mail-client
+        $this->mailgun = Mailgun::create($this->config['mailgun']['api_key']);
     }
 
     /**
@@ -133,6 +137,64 @@ class Mail {
     }
 
     /**
+     * Get events
+     *
+     * @param \DateTime $startDate
+     * @param string $type
+     * @return array
+     */
+    public function getEvents($startDate, $type = null)
+    {
+        // Get active domains
+        $domains = $this->getActiveDomains();
+
+        // Set parameters
+        $result = [];
+        $params = [
+            'end' => $startDate->format('r'),
+            'limit' => 300,
+        ];
+        if (!empty($type)) $params['event'] = $type;
+
+        // Iterate domains
+        foreach ($domains AS $domain) {
+            // Get events by domain/parameters
+            $events = $this->mailgun->events()->get($domain->getName(), $params);
+            if (count($events->getItems()) > 0) {
+                $result[$domain->getName()] = [];
+                // Iterate items
+                foreach ($events->getItems() AS $item) {
+                    // Add item to result
+                    $reason = $item->getReason();
+                    if (!empty($item->getDeliveryStatus()['message'])) $reason .= " [" . $item->getDeliveryStatus()['message'] . "]";
+                    $result[$domain->getName()][$item->getRecipient()] = $reason;
+                }
+            }
+        }
+
+        // Return
+        return $result;
+    }
+
+    /**
+     * Get list of active domains
+     *
+     * @return array
+     */
+    public function getActiveDomains()
+    {
+        $activeDomains = [];
+        $domains = $this->mailgun->domains()->index();
+        foreach($domains->getDomains() AS $domain) {
+            if ($domain->getState() == 'active') {
+                $activeDomains[] = $domain;
+            }
+        }
+
+        return $activeDomains;
+    }
+
+    /**
      * Send mail
      *
      * @param string $from
@@ -181,9 +243,6 @@ class Mail {
             }
         }
 
-        // Initialize Mailgun
-        $mailgun = Mailgun::create($this->config['mailgun']['api_key']);
-
         // Set sender (overwrite from config)
         if (!empty($this->config['mailgun']['default_from'])) {
             $from = $this->config['mailgun']['default_from'];
@@ -192,7 +251,7 @@ class Mail {
 
             // Check if sender-mailaddress is verified (by DNS - https://documentation.mailgun.com/en/latest/quickstart-sending.html#verify-your-domain)
             try {
-                $domain = $mailgun->domains()->show($tmp[1]);
+                $domain = $this->mailgun->domains()->show($tmp[1]);
                 if ($domain->getDomain()->getState() != 'active') {
                     $from = $from_alternative;
                 }
@@ -214,7 +273,7 @@ class Mail {
         // Check sender-domain is activated (verified) for Mailgun
         try {
             // Get domain-item by Mailgun
-            $domainItem = $mailgun->domains()->show($domain);
+            $domainItem = $this->mailgun->domains()->show($domain);
 
             // Get state of domain, if not active (not verified) unset FROM-address to fallback-sender
             if ($domainItem->getDomain()->getState() != 'active') {
@@ -228,7 +287,7 @@ class Mail {
 
         // Compose/send message
         try {
-            $mailgun->messages()->send($domain, [
+            $this->mailgun->messages()->send($domain, [
                 'from'    => $from,
                 'to'      => (is_array($to)) ? implode(",", $to) : $to,
                 'subject' => $subject,
