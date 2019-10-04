@@ -4,7 +4,7 @@ namespace AtpCore;
 
 class Format
 {
-    public function phoneNumber($countryCode, $nationalCode, $subscriberNumber)
+    public static function phoneNumber($countryCode, $nationalCode, $subscriberNumber)
     {
         // Skip if no phone-number available
         if (empty($subscriberNumber)) return;
