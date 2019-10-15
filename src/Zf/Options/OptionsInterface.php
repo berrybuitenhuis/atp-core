@@ -3,31 +3,28 @@
 namespace AtpCore\Zf\Options;
 
 /**
- * Class AbstractOptions
+ * Class OptionsInterface
  */
-abstract class AbstractOptions
+interface OptionsInterface
 {
-
     /**
      * Constructor
      */
-    public function __construct()
-    {
-    }
+    public function __construct();
 
     /*
      * Get filter for client
      *
      * @return array
      */
-    public abstract function getClientFilter();
+    public function getClientFilter();
 
     /**
      * Get default filter-options
      *
      * @return array
      */
-    public abstract function getDefaultFilterOptions();
+    public function getDefaultFilterOptions();
 
     /**
      * Transform filter-name(s) into filters
@@ -35,7 +32,7 @@ abstract class AbstractOptions
      * @param array $filters
      * @return array|null
      */
-    public abstract function getDefaultFilter($filters);
+    public function getDefaultFilter($filters);
 
     /**
      * Get data-fields for client
@@ -43,6 +40,6 @@ abstract class AbstractOptions
      * @return array
      * @throws \Exception
      */
-    public abstract function getDataFields();
+    public function getDataFields();
 
 }
