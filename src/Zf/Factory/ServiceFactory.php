@@ -7,6 +7,12 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 
 class ServiceFactory implements FactoryInterface
 {
+    /**
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
+     * @return mixed|object
+     */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         // Set repository-name (replace service into repository

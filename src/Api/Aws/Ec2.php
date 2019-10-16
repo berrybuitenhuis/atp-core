@@ -4,9 +4,12 @@
  */
 namespace AtpCore\Api\Aws;
 
+use Aws\Ec2\Ec2Client;
+
 class Ec2
 {
 
+    private $client;
     private $config;
     private $instanceId;
     private $instanceSecurityGroups;
@@ -36,22 +39,21 @@ class Ec2
         }
 
         // Set client
-        $this->client = new \Aws\Ec2\Ec2Client($this->config);
+        $this->client = new Ec2Client($this->config);
         $this->instanceId = $this->getInstanceId();
         if ($this->instanceId !== false) {
             $this->instanceSecurityGroups = $this->getInstanceSecurityGroups();
         }
 
         // Set error-messages
-        $this->messages = array();
-        $this->errorData = array();
+        $this->messages = [];
+        $this->errorData = [];
     }
 
     /**
      * Set error-data
      *
      * @param $data
-     * @return array
      */
     public function setErrorData($data)
     {
@@ -75,7 +77,7 @@ class Ec2
      */
     public function setMessages($messages)
     {
-        if (!is_array($messages)) $messages = array($messages);
+        if (!is_array($messages)) $messages = [$messages];
         $this->messages = $messages;
     }
 
@@ -86,7 +88,7 @@ class Ec2
      */
     public function addMessage($message)
     {
-        if (!is_array($message)) $message = array($message);
+        if (!is_array($message)) $message = [$message];
         $this->messages = array_merge($this->messages, $message);
     }
 
@@ -117,7 +119,8 @@ class Ec2
      *
      * @return array|boolean
      */
-    public function getInstanceSecurityGroups() {
+    public function getInstanceSecurityGroups()
+    {
         // Documentation: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html
         $result = @file_get_contents('http://169.254.169.254/' . $this->config['version'] . '/meta-data/security-groups');
         if ($result !== false) {

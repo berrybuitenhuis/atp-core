@@ -10,15 +10,19 @@ class PasswordInputFilter
     /**
      * Get InputFilter for a Password-type field
      *
-     * @param $name
+     * @param string $name
      * @param boolean $required
      * @param integer $minLength
-     * @return void|InputFilter
+     * @param integer $minUppercase
+     * @param integer $minLowercase
+     * @param integer $minDigits
+     * @param integer $minSpecialCharacters
+     * @return InputFilter
      */
     public static function getFilter($name, $required = false, $minLength = 8, $minUppercase = 1, $minLowercase = 1, $minDigits = 1, $minSpecialCharacters = 1)
     {
         if ($name == null) {
-            return;
+            return null;
         } else {
             $filter = [
                 'name'      => $name,

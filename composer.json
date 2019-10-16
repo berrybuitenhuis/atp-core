@@ -14,6 +14,9 @@
     "require": {
         "php": "^7.0",
         "aws/aws-sdk-php": "^3.70",
+        "ext/json": "*",
+        "ext/calendar": "*",
+        "ext-soap": "*",
         "guzzlehttp/guzzle": "^6.3",
         "guzzlehttp/psr7": "^1.4",
         "mailgun/mailgun-php": "^2.6",

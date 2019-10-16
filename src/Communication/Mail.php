@@ -2,12 +2,18 @@
 
 namespace AtpCore\Communication;
 
+use Exception;
 use Mailgun\Mailgun;
+use Mailgun\Exception\HttpClientException;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\ArrayLoader;
 use Twig\Environment;
 
-class Mail {
+class Mail
+{
 
     private $config;
     private $messages;
@@ -17,7 +23,6 @@ class Mail {
     /**
      * Constructor
      *
-     * @param string $type
      * @param array $config
      */
     public function __construct($config)
@@ -26,8 +31,8 @@ class Mail {
         $this->config = $config;
 
         // Set error-messages
-        $this->messages = array();
-        $this->errorData = array();
+        $this->messages = [];
+        $this->errorData = [];
 
         // Set mail-client
         $this->mailgun = Mailgun::create($this->config['mailgun']['api_key']);
@@ -37,7 +42,6 @@ class Mail {
      * Set error-data
      *
      * @param $data
-     * @return array
      */
     public function setErrorData($data)
     {
@@ -61,18 +65,18 @@ class Mail {
      */
     public function setMessages($messages)
     {
-        if (!is_array($messages)) $messages = array($messages);
+        if (!is_array($messages)) $messages = [$messages];
         $this->messages = $messages;
     }
 
     /**
      * Add error-message
      *
-     * @param array $message
+     * @param array|string $message
      */
     public function addMessage($message)
     {
-        if (!is_array($message)) $message = array($message);
+        if (!is_array($message)) $message = [$message];
         $this->messages = array_merge($this->messages, $message);
     }
 
@@ -94,9 +98,9 @@ class Mail {
      * @param array $templateVariables
      * @return string
      *
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function composeMessage($templatePath, $templateFile, $templateVariables = [])
     {
@@ -185,7 +189,7 @@ class Mail {
     {
         $activeDomains = [];
         $domains = $this->mailgun->domains()->index();
-        foreach($domains->getDomains() AS $domain) {
+        foreach ($domains->getDomains() AS $domain) {
             if ($domain->getState() == 'active') {
                 $activeDomains[] = $domain;
             }
@@ -198,16 +202,16 @@ class Mail {
      * Send mail
      *
      * @param string $from
-     * @param string $from_alternative if from-address not active
+     * @param string $fromAlternative if from-address not active
      * @param string|array $to
      * @param string $subject
      * @param string $text
      * @param string $html
      * @return boolean
      */
-    public function send($from, $from_alternative, $to, $subject, $text, $html = null)
+    public function send($from, $fromAlternative, $to, $subject, $text, $html = null)
     {
-        $result = $this->sendMailgun($from, $from_alternative, $to, $subject, $text, $html);
+        $result = $this->sendMailgun($from, $fromAlternative, $to, $subject, $text, $html);
         return $result;
     }
 
@@ -215,20 +219,20 @@ class Mail {
      * Send mail by Mailgun
      *
      * @param string $from
-     * @param string $from_alternative if from-address not active
+     * @param string $fromAlternative if from-address not active
      * @param string|array $to
      * @param string $subject
      * @param string $text
      * @param string $html
      * @return boolean
      */
-    private function sendMailgun($from, $from_alternative, $to, $subject, $text, $html = null)
+    private function sendMailgun($from, $fromAlternative, $to, $subject, $text, $html = null)
     {
         // Check email-addresses (from, to)
         if (filter_var($from, FILTER_VALIDATE_EMAIL) === false) {
             $this->addMessage("Invalid emailaddress (from)");
             return false;
-        } elseif (!empty($from_alternative) && filter_var($from_alternative, FILTER_VALIDATE_EMAIL) === false) {
+        } elseif (!empty($fromAlternative) && filter_var($fromAlternative, FILTER_VALIDATE_EMAIL) === false) {
             $this->addMessage("Invalid emailaddress (from_alternative)");
             return false;
         } elseif (!is_array($to) && filter_var($to, FILTER_VALIDATE_EMAIL) === false) {
@@ -253,10 +257,10 @@ class Mail {
             try {
                 $domain = $this->mailgun->domains()->show($tmp[1]);
                 if ($domain->getDomain()->getState() != 'active') {
-                    $from = $from_alternative;
+                    $from = $fromAlternative;
                 }
-            } catch (\Exception $e) {
-                $from = $from_alternative;
+            } catch (Exception $e) {
+                $from = $fromAlternative;
             }
         }
 
@@ -280,21 +284,24 @@ class Mail {
                 $from = $this->config['mailgun']['fallback_from'];
                 $domain = substr($from, strrpos($from, '@') + 1);
             }
-        } catch (\Mailgun\Exception\HttpClientException $e) {
+        } catch (HttpClientException $e) {
             $from = $this->config['mailgun']['fallback_from'];
             $domain = substr($from, strrpos($from, '@') + 1);
         }
 
         // Compose/send message
         try {
-            $this->mailgun->messages()->send($domain, [
-                'from'    => $from,
-                'to'      => (is_array($to)) ? implode(",", $to) : $to,
-                'subject' => $subject,
-                'text'    => $text,
-                'html'    => $html,
-            ]);
-        } catch (\Mailgun\Exception\HttpClientException $e) {
+            $this->mailgun->messages()->send(
+                $domain,
+                [
+                    'from'    => $from,
+                    'to'      => (is_array($to)) ? implode(",", $to) : $to,
+                    'subject' => $subject,
+                    'text'    => $text,
+                    'html'    => $html,
+                ]
+            );
+        } catch (HttpClientException $e) {
             $this->addMessage($e->getResponseBody());
             return false;
         }
@@ -303,5 +310,3 @@ class Mail {
         return true;
     }
 }
-
-?>

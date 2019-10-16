@@ -4,7 +4,9 @@
  */
 namespace AtpCore\Api\OneSignal;
 
+use Exception;
 use AtpCore\Api\OneSignal\Entity\Notification;
+use GuzzleHttp\Client;
 
 class Api
 {
@@ -24,24 +26,23 @@ class Api
     public function __construct($hostname, $apiKey, $debug = false)
     {
         // Set client
-        $this->client = new \GuzzleHttp\Client(array('base_uri'=>$hostname, 'http_errors'=>false, 'debug'=>$debug));
+        $this->client = new Client(['base_uri'=>$hostname, 'http_errors'=>false, 'debug'=>$debug]);
 
         // Set default header for client-requests
-        $this->clientHeaders = array(
+        $this->clientHeaders = [
             'Authorization' => 'Basic ' . $apiKey,
             'Content-Type' => 'application/json',
-        );
+        ];
 
         // Set error-messages
-        $this->messages = array();
-        $this->errorData = array();
+        $this->messages = [];
+        $this->errorData = [];
     }
 
     /**
      * Set error-data
      *
      * @param $data
-     * @return array
      */
     public function setErrorData($data)
     {
@@ -65,7 +66,7 @@ class Api
      */
     public function setMessages($messages)
     {
-        if (!is_array($messages)) $messages = array($messages);
+        if (!is_array($messages)) $messages = [$messages];
         $this->messages = $messages;
     }
 
@@ -76,7 +77,7 @@ class Api
      */
     public function addMessage($message)
     {
-        if (!is_array($message)) $message = array($message);
+        if (!is_array($message)) $message = [$message];
         $this->messages = array_merge($this->messages, $message);
     }
 
@@ -95,8 +96,9 @@ class Api
      *
      * @param Notification $data
      * @return boolean|object
+     * @throws Exception
      */
-    public function send(\AtpCore\Api\OneSignal\Entity\Notification $data)
+    public function send(Notification $data)
     {
         // Convert input-data into body
         $body = $data->encode();

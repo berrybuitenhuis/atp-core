@@ -12,12 +12,12 @@ class DateInputFilter
      *
      * @param $name
      * @param bool $required
-     * @return void|InputFilter
+     * @return InputFilter
      */
     public static function getFilter($name, $required = false)
     {
         if ($name == null) {
-            return;
+            return null;
         } else {
             $filter = [
                 'name' => $name,

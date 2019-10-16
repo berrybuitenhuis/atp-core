@@ -3,6 +3,7 @@
 namespace AtpCore\Zf\InputFilter;
 
 use Zend\InputFilter\InputFilter;
+use Zend\Validator\InArray;
 
 class BooleanInputFilter
 {
@@ -11,14 +12,14 @@ class BooleanInputFilter
      * Get InputFilter for a Boolean-type field
      *
      * @param $name
-     * @return void|InputFilter
+     * @return InputFilter
      */
     public static function getFilter($name)
     {
         // REQUIRED OPTION IS NOT WORKING, BECAUSE "false" IS NOT A VALID NON-EMPTY VALUE!
         // SO THIS CONSTRAINT HAS TO BE CHECKED AS "NOT NULL" IN TABLE
-        if ($name == null) {
-            return;
+        if ($name != null) {
+            return null;
         } else {
             $filter = [
                 'name' => $name,
@@ -30,7 +31,7 @@ class BooleanInputFilter
                         'name' => 'InArray',
                         'options' => [
                             'haystack' => [true, false, 1, 0, "1", "0"],
-                            'strict' => \Zend\Validator\InArray::COMPARE_STRICT
+                            'strict' => InArray::COMPARE_STRICT
                         ],
                     ],
                 ],

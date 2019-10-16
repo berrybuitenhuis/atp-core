@@ -14,12 +14,12 @@ class DecimalInputFilter
      * @param int $precision, total length of value
      * @param int $scale, length of decimals
      * @param bool $required
-     * @return void|InputFilter
+     * @return InputFilter
      */
     public static function getFilter($name, $precision, $scale, $required = false)
     {
         if ($name == null) {
-            return;
+            return null;
         } else {
             $filter = [
                 'name'      => $name,

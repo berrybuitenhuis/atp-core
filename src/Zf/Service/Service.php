@@ -5,15 +5,27 @@ namespace AtpCore\Zf\Service;
 class Service
 {
     /**
-     * @var Error-messages
+     * @var mixed
+     */
+    private $repository;
+
+    /**
+     * @var mixed Error-data
+     */
+    private $errorData = [];
+
+    /**
+     * @var array of Error-messages
      */
     private $messages = [];
 
     /**
-     * @var Error-data
+     * @param int $id
+     * @param string $output
+     * @param bool $refresh
+     * @param null $fields
+     * @return mixed
      */
-    private $errorData = [];
-
     public function get($id, $output = 'object', $refresh = false, $fields = NULL)
     {
         $res = $this->repository->get($id, $output, $refresh, $fields);
@@ -24,6 +36,12 @@ class Service
         return $res;
     }
 
+    /**
+     * @param array $parameters
+     * @param string $output
+     * @param bool $multiple
+     * @return mixed
+     */
     public function getByParameters($parameters, $output = 'object', $multiple = true)
     {
         $res = $this->repository->getByParameters($parameters, $output, $multiple);
@@ -34,12 +52,29 @@ class Service
         return $res;
     }
 
+    /**
+     * @return array
+     */
     public function getDefaultFilterOptions()
     {
         $res = $this->repository->getDefaultFilterOptions();
         return $res;
     }
 
+    /**
+     * @param string $output
+     * @param null|array $fields
+     * @param null|array $defaultFilter
+     * @param null|array $filter
+     * @param null|array $groupBy
+     * @param null|array $having
+     * @param null|array $orderBy
+     * @param int $limitRecords
+     * @param int $offset
+     * @param bool $paginator
+     * @param bool $debug
+     * @return mixed
+     */
     public function getList($output = 'object', $fields = NULL, $defaultFilter = NULL, $filter = NULL, $groupBy = null, $having = null, $orderBy = NULL, $limitRecords = 25, $offset = 0, $paginator = false, $debug = false)
     {
         $res = $this->repository->getList($output, $fields, $defaultFilter, $filter, $groupBy, $having, $orderBy, $limitRecords, $offset, $paginator, $debug);
@@ -50,6 +85,12 @@ class Service
         return $res;
     }
 
+    /**
+     * @param array $data
+     * @param string $output
+     * @param array $overrule
+     * @return mixed
+     */
     public function create($data, $output = 'object', $overrule = [])
     {
         $res = $this->repository->create($data, $output, $overrule);
@@ -60,6 +101,13 @@ class Service
         return $res;
     }
 
+    /**
+     * @param int $id
+     * @param array $data
+     * @param string $output
+     * @param bool $refresh
+     * @return mixed
+     */
     public function update($id, $data, $output = 'object', $refresh = false)
     {
         $res = $this->repository->update($id, $data, $output, $refresh);
@@ -70,6 +118,12 @@ class Service
         return $res;
     }
 
+    /**
+     * @param int $id
+     * @param bool $remove
+     * @param bool $refresh
+     * @return mixed
+     */
     public function delete($id, $remove = false, $refresh = false)
     {
         $res = $this->repository->delete($id, $remove, $refresh);
@@ -84,7 +138,6 @@ class Service
      * Set error-data
      *
      * @param $data
-     * @return array
      */
     public function setErrorData($data)
     {
@@ -126,7 +179,7 @@ class Service
     /**
      * Get error-messages
      *
-     * @return array|Error
+     * @return array
      */
     public function getMessages()
     {

@@ -2,7 +2,8 @@
 
 namespace AtpCore\Encoding;
 
-class Form {
+class Form
+{
     
     /**
     * Decode x-form-encoded data
@@ -11,10 +12,11 @@ class Form {
     * @param boolean $urlEncode, url-encode value
     * @return array
     */
-    public function decode($dataString, $urlEncode = false) {
-        if (empty($dataString)) return array();
+    public function decode($dataString, $urlEncode = false)
+    {
+        if (empty($dataString)) return [];
         
-        $output = array();
+        $output = [];
         $dataElements = explode("&", $dataString);
         foreach ($dataElements AS $dataElement) {
             $data = explode("=", $dataElement);
@@ -25,5 +27,3 @@ class Form {
     }
     
 }
-
-?>

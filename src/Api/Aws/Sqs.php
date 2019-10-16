@@ -4,9 +4,13 @@
  */
 namespace AtpCore\Api\Aws;
 
+use Exception;
+use Aws\Sqs\SqsClient;
+
 class Sqs
 {
 
+    private $client;
     private $config;
     private $messages;
     private $errorData;
@@ -34,18 +38,17 @@ class Sqs
         }
 
         // Set client
-        $this->client = new \Aws\Sqs\SqsClient($this->config);
+        $this->client = new SqsClient($this->config);
 
         // Set error-messages
-        $this->messages = array();
-        $this->errorData = array();
+        $this->messages = [];
+        $this->errorData = [];
     }
 
     /**
      * Set error-data
      *
      * @param $data
-     * @return array
      */
     public function setErrorData($data)
     {
@@ -69,7 +72,7 @@ class Sqs
      */
     public function setMessages($messages)
     {
-        if (!is_array($messages)) $messages = array($messages);
+        if (!is_array($messages)) $messages = [$messages];
         $this->messages = $messages;
     }
 
@@ -80,7 +83,7 @@ class Sqs
      */
     public function addMessage($message)
     {
-        if (!is_array($message)) $message = array($message);
+        if (!is_array($message)) $message = [$message];
         $this->messages = array_merge($this->messages, $message);
     }
 
@@ -114,7 +117,7 @@ class Sqs
     {
         try {
             return $this->client->getQueueUrl(["QueueName"=>$queueName]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->setErrorData($e->getMessage());
             return false;
         }
@@ -132,21 +135,26 @@ class Sqs
         $queueUrl = $this->getQueueUrl($queueName);
         if ($queueUrl !== false) {
             try {
-                $result = $this->client->receiveMessage([
-                    'AttributeNames' => ['SentTimestamp'],
-                    'MaxNumberOfMessages' => $maxMessages,
-                    'MessageAttributeNames' => ['All'],
-                    'QueueUrl' => $queueUrl,
-                    'WaitTimeSeconds' => 0,
-                ]);
+                $result = $this->client->receiveMessage(
+                    [
+                        'AttributeNames' => ['SentTimestamp'],
+                        'MaxNumberOfMessages' => $maxMessages,
+                        'MessageAttributeNames' => ['All'],
+                        'QueueUrl' => $queueUrl,
+                        'WaitTimeSeconds' => 0,
+                    ]
+                );
 
                 // Return
                 return $result->get('Messages');
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // Return
                 $this->setErrorData($e->getMessage());
                 return false;
             }
+        } else {
+            // Return
+            return false;
         }
     }
 
@@ -173,10 +181,12 @@ class Sqs
     {
         $queueUrl = $this->getQueueUrl($queueName);
         if ($queueUrl !== false) {
-            $this->client->deleteMessage([
-                'QueueUrl' => $queueUrl,
-                'ReceiptHandle' => $receiptHandle
-            ]);
+            $this->client->deleteMessage(
+                [
+                    'QueueUrl' => $queueUrl,
+                    'ReceiptHandle' => $receiptHandle
+                ]
+            );
         }
     }
 
@@ -198,7 +208,7 @@ class Sqs
             try {
                 $this->client->sendMessage($sqsMessage);
                 return true;
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->setErrorData($e->getMessage());
                 return false;
             }

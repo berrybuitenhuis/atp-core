@@ -4,6 +4,8 @@
  */
 namespace AtpCore\Api\Autodata;
 
+use GuzzleHttp\Client;
+
 class TradeApi
 {
 
@@ -24,11 +26,11 @@ class TradeApi
     public function __construct($hostname, $username, $password, $debug = false)
     {
         // Set client
-        $this->client = new \GuzzleHttp\Client(array('base_uri'=>$hostname, 'http_errors'=>false, 'debug'=>$debug));
+        $this->client = new Client(['base_uri'=>$hostname, 'http_errors'=>false, 'debug'=>$debug]);
 
         // Set error-messages
-        $this->messages = array();
-        $this->errorData = array();
+        $this->messages = [];
+        $this->errorData = [];
 
         // Get token
         $this->token = $this->getToken($username, $password);
@@ -45,7 +47,6 @@ class TradeApi
      * Set error-data
      *
      * @param $data
-     * @return array
      */
     public function setErrorData($data)
     {
@@ -69,7 +70,7 @@ class TradeApi
      */
     public function setMessages($messages)
     {
-        if (!is_array($messages)) $messages = array($messages);
+        if (!is_array($messages)) $messages = [$messages];
         $this->messages = $messages;
     }
 
@@ -80,7 +81,7 @@ class TradeApi
      */
     public function addMessage($message)
     {
-        if (!is_array($message)) $message = array($message);
+        if (!is_array($message)) $message = [$message];
         $this->messages = array_merge($this->messages, $message);
     }
 
@@ -154,16 +155,13 @@ class TradeApi
      *
      * @param int $externalId
      * @param string $statusType
-     * @param string $vatMarginType
      * @param int $bid
-     * @param DateTime $expirationDate
+     * @param \DateTime $expirationDate
      * @return bool|object
      */
-    function sendBid($externalId, $statusType, $vatMarginType, $bid, $expirationDate)
+    function sendBid($externalId, $statusType, $bid, $expirationDate)
     {
         if ($bid > 0 || $statusType == "not interested") {
-            $btw = (strtolower($vatMarginType) == "btw") ? true : false;
-
             // Send bid
             if ($statusType == "not interested") {
                 $body = [

@@ -10,7 +10,7 @@ class Input
      *
      * @param $dataString
      * @param string $output
-     * @return mixed|void
+     * @return mixed
      */
     public function convertJson($dataString, $output = "object")
     {
@@ -19,7 +19,7 @@ class Input
             if (self::isJson($dataString)) {
                 $data = $dataString;
             } else {
-                return;
+                return null;
             }
         } else {
             $data = json_encode($dataString);
@@ -40,7 +40,7 @@ class Input
      */
     public static function formDecode($dataString)
     {
-        if (empty($dataString)) return array();
+        if (empty($dataString)) return [];
         if (self::isJson($dataString)) return json_decode($dataString, true);
 
         // Parse string into variables
@@ -69,7 +69,7 @@ class Input
     public function isAssocArray($array)
     {
         if (empty($array)) return false;
-        return (array_keys($array) !== range(0,count($array)-1));
+        return (array_keys($array) !== range(0, count($array)-1));
     }
 
     /**

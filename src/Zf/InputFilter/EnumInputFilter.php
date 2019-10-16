@@ -3,6 +3,7 @@
 namespace AtpCore\Zf\InputFilter;
 
 use Zend\InputFilter\InputFilter;
+use Zend\Validator\InArray;
 
 class EnumInputFilter
 {
@@ -13,12 +14,12 @@ class EnumInputFilter
      * @param $name
      * @param bool $required
      * @param array $enumValues
-     * @return void|InputFilter
+     * @return InputFilter
      */
     public static function getFilter($name, $required = false, $enumValues = [])
     {
         if ($name == null) {
-            return;
+            return null;
         } else {
             $filter = [
                 'name' => $name,
@@ -29,7 +30,7 @@ class EnumInputFilter
                         'name' => 'InArray',
                         'options' => [
                             'haystack' => $enumValues,
-                            'strict' => \Zend\Validator\InArray::COMPARE_STRICT
+                            'strict' => InArray::COMPARE_STRICT
                         ],
                     ],
                 ],

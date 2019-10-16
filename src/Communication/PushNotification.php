@@ -2,7 +2,12 @@
 
 namespace AtpCore\Communication;
 
-class PushNotification {
+use Exception;
+use AtpCore\Api\OneSignal\Api;
+use AtpCore\Api\OneSignal\Entity\Notification;
+
+class PushNotification
+{
 
     private $config;
     private $messages;
@@ -19,15 +24,14 @@ class PushNotification {
         $this->config = $config;
 
         // Set error-messages
-        $this->messages = array();
-        $this->errorData = array();
+        $this->messages = [];
+        $this->errorData = [];
     }
 
     /**
      * Set error-data
      *
      * @param $data
-     * @return array
      */
     public function setErrorData($data)
     {
@@ -51,18 +55,18 @@ class PushNotification {
      */
     public function setMessages($messages)
     {
-        if (!is_array($messages)) $messages = array($messages);
+        if (!is_array($messages)) $messages = [$messages];
         $this->messages = $messages;
     }
 
     /**
      * Add error-message
      *
-     * @param array $message
+     * @param string|array $message
      */
     public function addMessage($message)
     {
-        if (!is_array($message)) $message = array($message);
+        if (!is_array($message)) $message = [$message];
         $this->messages = array_merge($this->messages, $message);
     }
 
@@ -84,29 +88,30 @@ class PushNotification {
      * @param string $message
      * @param array $options
      * @return bool
+     * @throws Exception
      */
-    public function send($platform = 'ios', $tokens, $message, $options = NULL)
+    public function send($platform, $tokens, $message, $options = NULL)
     {
         if (strtolower($platform) == 'onesignal') {
             // Set receiver (overwrite from config)
             if (!empty($this->config['oneSignal']['default_to'])) {
-                $tokens = array($this->config['oneSignal']['default_to']);
+                $tokens = [$this->config['oneSignal']['default_to']];
             }
 
             // Convert token to array
-            if (!is_array($tokens) && is_string($tokens)) $tokens = array($tokens);
+            if (!is_array($tokens) && is_string($tokens)) $tokens = [$tokens];
 
             // Initialize client
-            $client = new \AtpCore\Api\OneSignal\Api($this->config['oneSignal']['host'], $this->config['oneSignal']['apiKey']);
+            $client = new Api($this->config['oneSignal']['host'], $this->config['oneSignal']['apiKey']);
 
             // Setup notification
-            $notificationFields = array(
+            $notificationFields = [
                 'app_id' => $this->config['oneSignal']['appId'],
                 'include_player_ids' => $tokens,
                 'data' => $options,
-                'contents' => array("en"=>$message, "nl"=>$message)
-            );
-            $notification = new \AtpCore\Api\OneSignal\Entity\Notification($notificationFields);
+                'contents' => ["en"=>$message, "nl"=>$message]
+            ];
+            $notification = new Notification($notificationFields);
 
             // Send notification
             $result = $client->send($notification);

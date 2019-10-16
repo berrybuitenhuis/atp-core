@@ -4,10 +4,16 @@ namespace AtpCore;
 
 class Format
 {
+    /**
+     * @param string $countryCode
+     * @param string $nationalCode
+     * @param string $subscriberNumber
+     * @return null|string
+     */
     public static function phoneNumber($countryCode, $nationalCode, $subscriberNumber)
     {
         // Skip if no phone-number available
-        if (empty($subscriberNumber)) return;
+        if (empty($subscriberNumber)) return null;
 
         // Format phone-number
         $phoneNumber = '';

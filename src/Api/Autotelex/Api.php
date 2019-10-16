@@ -1,13 +1,17 @@
-<?php
+<?php /** @noinspection PhpUndefinedMethodInspection */
+
 /**
  * API-information: http://api.autotelexpro.nl/autotelexproapi.svc?singleWsdl
  */
 namespace AtpCore\Api\Autotelex;
 
+use Zend\Soap\Client;
+
 class Api
 {
 
     private $client;
+    private $debug;
     private $errorData;
     private $messages;
     private $token;
@@ -22,12 +26,13 @@ class Api
      */
     public function __construct($wsdl, $username, $password, $debug = false)
     {
-        $this->client = new \Zend\Soap\Client($wsdl, array('encoding' => 'UTF-8'));
+        $this->client = new Client($wsdl, ['encoding' => 'UTF-8']);
         $this->client->setSoapVersion(SOAP_1_1);
+        $this->debug = $debug;
 
         // Set error-messages
-        $this->messages = array();
-        $this->errorData = array();
+        $this->messages = [];
+        $this->errorData = [];
 
         // Get token
         $this->token = $this->getToken($username, $password);
@@ -37,7 +42,6 @@ class Api
      * Set error-data
      *
      * @param $data
-     * @return array
      */
     public function setErrorData($data)
     {
@@ -61,7 +65,7 @@ class Api
      */
     public function setMessages($messages)
     {
-        if (!is_array($messages)) $messages = array($messages);
+        if (!is_array($messages)) $messages = [$messages];
         $this->messages = $messages;
     }
 
@@ -72,7 +76,7 @@ class Api
      */
     public function addMessage($message)
     {
-        if (!is_array($message)) $message = array($message);
+        if (!is_array($message)) $message = [$message];
         $this->messages = array_merge($this->messages, $message);
     }
 
@@ -133,6 +137,8 @@ class Api
         if ($status->Code == 0) {
             $token = $result->GetVendorTokenResult->Token;
             return $token;
+        } else {
+            return null;
         }
     }
 
@@ -143,7 +149,7 @@ class Api
      * @param string $statusType
      * @param string $vatMarginType
      * @param int $bid
-     * @param DateTime $expirationDate
+     * @param \DateTime $expirationDate
      * @return bool|object
      */
     public function sendBid($externalId, $statusType, $vatMarginType, $bid, $expirationDate)
