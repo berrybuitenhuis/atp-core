@@ -19,7 +19,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
     /**
      * @var array
      */
-    private $config;
+    protected $config;
 
     /**
      * @var mixed Error-data
@@ -69,7 +69,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
     /**
      * @var mixed options
      */
-    private $options;
+    protected $options;
 
     /**
      * Constructor
