@@ -62,7 +62,7 @@ class PushNotification
     /**
      * Add error-message
      *
-     * @param string|array $message
+     * @param array|string $message
      */
     public function addMessage($message)
     {
