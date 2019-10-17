@@ -224,7 +224,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
     /**
      * Set error-message
      *
-     * @param string|array $messages
+     * @param array|string $messages
      */
     public function setMessages($messages)
     {

@@ -5,9 +5,6 @@ namespace AtpCore\Communication;
 use Exception;
 use Mailgun\Mailgun;
 use Mailgun\Exception\HttpClientException;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\ArrayLoader;
 use Twig\Environment;
@@ -61,7 +58,7 @@ class Mail
     /**
      * Set error-message
      *
-     * @param array $messages
+     * @param array|string $messages
      */
     public function setMessages($messages)
     {
@@ -96,18 +93,20 @@ class Mail
      * @param string $templatePath
      * @param string $templateFile
      * @param array $templateVariables
-     * @return string
-     *
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
+     * @return bool|string
      */
     public function composeMessage($templatePath, $templateFile, $templateVariables = [])
     {
         // Setup twig-template
         $loader = new FilesystemLoader(getcwd(). $templatePath);
         $twig = new Environment($loader);
-        $template = $twig->load($templateFile);
+
+        try {
+            $template = $twig->load($templateFile);
+        } catch (Exception $e) {
+            $this->setMessages($e->getMessage());
+            return false;
+        }
 
         // Compose message by template
         $message = $template->render($templateVariables);
@@ -121,11 +120,7 @@ class Mail
      *
      * @param string $text
      * @param array $variables
-     * @return string
-     *
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @return bool|string
      */
     public function composeText($text, $variables = [])
     {
@@ -134,7 +129,12 @@ class Mail
         $twig = new Environment($loader);
 
         // Compose text
-        $text = $twig->render('text', $variables);
+        try {
+            $text = $twig->render('text', $variables);
+        } catch (Exception $e) {
+            $this->setMessages($e->getMessage());
+            $text = false;
+        }
 
         // Return
         return $text;
