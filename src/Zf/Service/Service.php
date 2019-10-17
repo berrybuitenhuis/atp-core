@@ -7,7 +7,7 @@ class Service
     /**
      * @var mixed
      */
-    private $repository;
+    protected $repository;
 
     /**
      * @var mixed Error-data
