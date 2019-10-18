@@ -2,6 +2,7 @@
 
 namespace AtpCore\Zf\Repository;
 
+use AtpCore\BaseClass;
 use DateTime;
 use Exception;
 use Zend\InputFilter\InputFilterAwareInterface;
@@ -14,17 +15,12 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 /**
  * Class AbstractRepository
  */
-abstract class AbstractRepository implements InputFilterAwareInterface
+abstract class AbstractRepository extends BaseClass implements InputFilterAwareInterface
 {
     /**
      * @var array
      */
     protected $config;
-
-    /**
-     * @var mixed Error-data
-     */
-    private $errorData;
 
     /**
      * @var array of filter-associations
@@ -45,11 +41,6 @@ abstract class AbstractRepository implements InputFilterAwareInterface
      * @var array InputFilter
      */
     protected $inputFilter;
-
-    /**
-     * @var array Error-messages
-     */
-    private $messages;
 
     /**
      * @var array Method-check
@@ -81,8 +72,7 @@ abstract class AbstractRepository implements InputFilterAwareInterface
         if (!empty($objectManager)) {
             $this->objectManager = $objectManager;
         }
-        $this->messages = [];
-        $this->errorData = [];
+        $this->resetErrors();
         $this->methodCheck = [];
     }
 
@@ -199,67 +189,6 @@ abstract class AbstractRepository implements InputFilterAwareInterface
     public function getInputData()
     {
         return $this->inputData;
-    }
-
-    /**
-     * Set error-data
-     *
-     * @param $data
-     */
-    public function setErrorData($data)
-    {
-        $this->errorData = $data;
-    }
-
-    /**
-     * Get error-data
-     *
-     * @return array
-     */
-    public function getErrorData()
-    {
-        return $this->errorData;
-    }
-
-    /**
-     * Set error-message
-     *
-     * @param array|string $messages
-     */
-    public function setMessages($messages)
-    {
-        if (!is_array($messages)) $messages = [$messages];
-        $this->messages = $messages;
-    }
-
-    /**
-     * Add error-message
-     *
-     * @param array|string $message
-     */
-    public function addMessage($message)
-    {
-        if (!is_array($message)) $message = [$message];
-        $this->messages = array_merge($this->messages, $message);
-    }
-
-    /**
-     * Get error-messages
-     *
-     * @return array
-     */
-    public function getMessages()
-    {
-        return $this->messages;
-    }
-
-    /**
-     * Reset error-messages and error-data
-     */
-    public function resetErrors()
-    {
-        $this->messages = [];
-        $this->errorData = [];
     }
 
     /**

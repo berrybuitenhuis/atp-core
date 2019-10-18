@@ -2,6 +2,7 @@
 
 namespace AtpCore\Communication;
 
+use AtpCore\BaseClass;
 use Exception;
 use Mailgun\Mailgun;
 use Mailgun\Exception\HttpClientException;
@@ -9,12 +10,10 @@ use Twig\Loader\FilesystemLoader;
 use Twig\Loader\ArrayLoader;
 use Twig\Environment;
 
-class Mail
+class Mail extends BaseClass
 {
 
     private $config;
-    private $messages;
-    private $errorData;
     private $mailgun;
 
     /**
@@ -27,64 +26,11 @@ class Mail
         // Set mail-config
         $this->config = $config;
 
-        // Set error-messages
-        $this->messages = [];
-        $this->errorData = [];
+        // ReSet error-messages
+        $this->resetErrors();
 
         // Set mail-client
         $this->mailgun = Mailgun::create($this->config['mailgun']['api_key']);
-    }
-
-    /**
-     * Set error-data
-     *
-     * @param $data
-     */
-    public function setErrorData($data)
-    {
-        $this->errorData = $data;
-    }
-
-    /**
-     * Get error-data
-     *
-     * @return array
-     */
-    public function getErrorData()
-    {
-        return $this->errorData;
-    }
-
-    /**
-     * Set error-message
-     *
-     * @param array|string $messages
-     */
-    public function setMessages($messages)
-    {
-        if (!is_array($messages)) $messages = [$messages];
-        $this->messages = $messages;
-    }
-
-    /**
-     * Add error-message
-     *
-     * @param array|string $message
-     */
-    public function addMessage($message)
-    {
-        if (!is_array($message)) $message = [$message];
-        $this->messages = array_merge($this->messages, $message);
-    }
-
-    /**
-     * Get error-messages
-     *
-     * @return array
-     */
-    public function getMessages()
-    {
-        return $this->messages;
     }
 
     /**

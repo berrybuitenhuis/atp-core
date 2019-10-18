@@ -6,20 +6,29 @@ use DateInterval;
 use DateTime;
 use Exception;
 
-class Date
+class Date extends BaseClass
 {
+
+    private $date;
+
+    /**
+     * @param DateTime $date
+     */
+    public function __construct($date = null)
+    {
+        // Set date
+        $this->date = (empty($date)) ? new DateTime() : $date;
+    }
 
     /**
      * Add interval (minutes, hours, days) to date-time
      *
-     * @param DateTime $date
      * @param int $interval
      * @param string $format
-     * @param array $weekendDays
+     * @param array|bool $weekendDays
      * @return false|string
-     * @throws Exception
      */
-    public function addInterval(DateTime $date, $interval, $format = "seconds", $weekendDays = null)
+    public function addInterval($interval, $format = "seconds", $weekendDays = null)
     {
         // Set interval (in seconds) by format
         switch (strtolower($format)) {
@@ -48,103 +57,132 @@ class Date
                 $intervalSeconds = 0;
                 break;
             default:
-                throw new Exception("Invalid format provided ({$format})");
-                break;
+                $this->addMessage("Invalid format provided ({$format})");
+                return false;
         }
 
         // Add (number of) days to date
-        $newDate = $this->addWorkDays($date, $numberOfDays, $weekendDays);
+        try {
+            $result = $this->addWorkDays($numberOfDays, $weekendDays);
+            if ($result === false) return false;
+        } catch (Exception $e) {
+            $this->addMessage("Function addWorkDays failed");
+            $this->setErrorData($e);
+            return false;
+        }
+
 
         // Add remainder seconds
         if ($intervalSeconds > 0) {
-            $interval = new DateInterval("PT" . $intervalSeconds . "S");
-            $newDate->add($interval);
+            try {
+                $interval = new DateInterval("PT" . $intervalSeconds . "S");
+                $this->date->add($interval);
+            } catch (Exception $e) {
+                $this->addMessage("Invalid format provided (PT{$intervalSeconds}S)");
+                $this->setErrorData($e);
+                return false;
+            }
         }
 
         // Return (new) date
-        return $newDate;
+        return $this->date;
     }
 
     /**
      * Add number of workdays to date
      *
-     * @param DateTime $date
      * @param int $numberOfDays
-     * @param array $weekendDays
-     * @return DateTime
-     * @throws Exception
+     * @param array|bool $weekendDays
+     * @return false
      */
-    public function addWorkDays(DateTime $date, $numberOfDays, $weekendDays = null)
+    private function addWorkDays($numberOfDays, $weekendDays = null)
     {
         for ($i = 1; $i <= $numberOfDays; $i++) {
-            $date->add(new DateInterval("P1D"));
-            while ($this->isDayOff($date, $weekendDays)) {
-                $date->add(new DateInterval("P1D"));
+            try {
+                $this->date->add(new DateInterval("P1D"));
+            } catch (Exception $e) {
+                $this->addMessage("Invalid format provided");
+                $this->setErrorData($e);
+                return false;
+            }
+
+            if ($weekendDays !== false) {
+                try {
+                    while ($this->isDayOff($weekendDays)) {
+                        try {
+                            $this->date->add(new DateInterval("P1D"));
+                        } catch (Exception $e) {
+                            $this->addMessage("Invalid format provided");
+                            $this->setErrorData($e);
+                            return false;
+                        }
+                    }
+                } catch (Exception $e) {
+                    $this->addMessage("Function isDayOff failed");
+                    $this->setErrorData($e);
+                    return false;
+                }
             }
         }
-
-        // Return
-        return $date;
     }
 
     /**
      * Check if date is day-off
      *
-     * @param DateTime $date
      * @param array $weekendDays
      * @return boolean
      * @throws Exception
      */
-    public function isDayOff (DateTime $date, $weekendDays = null)
+    private function isDayOff ($weekendDays = null)
     {
         if (!is_array($weekendDays)) $weekendDays = ["sun"];
 
-        if (in_array(strtolower($date->format("D")), $weekendDays)) {
+        if (in_array(strtolower($this->date->format("D")), $weekendDays)) {
             return true;
         } else {
             // Check Easter (Pasen)
             $easter = new DateTime();
-            $easter->setTimestamp(easter_date($date->format("Y")));
-            if ($date->format("Y-m-d") == $easter->format("Y-m-d")) return true;
+            $easter->setTimestamp(easter_date($this->date->format("Y")));
+            if ($this->date->format("Y-m-d") == $easter->format("Y-m-d")) return true;
             $easterMonday = clone $easter;
             $easterMonday->add(new DateInterval('P1D'));
-            if ($date->format("Y-m-d") == $easterMonday->format("Y-m-d")) return true;
+            if ($this->date->format("Y-m-d") == $easterMonday->format("Y-m-d")) return true;
 
             // Check Ascension Day (Hemelvaartsdag)
             $ascensionDay = clone $easter;
             $ascensionDay->add(new DateInterval('P39D'));
-            if ($date->format("Y-m-d") == $ascensionDay->format("Y-m-d")) return true;
+            if ($this->date->format("Y-m-d") == $ascensionDay->format("Y-m-d")) return true;
 
             // Check Pentecost (Pinksteren)
             $pentecost = clone $ascensionDay;
             $pentecost->add(new DateInterval('P10D'));
-            if ($date->format("Y-m-d") == $pentecost->format("Y-m-d")) return true;
+            if ($this->date->format("Y-m-d") == $pentecost->format("Y-m-d")) return true;
             $pentecostMonday = clone $pentecost;
             $pentecostMonday->add(new DateInterval('P1D'));
-            if ($date->format("Y-m-d") == $pentecostMonday->format("Y-m-d")) return true;
+            if ($this->date->format("Y-m-d") == $pentecostMonday->format("Y-m-d")) return true;
 
             // Check Kingsday (Koningsdag)
-            $kingsDay = new DateTime($date->format("Y") . "-04-27");
+            $kingsDay = new DateTime($this->date->format("Y") . "-04-27");
             if ($kingsDay->format('D') === 'Sun') {
                 $kingsDay->sub(new DateInterval('P1D'));
             }
-            if ($date->format("Y-m-d") == $kingsDay->format("Y-m-d")) return true;
+            if ($this->date->format("Y-m-d") == $kingsDay->format("Y-m-d")) return true;
 
             // Check Liberation Day (Bevrijdingsdag)
-            if (($date->format("Y") % 5) == 0) {
-                $liberationDay = new DateTime($date->format("Y") . "-05-05");
-                if ($date->format("Y-m-d") == $liberationDay->format("Y-m-d")) return true;
+            if (($this->date->format("Y") % 5) == 0) {
+                $liberationDay = new DateTime($this->date->format("Y") . "-05-05");
+                if ($this->date->format("Y-m-d") == $liberationDay->format("Y-m-d")) return true;
             }
 
             // Check Christmas Days (Kerstmis)
-            $christmasDay = new DateTime($date->format("Y") . "-12-25");
-            if ($date->format("Y-m-d") == $christmasDay->format("Y-m-d")) return true;
-            $christmasDaySecond = new DateTime($date->format("Y") . "-12-26");
-            if ($date->format("Y-m-d") == $christmasDaySecond->format("Y-m-d")) return true;
+            $christmasDay = new DateTime($this->date->format("Y") . "-12-25");
+            if ($this->date->format("Y-m-d") == $christmasDay->format("Y-m-d")) return true;
+            $christmasDaySecond = new DateTime($this->date->format("Y") . "-12-26");
+            if ($this->date->format("Y-m-d") == $christmasDaySecond->format("Y-m-d")) return true;
 
             // Check New Years Day(Nieuwjaarsdag)
-            $newYearsDay = new DateTime($date->format("Y") . "-01-01");
-            if ($date->format("Y-m-d") == $newYearsDay->format("Y-m-d")) return true;
+            $newYearsDay = new DateTime($this->date->format("Y") . "-01-01");
+            if ($this->date->format("Y-m-d") == $newYearsDay->format("Y-m-d")) return true;
         }
 
         // Return

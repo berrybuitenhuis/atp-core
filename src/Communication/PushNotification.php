@@ -2,16 +2,15 @@
 
 namespace AtpCore\Communication;
 
+use AtpCore\BaseClass;
 use Exception;
 use AtpCore\Api\OneSignal\Api;
 use AtpCore\Api\OneSignal\Entity\Notification;
 
-class PushNotification
+class PushNotification extends BaseClass
 {
 
     private $config;
-    private $messages;
-    private $errorData;
 
     /**
      * Constructor
@@ -23,61 +22,8 @@ class PushNotification
         // Set config
         $this->config = $config;
 
-        // Set error-messages
-        $this->messages = [];
-        $this->errorData = [];
-    }
-
-    /**
-     * Set error-data
-     *
-     * @param $data
-     */
-    public function setErrorData($data)
-    {
-        $this->errorData = $data;
-    }
-
-    /**
-     * Get error-data
-     *
-     * @return array
-     */
-    public function getErrorData()
-    {
-        return $this->errorData;
-    }
-
-    /**
-     * Set error-message
-     *
-     * @param array|string $messages
-     */
-    public function setMessages($messages)
-    {
-        if (!is_array($messages)) $messages = [$messages];
-        $this->messages = $messages;
-    }
-
-    /**
-     * Add error-message
-     *
-     * @param array|string $message
-     */
-    public function addMessage($message)
-    {
-        if (!is_array($message)) $message = [$message];
-        $this->messages = array_merge($this->messages, $message);
-    }
-
-    /**
-     * Get error-messages
-     *
-     * @return array
-     */
-    public function getMessages()
-    {
-        return $this->messages;
+        // Reset error-messages
+        $this->resetErrors();
     }
 
     /**

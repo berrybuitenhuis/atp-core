@@ -4,15 +4,14 @@
  */
 namespace AtpCore\Api\Autodata;
 
+use AtpCore\BaseClass;
 use GuzzleHttp\Client;
 
-class TradeApi
+class TradeApi extends BaseClass
 {
 
     private $client;
     private $clientHeaders;
-    private $errorData;
-    private $messages;
     private $token;
 
     /**
@@ -28,9 +27,8 @@ class TradeApi
         // Set client
         $this->client = new Client(['base_uri'=>$hostname, 'http_errors'=>false, 'debug'=>$debug]);
 
-        // Set error-messages
-        $this->messages = [];
-        $this->errorData = [];
+        // Reset error-messages
+        $this->resetErrors();
 
         // Get token
         $this->token = $this->getToken($username, $password);
@@ -41,58 +39,6 @@ class TradeApi
             'Content-Type' => 'application/json',
             "User-Agent" => 'AutoData Trade v1.1',
         ];
-    }
-
-    /**
-     * Set error-data
-     *
-     * @param $data
-     */
-    public function setErrorData($data)
-    {
-        $this->errorData = $data;
-    }
-
-    /**
-     * Get error-data
-     *
-     * @return array
-     */
-    public function getErrorData()
-    {
-        return $this->errorData;
-    }
-
-    /**
-     * Set error-message
-     *
-     * @param array|string $messages
-     */
-    public function setMessages($messages)
-    {
-        if (!is_array($messages)) $messages = [$messages];
-        $this->messages = $messages;
-    }
-
-    /**
-     * Add error-message
-     *
-     * @param array|string $message
-     */
-    public function addMessage($message)
-    {
-        if (!is_array($message)) $message = [$message];
-        $this->messages = array_merge($this->messages, $message);
-    }
-
-    /**
-     * Get error-messages
-     *
-     * @return array
-     */
-    public function getMessages()
-    {
-        return $this->messages;
     }
 
     /**

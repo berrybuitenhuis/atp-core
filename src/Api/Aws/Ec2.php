@@ -4,17 +4,16 @@
  */
 namespace AtpCore\Api\Aws;
 
+use AtpCore\BaseClass;
 use Aws\Ec2\Ec2Client;
 
-class Ec2
+class Ec2 extends BaseClass
 {
 
     private $client;
     private $config;
     private $instanceId;
     private $instanceSecurityGroups;
-    private $messages;
-    private $errorData;
 
     /**
      * Constructor
@@ -45,61 +44,8 @@ class Ec2
             $this->instanceSecurityGroups = $this->getInstanceSecurityGroups();
         }
 
-        // Set error-messages
-        $this->messages = [];
-        $this->errorData = [];
-    }
-
-    /**
-     * Set error-data
-     *
-     * @param $data
-     */
-    public function setErrorData($data)
-    {
-        $this->errorData = $data;
-    }
-
-    /**
-     * Get error-data
-     *
-     * @return array
-     */
-    public function getErrorData()
-    {
-        return $this->errorData;
-    }
-
-    /**
-     * Set error-message
-     *
-     * @param array|string $messages
-     */
-    public function setMessages($messages)
-    {
-        if (!is_array($messages)) $messages = [$messages];
-        $this->messages = $messages;
-    }
-
-    /**
-     * Add error-message
-     *
-     * @param array|string $message
-     */
-    public function addMessage($message)
-    {
-        if (!is_array($message)) $message = [$message];
-        $this->messages = array_merge($this->messages, $message);
-    }
-
-    /**
-     * Get error-messages
-     *
-     * @return array
-     */
-    public function getMessages()
-    {
-        return $this->messages;
+        // Reset error-messages
+        $this->resetErrors();
     }
 
     /**
