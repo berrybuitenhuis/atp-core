@@ -5,8 +5,8 @@ namespace AtpCore;
 class BaseClass
 {
 
-    protected $errorData;
-    protected $messages;
+    protected $errorData = null;
+    protected $messages = [];
 
     /**
      * Set error-data
