@@ -30,35 +30,13 @@ class Date extends BaseClass
      */
     public function addInterval($interval, $format = "seconds", $weekendDays = null)
     {
-        // Set interval (in seconds) by format
-        switch (strtolower($format)) {
-            case "seconds":
-            case "seconden":
-            case "sec":
-                $numberOfDays = floor($interval / (60*60*24));
-                $intervalSeconds = $interval - ($numberOfDays * 60*60*24);
-                break;
-            case "minutes":
-            case "minuten":
-            case "min":
-                $numberOfDays = floor($interval / (60*24));
-                $intervalSeconds = ($interval - ($numberOfDays * 60*24)) * 60;
-                break;
-            case "hours":
-            case "uren":
-            case "u":
-                $numberOfDays = floor($interval / 24);
-                $intervalSeconds = ($interval - ($numberOfDays * 24)) * (60*60);
-                break;
-            case "days":
-            case "dagen":
-            case "d":
-                $numberOfDays = $interval;
-                $intervalSeconds = 0;
-                break;
-            default:
-                $this->addMessage("Invalid format provided ({$format})");
-                return false;
+        // Convert interval
+        $res = $this->convertInterval($interval, $format);
+        if ($res !== false) {
+            $numberOfDays = $res['numberOfDays'];
+            $intervalSeconds = $res['intervalSeconds'];
+        } else {
+            return false;
         }
 
         // Add (number of) days to date
@@ -77,6 +55,52 @@ class Date extends BaseClass
             try {
                 $interval = new DateInterval("PT" . $intervalSeconds . "S");
                 $this->date->add($interval);
+            } catch (Exception $e) {
+                $this->addMessage("Invalid format provided (PT{$intervalSeconds}S)");
+                $this->setErrorData($e);
+                return false;
+            }
+        }
+
+        // Return (new) date
+        return $this->date;
+    }
+
+    /**
+     * Subtract interval (minutes, hours, days) from date-time
+     *
+     * @param int $interval
+     * @param string $format
+     * @param array|bool $weekendDays
+     * @return false|string
+     */
+    public function subtractInterval($interval, $format = "seconds", $weekendDays = null)
+    {
+        // Convert interval
+        $res = $this->convertInterval($interval, $format);
+        if ($res !== false) {
+            $numberOfDays = $res['numberOfDays'];
+            $intervalSeconds = $res['intervalSeconds'];
+        } else {
+            return false;
+        }
+
+        // Subtract (number of) days from date
+        try {
+            $result = $this->subtractWorkDays($numberOfDays, $weekendDays);
+            if ($result === false) return false;
+        } catch (Exception $e) {
+            $this->addMessage("Function addWorkDays failed");
+            $this->setErrorData($e);
+            return false;
+        }
+
+
+        // Subtract remainder seconds
+        if ($intervalSeconds > 0) {
+            try {
+                $interval = new DateInterval("PT" . $intervalSeconds . "S");
+                $this->date->sub($interval);
             } catch (Exception $e) {
                 $this->addMessage("Invalid format provided (PT{$intervalSeconds}S)");
                 $this->setErrorData($e);
@@ -124,6 +148,79 @@ class Date extends BaseClass
                 }
             }
         }
+    }
+
+    /**
+     * Subtract number of workdays to date
+     *
+     * @param int $numberOfDays
+     * @param array|bool $weekendDays
+     * @return false
+     */
+    private function subtractWorkDays($numberOfDays, $weekendDays = null)
+    {
+        for ($i = 1; $i <= $numberOfDays; $i++) {
+            try {
+                $this->date->sub(new DateInterval("P1D"));
+            } catch (Exception $e) {
+                $this->addMessage("Invalid format provided");
+                $this->setErrorData($e);
+                return false;
+            }
+
+            if ($weekendDays !== false) {
+                try {
+                    while ($this->isDayOff($weekendDays)) {
+                        try {
+                            $this->date->sub(new DateInterval("P1D"));
+                        } catch (Exception $e) {
+                            $this->addMessage("Invalid format provided");
+                            $this->setErrorData($e);
+                            return false;
+                        }
+                    }
+                } catch (Exception $e) {
+                    $this->addMessage("Function isDayOff failed");
+                    $this->setErrorData($e);
+                    return false;
+                }
+            }
+        }
+    }
+
+    private function convertInterval($interval, $format) {
+        // Set interval (in seconds) by format
+        switch (strtolower($format)) {
+            case "seconds":
+            case "seconden":
+            case "sec":
+                $numberOfDays = floor($interval / (60*60*24));
+                $intervalSeconds = $interval - ($numberOfDays * 60*60*24);
+                break;
+            case "minutes":
+            case "minuten":
+            case "min":
+                $numberOfDays = floor($interval / (60*24));
+                $intervalSeconds = ($interval - ($numberOfDays * 60*24)) * 60;
+                break;
+            case "hours":
+            case "uren":
+            case "u":
+                $numberOfDays = floor($interval / 24);
+                $intervalSeconds = ($interval - ($numberOfDays * 24)) * (60*60);
+                break;
+            case "days":
+            case "dagen":
+            case "d":
+                $numberOfDays = $interval;
+                $intervalSeconds = 0;
+                break;
+            default:
+                $this->addMessage("Invalid format provided ({$format})");
+                return false;
+        }
+
+        return ["numberOfDays"=>$numberOfDays, "intervalSeconds"=>$intervalSeconds];
     }
 
     /**
