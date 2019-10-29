@@ -1184,6 +1184,15 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         // Set default data (if not available)
         if (property_exists($object, 'lastUpdated')) $this->inputData['lastUpdated'] = new DateTime();
 
+        // Verify data-fields for update
+        if (method_exists($this->options, 'verifyDataFields')) {
+            $this->inputData = $this->options->verifyDataFields(__FUNCTION__, $this->inputData);
+            if (empty($this->inputData)) {
+                $this->setMessages(['invalidInput' => 'No data for update']);
+                return false;
+            }
+        }
+
         // hydrate object, apply inputfilter, save it, and return result
         if ($this->filterAndPersist($this->inputData, $object)) {
             if ($output == 'array') {

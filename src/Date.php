@@ -117,7 +117,7 @@ class Date extends BaseClass
      *
      * @param int $numberOfDays
      * @param array|bool $weekendDays
-     * @return false
+     * @return boolean
      */
     private function addWorkDays($numberOfDays, $weekendDays = null)
     {
@@ -148,6 +148,9 @@ class Date extends BaseClass
                 }
             }
         }
+
+        // Return
+        return true;
     }
 
     /**
@@ -155,7 +158,7 @@ class Date extends BaseClass
      *
      * @param int $numberOfDays
      * @param array|bool $weekendDays
-     * @return false
+     * @return boolean
      */
     private function subtractWorkDays($numberOfDays, $weekendDays = null)
     {
@@ -186,6 +189,9 @@ class Date extends BaseClass
                 }
             }
         }
+
+        // Return
+        return true;
     }
 
     private function convertInterval($interval, $format) {
