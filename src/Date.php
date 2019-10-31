@@ -26,7 +26,7 @@ class Date extends BaseClass
      * @param int $interval
      * @param string $format
      * @param array|bool $weekendDays
-     * @return false|string
+     * @return bool|DateTime
      */
     public function addInterval($interval, $format = "seconds", $weekendDays = null)
     {
@@ -72,7 +72,7 @@ class Date extends BaseClass
      * @param int $interval
      * @param string $format
      * @param array|bool $weekendDays
-     * @return false|string
+     * @return bool|DateTime
      */
     public function subtractInterval($interval, $format = "seconds", $weekendDays = null)
     {
