@@ -70,6 +70,31 @@ class Sqs extends BaseClass
     }
 
     /**
+     * Get queue-attributes by name
+     *
+     * @param string $queueName
+     * @param array $attributes
+     * @return bool|\Aws\Result
+     */
+    public function getQueueAttributes($queueName, $attributes)
+    {
+        $queueUrl = $this->getQueueUrl($queueName);
+        if ($queueUrl !== false) {
+            try {
+                // Return
+                return $this->client->getQueueAttributes(["QueueUrl"=>$queueUrl, "AttributeNames"=>$attributes]);
+            } catch (Exception $e) {
+                // Return
+                $this->setErrorData($e->getMessage());
+                return false;
+            }
+        } else {
+            // Return
+            return false;
+        }
+    }
+
+    /**
      * Get message from queue
      *
      * @param string $queueName
