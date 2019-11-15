@@ -329,10 +329,11 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     {
         // Get data-fields configured by application
         $dataFields = $this->options->getDataFields();
+        $recordOrig = $record;
 
         // Check unknown properties of record
         foreach ($dataFields["fields"] AS $k => $v) {
-            $values = $this->transformValues($record, [$v]);
+            $values = $this->transformValues($record, [$v], $recordOrig);
             if (!empty($values[$v])) {
                 $record[$v] = $values[$v];
             }
@@ -375,9 +376,10 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      *
      * @param mixed $data
      * @param array $fields
+     * @param mixed $dataOrig
      * @return array
      */
-    public function transformValues($data, $fields)
+    public function transformValues($data, $fields, $dataOrig = null)
     {
         if (empty($fields)) return null;
         if (empty($data)) return null;
@@ -387,7 +389,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
 
             $values = [];
             foreach ($data AS $k => $v) {
-                $values[$k] = $this->transformValues($v, $fields);
+                $values[$k] = $this->transformValues($v, $fields, $dataOrig);
             }
         } else {
             if (is_object($data)) {
@@ -406,7 +408,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             foreach ($fields AS $k => $field) {
                 if (is_array($field)) {
                     $func = 'get' . ucfirst($k);
-                    $values[$k] = $this->transformValues($data->$func(), $field);
+                    $values[$k] = $this->transformValues($data->$func(), $field, $dataOrig);
                 } else {
                     $fieldValue = "";
 
@@ -421,7 +423,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     if (is_object($data)) {
                         // Check if convert-function exists (in corresponding repository-class)
                         if ($methodConvCheck == true) {
-                            $fieldValue = $repository::$func($data, $this->config['application']);
+                            $fieldValue = $repository::$func($data, $this->config['application'], $dataOrig);
                         } else {
                             // Check if get-function exists (in entity-class)
                             $func = 'get' . ucfirst($field);
@@ -432,7 +434,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     } elseif (is_array($data)) {
                         // Check if convert-function exists (in corresponding repository-class)
                         if ($methodConvCheck == true) {
-                            $fieldValue = $repository::$func($data, $this->config['application']);
+                            $fieldValue = $repository::$func($data, $this->config['application'], $dataOrig);
                         } else {
                             if (isset($data[$field])) {
                                 $fieldValue = $data[$field];
