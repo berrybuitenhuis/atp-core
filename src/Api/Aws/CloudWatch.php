@@ -47,10 +47,11 @@ class CloudWatch extends BaseClass
      * @param $stateName
      * @return \Aws\Result|bool
      */
-    public function describeAlarms($stateName)
+    public function describeAlarms($stateName = null)
     {
         try {
-            return $this->client->describeAlarms(["StateValue"=>$stateName]);
+            if (!empty($stateName)) return $this->client->describeAlarms(["StateValue"=>$stateName]);
+            else return $this->client->describeAlarms();
         } catch (Exception $e) {
             $this->setErrorData($e->getMessage());
             return false;
