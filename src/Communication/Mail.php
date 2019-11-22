@@ -153,11 +153,12 @@ class Mail extends BaseClass
      * @param string $subject
      * @param string $text
      * @param string $html
+     * @param array $attachments
      * @return boolean
      */
-    public function send($from, $fromAlternative, $to, $subject, $text, $html = null)
+    public function send($from, $fromAlternative, $to, $subject, $text, $html = null, $attachments = [])
     {
-        $result = $this->sendMailgun($from, $fromAlternative, $to, $subject, $text, $html);
+        $result = $this->sendMailgun($from, $fromAlternative, $to, $subject, $text, $html, $attachments);
         return $result;
     }
 
@@ -170,9 +171,10 @@ class Mail extends BaseClass
      * @param string $subject
      * @param string $text
      * @param string $html
+     * @param array $attachments
      * @return boolean
      */
-    private function sendMailgun($from, $fromAlternative, $to, $subject, $text, $html = null)
+    private function sendMailgun($from, $fromAlternative, $to, $subject, $text, $html = null, $attachments = [])
     {
         // Check email-addresses (from, to)
         if (filter_var($from, FILTER_VALIDATE_EMAIL) === false) {
@@ -240,11 +242,12 @@ class Mail extends BaseClass
             $this->mailgun->messages()->send(
                 $domain,
                 [
-                    'from'    => $from,
-                    'to'      => (is_array($to)) ? implode(",", $to) : $to,
-                    'subject' => $subject,
-                    'text'    => $text,
-                    'html'    => $html,
+                    'from'      => $from,
+                    'to'        => (is_array($to)) ? implode(",", $to) : $to,
+                    'subject'   => $subject,
+                    'text'      => $text,
+                    'html'      => $html,
+                    'attachment'=> $attachments,
                 ]
             );
         } catch (HttpClientException $e) {
