@@ -237,6 +237,16 @@ class Mail extends BaseClass
             $domain = substr($from, strrpos($from, '@') + 1);
         }
 
+        // Convert attachment-properties
+        if (is_array($attachments)) {
+            foreach ($attachments AS $k => $v) {
+                if (isset($v["fileContentBase64"])) {
+                    $attachments[$k]["fileContent"] = base64_decode($v["fileContentBase64"]);
+                    unset($attachments[$k]["fileContentBase64"]);
+                }
+            }
+        }
+
         // Compose/send message
         try {
             $this->mailgun->messages()->send(
