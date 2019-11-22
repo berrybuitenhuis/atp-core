@@ -247,19 +247,21 @@ class Mail extends BaseClass
             }
         }
 
-        // Compose/send message
+        // Set message-parameters
+        $params = [
+            'from'      => $from,
+            'to'        => (is_array($to)) ? implode(",", $to) : $to,
+            'subject'   => $subject,
+            'text'      => $text,
+            'html'      => $html,
+        ];
+        if (is_array($attachments) && count($attachments) > 0){
+            $params['attachment'] =  $attachments;
+        }
+
+        // Send message
         try {
-            $this->mailgun->messages()->send(
-                $domain,
-                [
-                    'from'      => $from,
-                    'to'        => (is_array($to)) ? implode(",", $to) : $to,
-                    'subject'   => $subject,
-                    'text'      => $text,
-                    'html'      => $html,
-                    'attachment'=> $attachments,
-                ]
-            );
+            $this->mailgun->messages()->send($domain, $params);
         } catch (HttpClientException $e) {
             $this->addMessage($e->getResponseBody());
             return false;
