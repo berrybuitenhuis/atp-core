@@ -30,8 +30,10 @@ class Route
                 ],
             ];
             // Add child-route to child-routes
+            $childRoute['options']['route'] = preg_replace('/\/{2,}/', '/', $childRoute['options']['route']);
+            $childRoute['options']['route'] = preg_replace('/\/\[\//', '[/', $childRoute['options']['route']);
             $childRoutes[$alias . "_general"] = $childRoute;
-    
+
             // Set child-route (specific)
             $childRoute = [];
             $childRoute['type'] = Segment::class;
@@ -47,8 +49,10 @@ class Route
                 ],
             ];
             // Add child-route to child-routes
+            $childRoute['options']['route'] = preg_replace('/\/{2,}/', '/', $childRoute['options']['route']);
+            $childRoute['options']['route'] = preg_replace('/\/\[\//', '[/', $childRoute['options']['route']);
             $childRoutes[$alias . "_specific"] = $childRoute;
-    
+
             // Set child-route (specific_subaction)
             $childRoute = [];
             $childRoute['type'] = Segment::class;
@@ -66,11 +70,13 @@ class Route
                 ],
             ];
             // Add child-route to child-routes
+            $childRoute['options']['route'] = preg_replace('/\/{2,}/', '/', $childRoute['options']['route']);
+            $childRoute['options']['route'] = preg_replace('/\/\[\//', '[/', $childRoute['options']['route']);
             $childRoutes[$alias . "_specific_subaction"] = $childRoute;
         }
 
         // Return
         return $childRoutes;
     }
-    
+
 }
