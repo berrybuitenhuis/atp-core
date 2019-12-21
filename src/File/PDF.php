@@ -12,12 +12,23 @@ class PDF
      *
      * @param $html
      * @param string $filename
+     * @param array $options
      * @return string|boolean
      */
-    public function generate($html, $filename = null)
+    public function generate($html, $options = [], $filename = null)
     {
-        // Instantiate
-        $dompdf = new Dompdf();
+        // Instantiate Dom-pdf
+        if (is_array($options) && !empty($options)) {
+            // Set options
+            $options = new Options();
+            foreach ($options AS $key => $value) {
+                $options->set($key, $value);
+            }
+
+            $dompdf = new Dompdf($options);
+        } else {
+            $dompdf = new Dompdf();
+        }
 
         // Set HTML
         $dompdf->loadHtml($html);
