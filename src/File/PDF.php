@@ -3,6 +3,7 @@
 namespace AtpCore\File;
 
 use \Dompdf\Dompdf;
+use \Dompdf\Options;
 
 class PDF
 {
