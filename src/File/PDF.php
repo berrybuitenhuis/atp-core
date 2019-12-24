@@ -21,12 +21,8 @@ class PDF
         // Instantiate Dom-pdf
         if (is_array($options) && !empty($options)) {
             // Set options
-            $opts = new Options();
-            foreach ($options AS $key => $value) {
-                $opts->set($key, $value);
-            }
-
-            $dompdf = new Dompdf($opts);
+            $options = new Options($options);
+            $dompdf = new Dompdf($options);
         } else {
             $dompdf = new Dompdf();
         }
