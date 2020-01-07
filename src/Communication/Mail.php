@@ -3,9 +3,8 @@
 namespace AtpCore\Communication;
 
 use AtpCore\BaseClass;
-use Exception;
 use Mailgun\Mailgun;
-use Mailgun\Exception\HttpClientException;
+use Throwable;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\ArrayLoader;
 use Twig\Environment;
@@ -49,8 +48,8 @@ class Mail extends BaseClass
 
         try {
             $template = $twig->load($templateFile);
-        } catch (Exception $e) {
-            $this->setMessages($e->getMessage());
+        } catch (Throwable $e) {
+            $this->setMessages($e->getCode() . ": " . $e->getMessage());
             return false;
         }
 
@@ -77,8 +76,8 @@ class Mail extends BaseClass
         // Compose text
         try {
             $text = $twig->render('text', $variables);
-        } catch (Exception $e) {
-            $this->setMessages($e->getMessage());
+        } catch (Throwable $e) {
+            $this->setMessages($e->getCode() . ": " . $e->getMessage());
             $text = false;
         }
 
@@ -207,7 +206,7 @@ class Mail extends BaseClass
                 if ($domain->getDomain()->getState() != 'active') {
                     $from = $fromAlternative;
                 }
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 $from = $fromAlternative;
             }
         }
@@ -232,7 +231,7 @@ class Mail extends BaseClass
                 $from = $this->config['mailgun']['fallback_from'];
                 $domain = substr($from, strrpos($from, '@') + 1);
             }
-        } catch (HttpClientException $e) {
+        } catch (Throwable $e) {
             $from = $this->config['mailgun']['fallback_from'];
             $domain = substr($from, strrpos($from, '@') + 1);
         }
@@ -262,8 +261,8 @@ class Mail extends BaseClass
         // Send message
         try {
             $this->mailgun->messages()->send($domain, $params);
-        } catch (HttpClientException $e) {
-            $this->addMessage($e->getResponseBody());
+        } catch (Throwable $e) {
+            $this->addMessage($e->getCode() . ": " . $e->getMessage());
             return false;
         }
 

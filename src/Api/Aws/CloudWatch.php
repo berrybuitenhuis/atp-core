@@ -6,6 +6,7 @@ namespace AtpCore\Api\Aws;
 
 use AtpCore\BaseClass;
 use Aws\CloudWatch\CloudWatchClient;
+use Throwable;
 
 class CloudWatch extends BaseClass
 {
@@ -52,7 +53,7 @@ class CloudWatch extends BaseClass
         try {
             if (!empty($stateName)) return $this->client->describeAlarms(["StateValue"=>$stateName]);
             else return $this->client->describeAlarms();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->setErrorData($e->getMessage());
             return false;
         }

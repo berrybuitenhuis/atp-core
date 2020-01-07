@@ -4,7 +4,7 @@ namespace AtpCore\Zf\Repository;
 
 use AtpCore\BaseClass;
 use DateTime;
-use Exception;
+use Throwable;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
 use Doctrine\ORM\EntityManager;
@@ -250,7 +250,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                 if ($flush === true) {
                     $this->getObjectManager()->flush();
                 }
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 $this->addMessage(['flushException' => $e->getMessage()]);
             }
         }
@@ -282,7 +282,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         if (empty($this->messages)) {
             try {
                 $this->getObjectManager()->flush();
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 $this->addMessage(['flushException' => $e->getMessage()]);
             }
         }
@@ -1311,7 +1311,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                 $this->objectManager->remove($object);
                 $this->objectManager->flush();
                 return true;
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 $this->setMessages($e->getMessage());
                 return false;
             }

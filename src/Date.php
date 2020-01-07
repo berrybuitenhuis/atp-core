@@ -4,7 +4,7 @@ namespace AtpCore;
 
 use DateInterval;
 use DateTime;
-use Exception;
+use Throwable;
 
 class Date extends BaseClass
 {
@@ -43,7 +43,7 @@ class Date extends BaseClass
         try {
             $result = $this->addWorkDays($numberOfDays, $weekendDays);
             if ($result === false) return false;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->addMessage("Function addWorkDays failed");
             $this->setErrorData($e);
             return false;
@@ -55,7 +55,7 @@ class Date extends BaseClass
             try {
                 $interval = new DateInterval("PT" . $intervalSeconds . "S");
                 $this->date->add($interval);
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 $this->addMessage("Invalid format provided (PT{$intervalSeconds}S)");
                 $this->setErrorData($e);
                 return false;
@@ -89,7 +89,7 @@ class Date extends BaseClass
         try {
             $result = $this->subtractWorkDays($numberOfDays, $weekendDays);
             if ($result === false) return false;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->addMessage("Function addWorkDays failed");
             $this->setErrorData($e);
             return false;
@@ -101,7 +101,7 @@ class Date extends BaseClass
             try {
                 $interval = new DateInterval("PT" . $intervalSeconds . "S");
                 $this->date->sub($interval);
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 $this->addMessage("Invalid format provided (PT{$intervalSeconds}S)");
                 $this->setErrorData($e);
                 return false;
@@ -124,7 +124,7 @@ class Date extends BaseClass
         for ($i = 1; $i <= $numberOfDays; $i++) {
             try {
                 $this->date->add(new DateInterval("P1D"));
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 $this->addMessage("Invalid format provided");
                 $this->setErrorData($e);
                 return false;
@@ -135,13 +135,13 @@ class Date extends BaseClass
                     while ($this->isDayOff($weekendDays)) {
                         try {
                             $this->date->add(new DateInterval("P1D"));
-                        } catch (Exception $e) {
+                        } catch (Throwable $e) {
                             $this->addMessage("Invalid format provided");
                             $this->setErrorData($e);
                             return false;
                         }
                     }
-                } catch (Exception $e) {
+                } catch (Throwable $e) {
                     $this->addMessage("Function isDayOff failed");
                     $this->setErrorData($e);
                     return false;
@@ -165,7 +165,7 @@ class Date extends BaseClass
         for ($i = 1; $i <= $numberOfDays; $i++) {
             try {
                 $this->date->sub(new DateInterval("P1D"));
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 $this->addMessage("Invalid format provided");
                 $this->setErrorData($e);
                 return false;
@@ -176,13 +176,13 @@ class Date extends BaseClass
                     while ($this->isDayOff($weekendDays)) {
                         try {
                             $this->date->sub(new DateInterval("P1D"));
-                        } catch (Exception $e) {
+                        } catch (Throwable $e) {
                             $this->addMessage("Invalid format provided");
                             $this->setErrorData($e);
                             return false;
                         }
                     }
-                } catch (Exception $e) {
+                } catch (Throwable $e) {
                     $this->addMessage("Function isDayOff failed");
                     $this->setErrorData($e);
                     return false;

@@ -5,8 +5,8 @@
 namespace AtpCore\Api\Aws;
 
 use AtpCore\BaseClass;
-use Exception;
 use Aws\Sqs\SqsClient;
+use Throwable;
 
 class Sqs extends BaseClass
 {
@@ -63,7 +63,7 @@ class Sqs extends BaseClass
     {
         try {
             return $this->client->getQueueUrl(["QueueName"=>$queueName]);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->setErrorData($e->getMessage());
             return false;
         }
@@ -83,7 +83,7 @@ class Sqs extends BaseClass
             try {
                 // Return
                 return $this->client->getQueueAttributes(["QueueUrl"=>$queueUrl, "AttributeNames"=>$attributes]);
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 // Return
                 $this->setErrorData($e->getMessage());
                 return false;
@@ -118,7 +118,7 @@ class Sqs extends BaseClass
 
                 // Return
                 return $result->get('Messages');
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 // Return
                 $this->setErrorData($e->getMessage());
                 return false;
@@ -179,7 +179,7 @@ class Sqs extends BaseClass
             try {
                 $this->client->sendMessage($sqsMessage);
                 return true;
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 $this->setErrorData($e->getMessage());
                 return false;
             }
