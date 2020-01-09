@@ -4,6 +4,7 @@ namespace AtpCore\Zf\Repository;
 
 use AtpCore\BaseClass;
 use DateTime;
+use Exception;
 use Throwable;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;

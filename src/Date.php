@@ -4,6 +4,7 @@ namespace AtpCore;
 
 use DateInterval;
 use DateTime;
+use Exception;
 use Throwable;
 
 class Date extends BaseClass
