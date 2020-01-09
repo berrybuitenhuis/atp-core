@@ -149,15 +149,17 @@ class Mail extends BaseClass
      * @param string $from
      * @param string $fromAlternative if from-address not active
      * @param string|array $to
+     * @param string|array $cc
+     * @param string|array $bcc
      * @param string $subject
      * @param string $text
      * @param string $html
      * @param array $attachments
      * @return boolean
      */
-    public function send($from, $fromAlternative, $to, $subject, $text, $html = null, $attachments = [])
+    public function send($from, $fromAlternative, $to, $cc, $bcc, $subject, $text, $html = null, $attachments = [])
     {
-        $result = $this->sendMailgun($from, $fromAlternative, $to, $subject, $text, $html, $attachments);
+        $result = $this->sendMailgun($from, $fromAlternative, $to, $cc, $bcc, $subject, $text, $html, $attachments);
         return $result;
     }
 
@@ -167,13 +169,15 @@ class Mail extends BaseClass
      * @param string $from
      * @param string $fromAlternative if from-address not active
      * @param string|array $to
+     * @param string|array $cc
+     * @param string|array $bcc
      * @param string $subject
      * @param string $text
      * @param string $html
      * @param array $attachments
      * @return boolean
      */
-    private function sendMailgun($from, $fromAlternative, $to, $subject, $text, $html = null, $attachments = [])
+    private function sendMailgun($from, $fromAlternative, $to, $cc, $bcc, $subject, $text, $html = null, $attachments = [])
     {
         // Check email-addresses (from, to)
         if (filter_var($from, FILTER_VALIDATE_EMAIL) === false) {
@@ -189,6 +193,26 @@ class Mail extends BaseClass
             foreach ($to AS $recipient) {
                 if (filter_var($recipient, FILTER_VALIDATE_EMAIL) === false) {
                     $this->addMessage("Invalid emailaddress (to)");
+                    return false;
+                }
+            }
+        } elseif (!is_array($cc) && filter_var($cc, FILTER_VALIDATE_EMAIL) === false) {
+            $this->addMessage("Invalid emailaddress (cc)");
+            return false;
+        } elseif (is_array($cc)) {
+            foreach ($cc AS $recipientCC) {
+                if (filter_var($recipientCC, FILTER_VALIDATE_EMAIL) === false) {
+                    $this->addMessage("Invalid emailaddress (cc)");
+                    return false;
+                }
+            }
+        } elseif (!is_array($bcc) && filter_var($bcc, FILTER_VALIDATE_EMAIL) === false) {
+            $this->addMessage("Invalid emailaddress (bcc)");
+            return false;
+        } elseif (is_array($bcc)) {
+            foreach ($bcc AS $recipientBCC) {
+                if (filter_var($recipientBCC, FILTER_VALIDATE_EMAIL) === false) {
+                    $this->addMessage("Invalid emailaddress (bcc)");
                     return false;
                 }
             }
@@ -216,6 +240,17 @@ class Mail extends BaseClass
             if (is_array($to)) $subject .= " [" . implode(", ", $to) . "]";
             else $subject .= " [" . $to . "]";
             $to = $this->config['mailgun']['default_to'];
+
+            if (!empty($cc)) {
+                if (is_array($cc)) $subject .= " [CC: " . implode(", ", $cc) . "]";
+                else $subject .= " [CC: " . $cc . "]";
+                $cc = null;
+            }
+            if (!empty($bcc)) {
+                if (is_array($bcc)) $subject .= " [BCC: " . implode(", ", $bcc) . "]";
+                else $subject .= " [BCC: " . $bcc . "]";
+                $bcc = null;
+            }
         }
 
         // Set sender-domain
@@ -254,6 +289,12 @@ class Mail extends BaseClass
             'text'      => $text,
             'html'      => $html,
         ];
+        if (!empty($cc)) {
+            $params['cc'] = (is_array($cc)) ? implode(",", $cc) : $cc;
+        }
+        if (!empty($bcc)) {
+            $params['bcc'] = (is_array($bcc)) ? implode(",", $bcc) : $bcc;
+        }
         if (is_array($attachments) && count($attachments) > 0){
             $params['attachment'] =  $attachments;
         }
