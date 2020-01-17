@@ -333,7 +333,6 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         $recordOrig = $record;
 
         // Get fields requested by user (if available, else all configured data-fields)
-        $dataFields["fields"] = array_map("strtolower", $dataFields["fields"]);
         if (!empty($fields)) {
             $requestedFields = $this->getRequestedFields($dataFields, $fields);
         } else {
@@ -353,6 +352,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         }
 
         // Iterate data-fields
+        $requestedFields["fields"] = array_map("strtolower", $requestedFields["fields"]);
         foreach ($record AS $k => $v) {
             // Skip field if not configured for application
             if (!in_array(strtolower($k), $requestedFields["fields"]) && !array_key_exists($k, $requestedFields["entities"])) {
@@ -361,11 +361,11 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             }
 
             // Transform/unset values
-            if (array_key_exists(strtolower($k), $requestedFields["fields"]) && !in_array(strtolower($k), $processedFields)) {
+            if (in_array(strtolower($k), $requestedFields["fields"]) && !in_array($k, $processedFields)) {
                 // Overwrite values
                 $values = $this->transformValues($record, [$k], $recordOrig);
-                if (!empty($values[$v])) {
-                    $record[$v] = $values[$v];
+                if (!empty($values[$k])) {
+                    $record[$k] = $values[$k];
                 }
             } elseif (array_key_exists($k, $requestedFields["entities"])) {
                 // Overwrite values
@@ -514,9 +514,9 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     // Set/merge to requestedFields
                     $requestedFields["entities"] = (!empty($requestedFields["entities"])) ? array_merge_recursive($requestedFields["entities"], $tmpRequestedFields) : $tmpRequestedFields;
                 }
-            } elseif (in_array(strtolower($customField), $dataFields['fields'])) {
+            } elseif (in_array(strtolower($customField), array_map("strtolower", $dataFields['fields']))) {
                 // Add field to requestedFields
-                $requestedFields["fields"][] = strtolower($customField);
+                $requestedFields["fields"][] = $customField;
             } elseif (array_key_exists($customField, $dataFields['entities'])) {
                 // Add entire entity to requestedFields (no fields of entity specified)
                 $requestedFields["entities"][$customField] = $dataFields['entities'][$customField];
