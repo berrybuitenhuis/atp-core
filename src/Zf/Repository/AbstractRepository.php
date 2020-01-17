@@ -332,20 +332,24 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         $dataFields = $this->options->getDataFields();
         $recordOrig = $record;
 
-        // Check unknown properties of record
-        foreach ($dataFields["fields"] AS $k => $v) {
-            $values = $this->transformValues($record, [$v], $recordOrig);
-            if (!empty($values[$v])) {
-                $record[$v] = $values[$v];
-            }
-        }
-
         // Get fields requested by user (if available, else all configured data-fields)
         $dataFields["fields"] = array_map("strtolower", $dataFields["fields"]);
         if (!empty($fields)) {
             $requestedFields = $this->getRequestedFields($dataFields, $fields);
         } else {
             $requestedFields = $dataFields;
+        }
+
+        // Check unknown properties of record
+        $processedFields = [];
+        foreach ($requestedFields["fields"] AS $k => $v) {
+            if (!isset($record[$v])) {
+                $values = $this->transformValues($record, [$v], $recordOrig);
+                if (!empty($values[$v])) {
+                    $record[$v] = $values[$v];
+                }
+                $processedFields[] = $v;
+            }
         }
 
         // Iterate data-fields
@@ -356,11 +360,17 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                 continue;
             }
 
-            // Set/unset values
-            if (array_key_exists($k, $requestedFields["entities"])) {
+            // Transform/unset values
+            if (array_key_exists(strtolower($k), $requestedFields["fields"]) && !in_array(strtolower($k), $processedFields)) {
+                // Overwrite values
+                $values = $this->transformValues($record, [$k], $recordOrig);
+                if (!empty($values[$v])) {
+                    $record[$v] = $values[$v];
+                }
+            } elseif (array_key_exists($k, $requestedFields["entities"])) {
                 // Overwrite values
                 $fields = $requestedFields["entities"][$k];
-                $values = $this->transformValues($v, $fields);
+                $values = $this->transformValues($v, $fields, $v);
                 if (!empty($values)) $record[$k] = $values;
                 else unset($record[$k]);
             } elseif (is_object($v) && !($v instanceof DateTime)) {
