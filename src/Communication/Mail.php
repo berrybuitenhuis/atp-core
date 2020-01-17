@@ -196,20 +196,20 @@ class Mail extends BaseClass
                     return false;
                 }
             }
-        } elseif (!is_array($cc) && filter_var($cc, FILTER_VALIDATE_EMAIL) === false) {
+        } elseif (!empty($cc) && !is_array($cc) && filter_var($cc, FILTER_VALIDATE_EMAIL) === false) {
             $this->addMessage("Invalid emailaddress (cc)");
             return false;
-        } elseif (is_array($cc)) {
+        } elseif (!empty($cc) && is_array($cc)) {
             foreach ($cc AS $recipientCC) {
                 if (filter_var($recipientCC, FILTER_VALIDATE_EMAIL) === false) {
                     $this->addMessage("Invalid emailaddress (cc)");
                     return false;
                 }
             }
-        } elseif (!is_array($bcc) && filter_var($bcc, FILTER_VALIDATE_EMAIL) === false) {
+        } elseif (!empty($bcc) && !is_array($bcc) && filter_var($bcc, FILTER_VALIDATE_EMAIL) === false) {
             $this->addMessage("Invalid emailaddress (bcc)");
             return false;
-        } elseif (is_array($bcc)) {
+        } elseif (!empty($bcc) && is_array($bcc)) {
             foreach ($bcc AS $recipientBCC) {
                 if (filter_var($recipientBCC, FILTER_VALIDATE_EMAIL) === false) {
                     $this->addMessage("Invalid emailaddress (bcc)");
