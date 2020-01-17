@@ -400,7 +400,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
 
             $values = [];
             foreach ($data AS $k => $v) {
-                $values[$k] = $this->transformValues($v, $fields, $dataOrig);
+                $values[$k] = $this->transformValues($v, $fields, $dataOrig[$k]);
             }
         } else {
             if (is_object($data)) {
@@ -419,7 +419,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             foreach ($fields AS $k => $field) {
                 if (is_array($field)) {
                     $func = 'get' . ucfirst($k);
-                    $values[$k] = $this->transformValues($data->$func(), $field, $dataOrig);
+                    $values[$k] = $this->transformValues($data->$func(), $field, $dataOrig->$func());
                 } else {
                     $fieldValue = "";
 
