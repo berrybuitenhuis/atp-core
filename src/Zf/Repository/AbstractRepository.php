@@ -366,7 +366,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                 $values = $this->transformValues($record, [$k], $recordOrig);
                 if (!empty($values[$k])) {
                     $record[$k] = $values[$k];
-                } else {
+                } elseif (is_object($record[$k]) || is_array($record[$k])) {
                     $record[$k] = null;
                 }
             } elseif (array_key_exists($k, $requestedFields["entities"])) {
