@@ -50,10 +50,20 @@ class S3 extends BaseClass
      * @param string $filename
      * @param string $file
      * @param string $acl
+     * @param boolean $overwrite
      * @return \Aws\Result|bool
      */
-    public function upload($bucket, $filename, $file, $acl = 'private')
+    public function upload($bucket, $filename, $file, $acl = 'private', $overwrite = false)
     {
+        // Check if file already exists (if overwrite disabled)
+        if ($overwrite !== true) {
+            $exists = $this->client->doesObjectExist($bucket, $filename);
+            if ($exists === true) {
+                $this->setMessages("File already exists (no overwrite allowed)");
+                return false;
+            }
+        }
+
         // Check if file exists (readable)
         if (!is_file($file) && !stristr($file, "http://") && !stristr($file, "https://")) {
             $this->setMessages("File not found ({$file})");
