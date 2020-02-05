@@ -56,10 +56,10 @@ class S3 extends BaseClass
     {
         // Check if file exists (readable)
         if (!is_file($file) && !stristr($file, "http://") && !stristr($file, "https://")) {
-            $this->setErrorData("File not found ({$file})");
+            $this->setMessages("File not found ({$file})");
             return false;
         } elseif (ini_get('allow_url_fopen') == false && (stristr($file, "http://") || stristr($file, "https://"))) {
-            $this->setErrorData("URL upload not allowed ({$file})");
+            $this->setMessages("URL upload not allowed ({$file})");
             return false;
         }
 
@@ -71,6 +71,7 @@ class S3 extends BaseClass
                 $acl
             );
         } catch(Throwable $e) {
+            $this->setMessages("Upload failed");
             $this->setErrorData($e->getMessage());
             return false;
         }
