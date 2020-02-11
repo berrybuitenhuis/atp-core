@@ -73,6 +73,28 @@ class Input
     }
 
     /**
+     * Re-index object-collection by property-name (instead of numeric sequence)
+     *
+     * @param array $objectCollection
+     * @param string $propertyName
+     * @return array
+     */
+    public static function reindexObjectCollection($objectCollection, $propertyName) {
+        $output = [];
+
+        if (is_array($objectCollection) && count($objectCollection) > 0) {
+            foreach ($objectCollection as $object) {
+                $func = 'get' . ucfirst($propertyName);
+                if (method_exists($object, $func)) {
+                    $output[$object->$func()] = $object;
+                }
+            }
+        }
+
+        return $output;
+    }
+
+    /**
      * Set parameters by request-object
      *
      * @param $params
