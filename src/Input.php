@@ -82,12 +82,17 @@ class Input
     public static function reindexObjectCollection($objectCollection, $propertyName) {
         $output = [];
 
-        if (is_array($objectCollection) && count($objectCollection) > 0) {
+        if (count($objectCollection) > 0) {
+            $properties = explode("-", $propertyName);
+
             foreach ($objectCollection as $object) {
-                $func = 'get' . ucfirst($propertyName);
-                if (method_exists($object, $func)) {
-                    $output[$object->$func()] = $object;
+                $index = $object;
+                for ($i=0; $i < count($properties); $i++) {
+                    $func = 'get' . ucfirst($properties[$i]);
+                    $index = $index->$func();
                 }
+
+                $output[$index] = $object;
             }
         }
 
