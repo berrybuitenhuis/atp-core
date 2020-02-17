@@ -222,16 +222,16 @@ class Mail extends BaseClass
         if (!empty($this->config['mailgun']['default_from'])) {
             $from = $this->config['mailgun']['default_from'];
         } else {
-            $tmp = explode("@", $from);
-
             // Check if sender-mailaddress is verified (by DNS - https://documentation.mailgun.com/en/latest/quickstart-sending.html#verify-your-domain)
             try {
-                $domain = $this->mailgun->domains()->show($tmp[1]);
+                $domainName = substr($from, strrpos($from, '@') + 1);
+                $domain = $this->mailgun->domains()->show($domainName);
                 if ($domain->getDomain()->getState() != 'active') {
                     $from = $fromAlternative;
                 }
             } catch (Throwable $e) {
-                $from = $fromAlternative;
+                $this->addMessage($e->getCode() . ": " . $e->getMessage());
+                return false;
             }
         }
 
@@ -267,8 +267,8 @@ class Mail extends BaseClass
                 $domain = substr($from, strrpos($from, '@') + 1);
             }
         } catch (Throwable $e) {
-            $from = $this->config['mailgun']['fallback_from'];
-            $domain = substr($from, strrpos($from, '@') + 1);
+            $this->addMessage($e->getCode() . ": " . $e->getMessage());
+            return false;
         }
 
         // Convert attachment-properties
