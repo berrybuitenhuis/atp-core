@@ -33,6 +33,26 @@ class Mail extends BaseClass
     }
 
     /**
+     * Check if domain is active
+     *
+     * @param string $domainName
+     * @return bool
+     */
+    public function checkActiveDomain($domainName)
+    {
+        try {
+            $domain = $this->mailgun->domains()->show($domainName);
+            if ($domain->getDomain()->getState() == 'active') {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Throwable $e) {
+            return false;
+        }
+    }
+
+    /**
      * Compose mail-message by template (and variables)
      *
      * @param string $templatePath
@@ -219,19 +239,27 @@ class Mail extends BaseClass
         }
 
         // Set sender (overwrite from config)
+        $domainVerified = false;
         if (!empty($this->config['mailgun']['default_from'])) {
             $from = $this->config['mailgun']['default_from'];
         } else {
-            // Check if sender-mailaddress is verified (by DNS - https://documentation.mailgun.com/en/latest/quickstart-sending.html#verify-your-domain)
             try {
+                // Check if sender-maildomain is verified (by DNS - https://documentation.mailgun.com/en/latest/quickstart-sending.html#verify-your-domain)
                 $domainName = substr($from, strrpos($from, '@') + 1);
                 $domain = $this->mailgun->domains()->show($domainName);
-                if ($domain->getDomain()->getState() != 'active') {
+                if ($domain->getDomain()->getState() == 'active') {
+                    $domainVerified = true;
+                } else {
                     $from = $fromAlternative;
                 }
             } catch (Throwable $e) {
-                $this->addMessage($e->getCode() . ": " . $e->getMessage());
-                return false;
+                // Check if sender-maildomain not available in mailgun, then replace by alternative-sender
+                if ($e->getCode() == 404) {
+                    $from = $fromAlternative;
+                } else {
+                    $this->addMessage($e->getCode() . ": " . $e->getMessage());
+                    return false;
+                }
             }
         }
 
@@ -256,19 +284,27 @@ class Mail extends BaseClass
         // Set sender-domain
         $domain = substr($from, strrpos($from, '@') + 1);
 
-        // Check sender-domain is activated (verified) for Mailgun
-        try {
-            // Get domain-item by Mailgun
-            $domainItem = $this->mailgun->domains()->show($domain);
+        // Check sender-domain is activated (verified) for Mailgun (skip if already checked)
+        if ($domainVerified === false) {
+            try {
+                // Get domain-item by Mailgun
+                $domainItem = $this->mailgun->domains()->show($domain);
 
-            // Get state of domain, if not active (not verified) unset FROM-address to fallback-sender
-            if ($domainItem->getDomain()->getState() != 'active') {
-                $from = $this->config['mailgun']['fallback_from'];
-                $domain = substr($from, strrpos($from, '@') + 1);
+                // Get state of domain, if not active (not verified) unset FROM-address to fallback-sender
+                if ($domainItem->getDomain()->getState() != 'active') {
+                    $from = $this->config['mailgun']['fallback_from'];
+                    $domain = substr($from, strrpos($from, '@') + 1);
+                }
+            } catch (Throwable $e) {
+                // Check if sender-maildomain not available in mailgun, then replace by alternative-sender
+                if ($e->getCode() == 404) {
+                    $from = $this->config['mailgun']['fallback_from'];
+                    $domain = substr($from, strrpos($from, '@') + 1);
+                } else {
+                    $this->addMessage($e->getCode() . ": " . $e->getMessage());
+                    return false;
+                }
             }
-        } catch (Throwable $e) {
-            $this->addMessage($e->getCode() . ": " . $e->getMessage());
-            return false;
         }
 
         // Convert attachment-properties
