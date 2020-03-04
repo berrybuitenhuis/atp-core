@@ -946,7 +946,9 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         // Get results
         if ($paginator) {
             // Set paginator-result
-            $paginatorResult = new Paginator($query, $fetchJoinCollection = true);
+            $paginatorQuery = clone $query;
+            $paginatorQuery->resetDQLPart('orderBy');
+            $paginatorResult = new Paginator($paginatorQuery, $fetchJoinCollection = true);
             $paginatorData['records'] = (int) $paginatorResult->count();
             $paginatorData['pages'] = (int) ceil($paginatorData['records'] / $limit['limit']);
             $paginatorData['currentPage'] = (int) (ceil($limit['offset'] / $limit['limit']) + 1);
