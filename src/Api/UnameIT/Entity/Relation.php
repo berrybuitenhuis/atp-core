@@ -7,8 +7,6 @@ class Relation extends Base
 {
 
     /** @var string */
-    public $relationType;
-    /** @var string */
     public $emailAddress;
     /** @var array */
     public $phoneNumbers;

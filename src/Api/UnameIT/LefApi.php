@@ -93,24 +93,21 @@ class LefApi extends BaseClass
         // Set relation-attributes
         $customer = $lead->addChild("Relatie");
         $customer->addChild("EmailAdres", "");
-        if (strtolower($relation->relationType) == "particulier") {
-            $consumer = $customer->addChild("Particulier");
-            $consumer->addChild("Aanhef", $relation->salutation);
-            $consumer->addChild("Voornaam", $relation->firstname);
-            $consumer->addChild("Voorletters", $relation->initials);
-            $consumer->addChild("Tussenvoegsel", $relation->infix);
-            $consumer->addChild("Achternaam", $relation->lastname);
-            $consumer->addChild("GeboorteDatum", $relation->dateOfBirth);
-            if (in_array(strtolower($relation->gender), ['man','male'])) {
-                $consumer->addChild("Geslacht", "Man");
-            } elseif (in_array(strtolower($relation->gender), ['vrouw','female'])) {
-                $consumer->addChild("Geslacht", "Vrouw");
-            }
-        } else {
-            $company = $customer->addChild("Zakelijk");
-            $company->addChild("Bedrijfsnaam", $relation->companyName);
-            $company->addChild("KvkNummer", $relation->cocNumber);
+        $consumer = $customer->addChild("Particulier");
+        $consumer->addChild("Aanhef", $relation->salutation);
+        $consumer->addChild("Voornaam", $relation->firstname);
+        $consumer->addChild("Voorletters", $relation->initials);
+        $consumer->addChild("Tussenvoegsel", $relation->infix);
+        $consumer->addChild("Achternaam", $relation->lastname);
+        $consumer->addChild("GeboorteDatum", $relation->dateOfBirth);
+        if (in_array(strtolower($relation->gender), ['man','male'])) {
+            $consumer->addChild("Geslacht", "Man");
+        } elseif (in_array(strtolower($relation->gender), ['vrouw','female'])) {
+            $consumer->addChild("Geslacht", "Vrouw");
         }
+        $company = $customer->addChild("Zakelijk");
+        $company->addChild("Bedrijfsnaam", $relation->companyName);
+        $company->addChild("KvkNummer", $relation->cocNumber);
 
         // Set relation-number attributes
         if (!empty($relation->phoneNumbers)) {
