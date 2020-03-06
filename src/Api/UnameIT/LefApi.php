@@ -77,13 +77,10 @@ class LefApi extends BaseClass
     private function generateLead(Entity\Lead $leadInfo, Entity\Relation $relation, Entity\VehicleCurrent $vehicleCurrent, Entity\VehicleInterest $vehicleInterest = null)
     {
         // Initialize XML-document
-        $xml = new SimpleXMLElement();
-
-        // Set leads-node
-        $leads = $xml->addChild("Leads");
+        $xml = new \SimpleXMLElement("<?xml version=\"1.0\" encoding=\"utf-8\" ?><Leads></Leads>");
 
         // Set lead-attributes
-        $lead = $leads->addChild("Lead");
+        $lead = $xml->addChild("Lead");
         $lead->addChild("LeadType", "Sales");
         $lead->addChild("SoortLead", "Taxatie");
         $lead->addChild("Omschrijving", "Gevraagd bod tbv Inruil van " . $vehicleCurrent->make . " " . $vehicleCurrent->model . " " . $vehicleCurrent->registration . ", " . date("d-m-Y"));
