@@ -6,6 +6,15 @@ class Input
 {
 
     /**
+     * Check if array (values in array) start with capital
+     * @param array $data
+     * @return array
+     */
+    public static function containsCapitalizedValue($data) {
+        return !empty(array_filter($data, function($var) { return preg_match("/^[A-Z]{1}/", $var); }));
+    }
+
+    /**
      * Convert JSON-string (or object/array) into array/object
      *
      * @param $dataString

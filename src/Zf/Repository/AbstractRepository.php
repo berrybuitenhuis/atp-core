@@ -3,7 +3,6 @@
 namespace AtpCore\Zf\Repository;
 
 use AtpCore\BaseClass;
-use AtpCore\Input;
 use DateTime;
 use Exception;
 use Throwable;
@@ -667,11 +666,19 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             $hydrator = $this->getHydrator();
             if ($paginator === true) {
                 foreach ($records['results'] AS $k => $v) {
-                    $records['results'][$k] = $hydrator->extract($v);
+                    if (gettype($v) == 'array') {
+                        $records['results'][$k] = $v;
+                    } else {
+                        $records['results'][$k] = $hydrator->extract($v);
+                    }
                 }
             } else {
                 foreach ($records AS $k => $v) {
-                    $records[$k] = $hydrator->extract($v);
+                    if (gettype($v) == 'array') {
+                        $records[$k] = $v;
+                    } else {
+                        $records[$k] = $hydrator->extract($v);
+                    }
                 }
             }
 
@@ -713,7 +720,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         $parameters = [];
 
         // Set fields
-        if (!empty($fields) && empty(\AtpCore\Input::getItemsContainingString("-", $fields))) {
+        if (!empty($fields) && \AtpCore\Input::containsCapitalizedValue($fields) === false) {
             $query->select("f." . implode(", f.", $fields));
         } else {
             $query->select('f');
