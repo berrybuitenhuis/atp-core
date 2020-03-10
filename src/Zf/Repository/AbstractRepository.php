@@ -3,6 +3,7 @@
 namespace AtpCore\Zf\Repository;
 
 use AtpCore\BaseClass;
+use AtpCore\Input;
 use DateTime;
 use Exception;
 use Throwable;
@@ -565,7 +566,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         // get object from the repository specified by primary key
         if ($output == 'array') {
             $filter = ["AND"=>[["id", "eq", $id]]];
-            $objects = $this->getByFilter(null, $filter, null, null, null, 1, false);
+            $objects = $this->getByFilter($fields, null, $filter, null, null, null, 1, false);
             $object = current($objects);
         } else {
             $object = $this->objectManager
@@ -659,7 +660,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         if (!is_array($filter)) $filter = [];
 
         // Get results
-        $records = $this->getByFilter($defaultFilter, $filter, $groupBy, $having, $orderBy, $limit, $paginator, $debug);
+        $records = $this->getByFilter($fields, $defaultFilter, $filter, $groupBy, $having, $orderBy, $limit, $paginator, $debug);
 
         // Convert object to array (if output is array)
         if ($output == 'array') {
@@ -686,6 +687,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     /**
      * Return objects by filter
      *
+     * @param $fields
      * @param $defaultFilter
      * @param $filter
      * @param $groupBy
@@ -697,7 +699,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * @return array/object
      * @throws Exception
      */
-    public function getByFilter($defaultFilter = NULL, $filter = NULL, $groupBy = null, $having = null, $orderBy = null, $limit = NULL, $paginator = false, $debug = false)
+    public function getByFilter($fields = NULL, $defaultFilter = NULL, $filter = NULL, $groupBy = null, $having = null, $orderBy = null, $limit = NULL, $paginator = false, $debug = false)
     {
         // Get client-filter
         $clientFilter = $this->options->getClientFilter();
@@ -711,7 +713,12 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         $parameters = [];
 
         // Set fields
-        $query->select('f');
+        if (!empty($fields) && empty(\AtpCore\Input::getItemsContainingString("-", $fields))) {
+            $query->select("f." . implode(", f.", $fields));
+        } else {
+            $query->select('f');
+        }
+
         // Set from
         $query->from($this->objectName, 'f');
         // Set joins (if available/needed)

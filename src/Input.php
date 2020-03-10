@@ -50,6 +50,16 @@ class Input
     }
 
     /**
+     * Get items (values in array) which contain specific string
+     * @param string $searchString
+     * @param array $data
+     * @return array
+     */
+    public static function getItemsContainingString($searchString, $data) {
+        return array_filter($data, function($var) use ($searchString) { return preg_match("/\b$searchString\b/i", $var); });
+    }
+
+    /**
      * Check if string is JSON-string
      *
      * @param string $dataString
