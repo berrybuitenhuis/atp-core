@@ -586,7 +586,11 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
 
         // return
         if ($output == 'array') {
-            $record = $this->getHydrator()->extract($object);
+            if (gettype($object) == 'array') {
+                $record = $object;
+            } else {
+                $record = $this->getHydrator()->extract($object);
+            }
 
             // Return result
             if (method_exists($this, 'transformData')) return $this->transformData($record, $fields);
