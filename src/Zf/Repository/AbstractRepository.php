@@ -553,10 +553,10 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     /**
      * Return a single object from the repository
      *
-     * @param $id
-     * @param $output
-     * @param $refresh
-     * @param array $fields
+     * @param int $id
+     * @param string $output
+     * @param boolean $refresh
+     * @param null|array $fields
      * @return object|array|bool
      * @throws Exception
      */
@@ -642,7 +642,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * Return a list of objects from the repository
      *
      * @param string $output
-     * @param array $fields
+     * @param array|false $fields
      * @param array $defaultFilter
      * @param array $filter
      * @param array $groupBy
@@ -664,6 +664,11 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
 
         // Get results
         $records = $this->getByFilter($fields, $defaultFilter, $filter, $groupBy, $having, $orderBy, $limit, $paginator, $debug);
+
+        // Return if only paginator requested (fields set to false)
+        if ($fields === false) {
+            return $records;
+        }
 
         // Convert object to array (if output is array)
         if ($output == 'array') {
@@ -698,15 +703,15 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     /**
      * Return objects by filter
      *
-     * @param $fields
-     * @param $defaultFilter
-     * @param $filter
-     * @param $groupBy
-     * @param $having
-     * @param $orderBy
-     * @param $limit
-     * @param $paginator
-     * @param $debug
+     * @param null|array|false $fields
+     * @param null|array $defaultFilter
+     * @param null|array $filter
+     * @param null|array $groupBy
+     * @param null|array $having
+     * @param null|array $orderBy
+     * @param null|array $limit
+     * @param boolean $paginator
+     * @param boolean$debug
      * @return array/object
      * @throws Exception
      */
@@ -724,7 +729,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         $parameters = [];
 
         // Set fields
-        if (!empty($fields) && \AtpCore\Input::containsCapitalizedValue($fields) === false) {
+        if ($fields !== false && !empty($fields) && \AtpCore\Input::containsCapitalizedValue($fields) === false) {
             $query->select("f." . implode(", f.", $fields));
         } else {
             $query->select('f');
@@ -975,6 +980,11 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             $paginatorData['pages'] = (int) ceil($paginatorData['records'] / $limit['limit']);
             $paginatorData['currentPage'] = (int) (ceil($limit['offset'] / $limit['limit']) + 1);
             $paginatorData['recordsPage'] = (int) $limit['limit'];
+
+            // Return if only paginator requested (fields set to false)
+            if ($fields === false) {
+                return ["paginator"=>$paginatorData, "results"=>null];
+            }
 
             // Get "page"-results (if any results found)
             if ($paginatorData['records'] > 0) {

@@ -55,7 +55,7 @@ class Service extends BaseClass
 
     /**
      * @param string $output
-     * @param null|array $fields
+     * @param null|false|array $fields
      * @param null|array $defaultFilter
      * @param null|array $filter
      * @param null|array $groupBy
