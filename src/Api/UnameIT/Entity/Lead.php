@@ -6,7 +6,7 @@ use AtpCore\Api\Base;
 class Lead extends Base
 {
 
-    /** @var int */
+    /** @var string */
     public $leadId;
     /** @var int */
     public $companyId;
