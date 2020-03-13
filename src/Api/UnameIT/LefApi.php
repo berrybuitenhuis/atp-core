@@ -9,7 +9,6 @@ use GuzzleHttp\Client;
 
 class LefApi extends BaseClass
 {
-
     private $client;
     private $clientHeaders;
 
@@ -66,6 +65,52 @@ class LefApi extends BaseClass
     }
 
     /**
+     * Converts fueltype to LEF fueltype
+     *
+     * @param string $originalValue
+     * @return string
+     */
+    private function convertFuelType($originalValue)
+    {
+        switch (strtolower($originalValue)) {
+            case "benzine":
+                $output = 'Benzine';
+                break;
+            case "diesel":
+                $output = 'Diesel';
+                break;
+            case "cng":
+                $output = 'CNG';
+                break;
+            case "elektriciteit":
+            case "elektrisch":
+                $output = 'Elektrisch';
+                break;
+            case "hybride":
+                $output = 'Hybride';
+                break;
+            case "hybride diesel":
+                $output = 'HybrideDiesel';
+                break;
+            case "hybride lpg":
+                $output = 'HybrideLPG';
+                break;
+            case "lpg":
+            case "lpg g3":
+                $output = 'LPG';
+                break;
+            case "waterstof":
+                $output = 'Waterstof';
+                break;
+            default:
+                $output = 'Overige';
+                break;
+        }
+
+        return $output;
+    }
+
+    /**
      * Generate Lead XML
      *
      * @param Entity\Lead $leadInfo
@@ -77,10 +122,11 @@ class LefApi extends BaseClass
     private function generateLead(Entity\Lead $leadInfo, Entity\Relation $relation, Entity\VehicleCurrent $vehicleCurrent, Entity\VehicleInterest $vehicleInterest = null)
     {
         // Initialize XML-document
-        $xml = new \SimpleXMLElement("<?xml version=\"1.0\" encoding=\"utf-8\" ?><Leads></Leads>");
+        $xml = new \SimpleXMLElement("<?xml version=\"1.0\" encoding=\"utf-8\" ?><Leads xmlns=\"http://www.uname-it.nl/unameit/xsd/LEF/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.uname-it.nl/unameit/xsd/LEF/Leads.xsd\"></Leads>");
 
         // Set lead-attributes
         $lead = $xml->addChild("Lead");
+        $lead->addChild("LeadID", $leadInfo->leadId);
         $lead->addChild("LeadType", "Sales");
         $lead->addChild("SoortLead", "Taxatie");
         $lead->addChild("Omschrijving", "Gevraagd bod tbv Inruil van " . $vehicleCurrent->make . " " . $vehicleCurrent->model . " " . $vehicleCurrent->registration . ", " . date("d-m-Y"));
@@ -92,22 +138,27 @@ class LefApi extends BaseClass
 
         // Set relation-attributes
         $customer = $lead->addChild("Relatie");
-        $customer->addChild("EmailAdres", "");
-        $consumer = $customer->addChild("Particulier");
-        $consumer->addChild("Aanhef", $relation->salutation);
-        $consumer->addChild("Voornaam", $relation->firstname);
-        $consumer->addChild("Voorletters", $relation->initials);
-        $consumer->addChild("Tussenvoegsel", $relation->infix);
-        $consumer->addChild("Achternaam", $relation->lastname);
-        $consumer->addChild("GeboorteDatum", $relation->dateOfBirth);
-        if (in_array(strtolower($relation->gender), ['man','male'])) {
-            $consumer->addChild("Geslacht", "Man");
-        } elseif (in_array(strtolower($relation->gender), ['vrouw','female'])) {
-            $consumer->addChild("Geslacht", "Vrouw");
+        if (!empty($relation->companyName)) {
+            $company = $customer->addChild("Zakelijk");
+            $company->addChild("Bedrijfsnaam", $relation->companyName);
+            $company->addChild("KvkNummer", $relation->cocNumber);
+        } else {
+            $consumer = $customer->addChild("Particulier");
+            $consumer->addChild("Aanhef", $relation->salutation);
+            $consumer->addChild("Voornaam", $relation->firstname);
+            $consumer->addChild("Voorletters", $relation->initials);
+            $consumer->addChild("Tussenvoegsel", $relation->infix);
+            $consumer->addChild("Achternaam", $relation->lastname);
+            if(!empty($relation->dateOfBirth)) {
+                $consumer->addChild("GeboorteDatum", $relation->dateOfBirth->format("Y-m-d"));
+            }
+            if (in_array(strtolower($relation->gender), ['man','male','mister'])) {
+                $consumer->addChild("Geslacht", "Man");
+            } elseif (in_array(strtolower($relation->gender), ['vrouw','female','missis'])) {
+                $consumer->addChild("Geslacht", "Vrouw");
+            }
         }
-        $company = $customer->addChild("Zakelijk");
-        $company->addChild("Bedrijfsnaam", $relation->companyName);
-        $company->addChild("KvkNummer", $relation->cocNumber);
+        $customer->addChild("EmailAdres", $relation->emailAddress);
 
         // Set relation-number attributes
         if (!empty($relation->phoneNumbers)) {
@@ -120,14 +171,14 @@ class LefApi extends BaseClass
         // Set relation-address attributes
         if (!empty($relation->addresses)) {
             $addresses = $customer->addChild("Adressen");
-            foreach ($relation->addresses AS $address) {
+            foreach ($relation->addresses AS $tmpAddress) {
                 $address = $addresses->addChild("Adres");
-                $address->addChild("Straat", $address->street);
-                $address->addChild("Huisnummer", $address->number);
-                $address->addChild("HuisnummerToevoeging", $address->numberSuffix);
-                $address->addChild("Postcode", $address->zipCode);
-                $address->addChild("Plaats", $address->city);
-                $address->addChild("Land", $address->country);
+                $address->addChild("Straat", $tmpAddress->street);
+                if (!empty($tmpAddress->number)) $address->addChild("Huisnummer", $tmpAddress->number);
+                $address->addChild("HuisnummerToevoeging", $tmpAddress->numberSuffix);
+                $address->addChild("Postcode", $tmpAddress->zipCode);
+                $address->addChild("Plaats", $tmpAddress->city);
+                $address->addChild("Land", $tmpAddress->country);
             }
         }
 
@@ -137,8 +188,8 @@ class LefApi extends BaseClass
         $vehicle->addChild("Model", $vehicleCurrent->model);
         $vehicle->addChild("Uitvoering", $vehicleCurrent->type);
         $vehicle->addChild("Kenteken", $vehicleCurrent->registration);
-        $vehicle->addChild("Bouwjaar", $vehicleCurrent->year);
-        $vehicle->addChild("SoortBrandstof", $vehicleCurrent->fuelType);
+        if (!empty($vehicleCurrent->year)) $vehicle->addChild("Bouwjaar", $vehicleCurrent->year);
+        if (!empty($vehicleCurrent->fuelType)) $vehicle->addChild("SoortBrandstof", $this->convertFuelType($vehicleCurrent->fuelType));
 
         // Set vehicle-interest attributes
         if (!empty($vehicleInterest)) {
@@ -147,8 +198,8 @@ class LefApi extends BaseClass
             $interest->addChild("Model", $vehicleInterest->model);
             $interest->addChild("Uitvoering", $vehicleInterest->type);
             $interest->addChild("Kenteken", $vehicleInterest->registration);
-            $interest->addChild("Bouwjaar", $vehicleInterest->year);
-            $interest->addChild("SoortBrandstof", $vehicleInterest->fuelType);
+            if (!empty($vehicleInterest->year)) $interest->addChild("Bouwjaar", $vehicleInterest->year);
+            if (!empty($vehicleInterest->fuelType))  $interest->addChild("SoortBrandstof", $this->convertFuelType($vehicleInterest->fuelType));
             if (in_array(strtolower($vehicleInterest->vehicleCategory), ['nieuw','new'])) {
                 $interest->addChild("SoortVoertuig", 'Nieuw');
             } elseif (in_array(strtolower($vehicleInterest->vehicleCategory), ['gebruikt','used'])) {
@@ -168,7 +219,7 @@ class LefApi extends BaseClass
         $pair->addChild("Value", $leadInfo->companyName);
         $pair = $group->addChild("Pair");
         $pair->addChild("Key", "Link");
-        $pair->addChild("Value", $leadInfo->link);
+        $pair->addChild("Value", "&lt;a href=&quot;" . $leadInfo->link . "&quot;&gt;Lead bekijken&lt;/a&gt;");
 
         // Return
         return $xml->asXML();

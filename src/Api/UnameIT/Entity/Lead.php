@@ -7,6 +7,8 @@ class Lead extends Base
 {
 
     /** @var int */
+    public $leadId;
+    /** @var int */
     public $companyId;
     /** @var string */
     public $companyName;
