@@ -129,6 +129,7 @@ class LefApi extends BaseClass
         $lead->addChild("LeadID", $leadInfo->leadId);
         $lead->addChild("LeadType", "Sales");
         $lead->addChild("SoortLead", "Taxatie");
+        if (!empty($leadInfo->accountNumber)) $lead->addChild("AccountNummer", $leadInfo->accountNumber);
         $lead->addChild("Omschrijving", "Gevraagd bod tbv Inruil van " . $vehicleCurrent->make . " " . $vehicleCurrent->model . " " . $vehicleCurrent->registration . ", " . date("d-m-Y"));
         if (!empty($vehicleInterest)) {
             $lead->addChild("LeadBron", "ATP inruilTaxatie met referentie");
