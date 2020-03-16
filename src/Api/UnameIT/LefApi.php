@@ -158,7 +158,6 @@ class LefApi extends BaseClass
                 $consumer->addChild("Geslacht", "Vrouw");
             }
         }
-        $customer->addChild("EmailAdres", $relation->emailAddress);
 
         // Set relation-number attributes
         if (!empty($relation->phoneNumbers)) {
@@ -167,6 +166,9 @@ class LefApi extends BaseClass
                 $numbers->addChild("TelefoonNummer", $phoneNumber);
             }
         }
+
+        // Set relation-email attribute
+        $customer->addChild("EmailAdres", $relation->emailAddress);
 
         // Set relation-address attributes
         if (!empty($relation->addresses)) {
