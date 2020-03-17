@@ -46,7 +46,7 @@ class TradeApi extends BaseClass
      *
      * @param int $externalId
      * @param $origResponse
-     * @return int|bool
+     * @return int|object|bool
      */
     function getBid($externalId, $origResponse = false)
     {
@@ -89,6 +89,28 @@ class TradeApi extends BaseClass
         // Return
         if (!isset($response->errors) || empty($response->errors)) {
             return $response->token_type . " " . $response->access_token;
+        } else {
+            $this->setErrorData($response);
+            $this->setMessages($response->errors);
+            return false;
+        }
+    }
+
+    /**
+     * Get vehicle from ASPRO-request
+     *
+     * @param int $externalId
+     * @return object|bool
+     */
+    function getVehicle($externalId) {
+        // Get vehicle
+        $requestHeader = $this->clientHeaders;
+        $result = $this->client->get('bid/' . $externalId . "/vehicle", ['headers'=>$requestHeader]);
+        $response = json_decode((string) $result->getBody());
+
+        // Return
+        if (!isset($response->errors) || empty($response->errors)) {
+            return $response;
         } else {
             $this->setErrorData($response);
             $this->setMessages($response->errors);
