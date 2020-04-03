@@ -16,5 +16,7 @@ class Lead extends Base
     public $companyName;
     /** @var string */
     public $link;
+    /** @var string */
+    public $referenceId;
 
 }

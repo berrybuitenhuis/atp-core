@@ -215,6 +215,9 @@ class LefApi extends BaseClass
         $group = $extraInfo->addChild("Groep");
         $group->addChild("Naam", "Autotaxatie Partners");
         $pair = $group->addChild("Pair");
+        $pair->addChild("Key", "Reference-id");
+        $pair->addChild("Value", $leadInfo->referenceId);
+        $pair = $group->addChild("Pair");
         $pair->addChild("Key", "Company-id");
         $pair->addChild("Value", $leadInfo->companyId);
         $pair = $group->addChild("Pair");
