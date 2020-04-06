@@ -92,6 +92,32 @@ class Input
     }
 
     /**
+     * Re-index array-collection by property-name (instead of numeric sequence)
+     *
+     * @param array $arrayCollection
+     * @param string $propertyName
+     * @return array
+     */
+    public static function reindexArrayCollection($arrayCollection, $propertyName) {
+        $output = [];
+
+        if (count($arrayCollection) > 0) {
+            $properties = explode("-", $propertyName);
+
+            foreach ($arrayCollection as $item) {
+                $index = $item;
+                for ($i=0; $i < count($properties); $i++) {
+                    $index = $index[$properties[$i]];
+                }
+
+                $output[$index] = $item;
+            }
+        }
+
+        return $output;
+    }
+
+    /**
      * Re-index object-collection by property-name (instead of numeric sequence)
      *
      * @param array $objectCollection
