@@ -27,6 +27,7 @@ class RepositoryFactory implements FactoryInterface
 
         /** @var $repository */
         $repository = new $requestedName(
+            $container,
             $objectManager,
             $config,
             $options

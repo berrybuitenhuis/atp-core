@@ -24,6 +24,11 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     protected $config;
 
     /**
+     * @var \Interop\Container\ContainerInterface
+     */
+    protected $serviceManager;
+
+    /**
      * @var array of filter-associations
      */
     protected $filterAssociations;
@@ -75,6 +80,26 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         }
         $this->resetErrors();
         $this->methodCheck = [];
+    }
+
+    /**
+     * Set the ServiceManager
+     *
+     * @param $container
+     */
+    public function setServiceManager($container)
+    {
+        $this->serviceManager = $container;
+    }
+
+    /**
+     * Get the ServiceManager
+     *
+     * @return mixed
+     */
+    public function getServiceManager()
+    {
+        return $this->serviceManager;
     }
 
     /**
@@ -408,11 +433,13 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             if (is_object($data)) {
                 // Get repository-class by entity-class
                 $className = (get_parent_class($data)) ? get_parent_class($data) : get_class($data);
-                $repository = str_replace("\Entity\\", "\Repository\\", $className);
-                $repository = preg_replace("~Entity(?!.*Entity)~", "Repository", $repository) . 'Repository';
+                $repositoryName = str_replace("\Entity\\", "\Repository\\", $className);
+                $repositoryName = preg_replace("~Entity(?!.*Entity)~", "Repository", $repositoryName) . 'Repository';
+                $repository = $this->getServiceManager()->get($repositoryName);
             } elseif (is_array($data)) {
                 // Get repository-class
-                $repository = get_class($this);
+                $repositoryName = get_class($this);
+                $repository = $this->getServiceManager()->get($repositoryName);
             } else {
                 return null;
             }
@@ -427,16 +454,16 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
 
                     // Method-check
                     $func = 'conv' . ucfirst($field);
-                    if (!isset($this->methodCheck[$repository]) || !isset($this->methodCheck[$repository][$func])) {
-                        if (!isset($this->methodCheck[$repository])) $this->methodCheck[$repository] = [];
-                        $this->methodCheck[$repository][$func] = method_exists($repository, $func);
+                    if (!isset($this->methodCheck[$repositoryName]) || !isset($this->methodCheck[$repositoryName][$func])) {
+                        if (!isset($this->methodCheck[$repositoryName])) $this->methodCheck[$repositoryName] = [];
+                        $this->methodCheck[$repositoryName][$func] = method_exists($repositoryName, $func);
                     }
-                    $methodConvCheck = $this->methodCheck[$repository][$func];
+                    $methodConvCheck = $this->methodCheck[$repositoryName][$func];
 
                     if (is_object($data)) {
                         // Check if convert-function exists (in corresponding repository-class)
                         if ($methodConvCheck == true) {
-                            $fieldValue = $repository::$func($data, $this->config['application'], $dataOrig);
+                            $fieldValue = $repository->$func($data, $this->config['application'], $dataOrig);
                         } else {
                             // Check if get-function exists (in entity-class)
                             $func = 'get' . ucfirst($field);
@@ -447,7 +474,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     } elseif (is_array($data)) {
                         // Check if convert-function exists (in corresponding repository-class)
                         if ($methodConvCheck == true) {
-                            $fieldValue = $repository::$func($data, $this->config['application'], $dataOrig);
+                            $fieldValue = $repository->$func($data, $this->config['application'], $dataOrig);
                         } else {
                             if (isset($data[$field])) {
                                 $fieldValue = $data[$field];
