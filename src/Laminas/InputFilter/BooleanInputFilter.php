@@ -1,35 +1,36 @@
 <?php
 
-namespace AtpCore\Zf\InputFilter;
+namespace AtpCore\Laminas\InputFilter;
 
-use Zend\InputFilter\InputFilter;
-use Zend\Validator\InArray;
+use Laminas\InputFilter\InputFilter;
+use Laminas\Validator\InArray;
 
-class EnumInputFilter
+class BooleanInputFilter
 {
 
     /**
-     * Get InputFilter for a Enum-type field
+     * Get InputFilter for a Boolean-type field
      *
      * @param $name
-     * @param bool $required
-     * @param array $enumValues
      * @return InputFilter
      */
-    public static function getFilter($name, $required = false, $enumValues = [])
+    public static function getFilter($name)
     {
+        // REQUIRED OPTION IS NOT WORKING, BECAUSE "false" IS NOT A VALID NON-EMPTY VALUE!
+        // SO THIS CONSTRAINT HAS TO BE CHECKED AS "NOT NULL" IN TABLE
         if ($name == null) {
             return null;
         } else {
             $filter = [
                 'name' => $name,
-                'required' => $required,
+                'allow_empty' => true,
+                'required' => false,
                 'filters' => [],
                 'validators' => [
                     [
                         'name' => 'InArray',
                         'options' => [
-                            'haystack' => $enumValues,
+                            'haystack' => [true, false, 1, 0, "1", "0"],
                             'strict' => InArray::COMPARE_STRICT
                         ],
                     ],

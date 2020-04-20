@@ -6,7 +6,7 @@
 namespace AtpCore\Api\Autotelex;
 
 use AtpCore\BaseClass;
-use Zend\Soap\Client;
+use Laminas\Soap\Client;
 
 class Api extends BaseClass
 {

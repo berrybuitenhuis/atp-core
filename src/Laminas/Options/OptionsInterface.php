@@ -1,6 +1,6 @@
 <?php
 
-namespace AtpCore\Zf\Options;
+namespace AtpCore\Laminas\Options;
 
 /**
  * Class OptionsInterface

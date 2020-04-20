@@ -1,14 +1,14 @@
 <?php
 
-namespace AtpCore\Zf\InputFilter;
+namespace AtpCore\Laminas\InputFilter;
 
-use Zend\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilter;
 
-class DateInputFilter
+class IntegerInputFilter
 {
 
     /**
-     * Get InputFilter for a Date-type field
+     * Get InputFilter for a Integer-type field
      *
      * @param $name
      * @param bool $required
@@ -23,7 +23,7 @@ class DateInputFilter
                 'name' => $name,
                 'required' => $required,
                 'validators' => [
-                    ['name' => 'Date'],
+                    ['name' => 'Digits'],
                 ],
             ];
 

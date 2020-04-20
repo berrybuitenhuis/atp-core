@@ -1,13 +1,13 @@
 <?php
 
-namespace AtpCore\Zf\Repository;
+namespace AtpCore\Laminas\Repository;
 
 use AtpCore\BaseClass;
 use DateTime;
 use Exception;
 use Throwable;
-use Zend\InputFilter\InputFilterAwareInterface;
-use Zend\InputFilter\InputFilterInterface;
+use Laminas\InputFilter\InputFilterAwareInterface;
+use Laminas\InputFilter\InputFilterInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\Tools\Pagination\Paginator;

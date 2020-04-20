@@ -1,6 +1,6 @@
 <?php
 
-namespace AtpCore\Zf\Service;
+namespace AtpCore\Laminas\Service;
 
 use AtpCore\BaseClass;
 

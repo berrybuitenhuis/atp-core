@@ -1,10 +1,10 @@
 <?php
 
-namespace AtpCore\Zf\Factory;
+namespace AtpCore\Laminas\Factory;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class RepositoryFactory implements FactoryInterface
 {

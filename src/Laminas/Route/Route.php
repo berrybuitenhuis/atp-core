@@ -1,8 +1,8 @@
 <?php
 
-namespace AtpCore\Zf\Route;
+namespace AtpCore\Laminas\Route;
 
-use Zend\Router\Http\Segment;
+use Laminas\Router\Http\Segment;
 
 class Route
 {

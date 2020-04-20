@@ -1,8 +1,8 @@
 <?php
 
-namespace AtpCore\Zf\InputFilter;
+namespace AtpCore\Laminas\InputFilter;
 
-use Zend\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilter;
 
 class EntityInputFilter
 {
