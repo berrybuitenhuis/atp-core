@@ -1251,14 +1251,14 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             ->getRepository($this->getObjectName())
             ->find($id);
 
-        // Refresh entity (clear all local changes)
-        if ($refresh === true) {
-            $this->objectManager->refresh($object);
-        }
-
         if ($object == null) {
             $this->setMessages(['notFound' => $this->objectName. ' not found']);
             return false;
+        }
+
+        // Refresh entity (clear all local changes)
+        if ($refresh === true) {
+            $this->objectManager->refresh($object);
         }
 
         // Prepare data

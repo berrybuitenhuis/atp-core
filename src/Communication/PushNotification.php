@@ -3,9 +3,9 @@
 namespace AtpCore\Communication;
 
 use AtpCore\BaseClass;
-use Exception;
 use AtpCore\Api\OneSignal\Api;
 use AtpCore\Api\OneSignal\Entity\Notification;
+use Exception;
 
 class PushNotification extends BaseClass
 {

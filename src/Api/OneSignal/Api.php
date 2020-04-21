@@ -5,8 +5,8 @@
 namespace AtpCore\Api\OneSignal;
 
 use AtpCore\BaseClass;
-use Exception;
 use AtpCore\Api\OneSignal\Entity\Notification;
+use Exception;
 use GuzzleHttp\Client;
 
 class Api extends BaseClass
