@@ -22,6 +22,27 @@ class Date extends BaseClass
     }
 
     /**
+     * Return format of date-string
+     *
+     * @param string $dateString
+     * @return string|null
+     */
+    public static function getDateFormat($dateString) {
+        // Initialize date-format
+        $dateFormat = null;
+
+        // Check format of date-string
+        if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $dateString)) {
+            $dateFormat = "Y-m-d";
+        } elseif (preg_match("/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$/", $dateString)) {
+            $dateFormat = "d-m-Y";
+        }
+
+        // Return
+        return $dateFormat;
+    }
+
+    /**
      * Add interval (minutes, hours, days) to date-time
      *
      * @param int $interval
