@@ -59,12 +59,16 @@ class Api extends BaseClass
         $requestHeader = $this->clientHeaders;
         $requestHeader['Content-Length'] = strlen($body);
         $result = $this->client->post('order', ['headers'=>$requestHeader, 'body'=>$body]);
+        if ($result->getStatusCode() !== 202) {
+            $this->setMessages("{$result->getStatusCode()}: {$result->getReasonPhrase()}");
+            return false;
+        }
 
         // Convert result into response
         if ($requestHeader['Accept'] == 'application/json') {
-            $response = json_decode($result);
+            $response = json_decode($result->getBody()->getContents());
         } else {
-            $response = new SimpleXMLElement($result);
+            $response = new SimpleXMLElement($result->getBody()->getContents());
         }
 
         // Return
