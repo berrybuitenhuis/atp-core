@@ -44,18 +44,30 @@ class Input
     /**
      * Decode x-form-encoded data
      *
-     * @param string $dataString, example test=1&test2=3&data=1+2
-     * @return array
+     * @param string $dataString example: test=1&test2=3&data=1+2
+     * @param array|null $paramKeys parameter-keys
+     * @return array|object
      */
-    public static function formDecode($dataString)
+    public static function formDecode($dataString, $paramKeys = null)
     {
-        if (empty($dataString)) return [];
-        if (self::isJson($dataString)) return json_decode($dataString, true);
+        if (empty($dataString)) {
+            // Set empty parameter-list
+            $params = [];
+        } elseif (self::isJson($dataString)) {
+            // Decode JSON-string
+            $params = json_decode($dataString, true);
+        } else {
+            // Parse string into variables
+            parse_str($dataString, $params);
+        }
 
-        // Parse string into variables
-        parse_str($dataString, $output);
+        // Check if default parameter-keys available (set undefined keys to null)
+        if (!empty($paramKeys)) {
+            $params = self::setInputParams($params, $paramKeys);
+        }
 
-        return $output;
+        // Return
+        return $params;
     }
 
     /**
@@ -69,17 +81,6 @@ class Input
     }
 
     /**
-     * Check if string is JSON-string
-     *
-     * @param string $dataString
-     * @return boolean
-     */
-    public static function isJson($dataString)
-    {
-        return is_string($dataString) && is_array(json_decode($dataString, true)) && (json_last_error() == JSON_ERROR_NONE) ? true : false;
-    }
-
-    /**
      * Check if array is associative-array (or sequential)
      *
      * @param array $array
@@ -89,6 +90,17 @@ class Input
     {
         if (empty($array)) return false;
         return (array_keys($array) !== range(0, count($array)-1));
+    }
+
+    /**
+     * Check if string is JSON-string
+     *
+     * @param string $dataString
+     * @return boolean
+     */
+    public static function isJson($dataString)
+    {
+        return is_string($dataString) && is_array(json_decode($dataString, true)) && (json_last_error() == JSON_ERROR_NONE) ? true : false;
     }
 
     /**
@@ -145,13 +157,31 @@ class Input
     }
 
     /**
+     * Set parameters by input
+     *
+     * @param $params
+     * @return \stdClass
+     */
+    public static function setInputParams($params, $paramKeys) {
+        // Parse variables into params (set undefined indexes to null)
+        $output = new \stdClass;
+        foreach ($paramKeys AS $paramKey) {
+            $output->{$paramKey} = $params[$paramKey] ?? null;
+        }
+
+        // Return
+        return $output;
+    }
+
+    /**
      * Set parameters by request-object
      *
      * @param $params
-     * @return array
+     * @return \stdClass
      */
     public static function setParams($params)
     {
+        // Set parameters
         $params->fields = (isset($params->fields)) ? json_decode($params->fields, true) : null;
         $params->defaultFilter = (isset($params->defaultFilter)) ? json_decode($params->defaultFilter, true) : null;
         $params->filter = (isset($params->filter)) ? json_decode($params->filter, true) : null;
@@ -163,6 +193,7 @@ class Input
         $params->debug = (isset($params->debug) && ($params->debug == 'true' || $params->debug == 1)) ? true : false;
         $params->customRequestId = (isset($params->customRequestId) && !empty($params->customRequestId)) ? $params->customRequestId : null;
 
+        // Return
         return $params;
     }
 
