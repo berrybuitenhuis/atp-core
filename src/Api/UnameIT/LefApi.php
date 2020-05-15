@@ -130,7 +130,7 @@ class LefApi extends BaseClass
         $lead->addChild("LeadType", "Sales");
         $lead->addChild("SoortLead", "Taxatie");
         if (!empty($leadInfo->accountNumber)) $lead->addChild("AccountNummer", $leadInfo->accountNumber);
-        $lead->addChild("Omschrijving", "Gevraagd bod tbv Inruil van " . $vehicleCurrent->make . " " . $vehicleCurrent->model . " " . $vehicleCurrent->registration . ", " . date("d-m-Y"));
+        $lead->addChild("Omschrijving", "Gevraagd bod tbv Inruil van " . $this->sanitize($vehicleCurrent->make . " " . $vehicleCurrent->model) . " " . $vehicleCurrent->registration . ", " . date("d-m-Y"));
         if (!empty($vehicleInterest)) {
             $lead->addChild("LeadBron", "ATP inruilTaxatie met referentie");
         } else {
@@ -187,9 +187,9 @@ class LefApi extends BaseClass
 
         // Set vehicle-current attributes
         $vehicle = $lead->addChild("HuidigVoertuig");
-        $vehicle->addChild("Merk", $vehicleCurrent->make);
-        $vehicle->addChild("Model", $vehicleCurrent->model);
-        $vehicle->addChild("Uitvoering", $vehicleCurrent->type);
+        $vehicle->addChild("Merk", $this->sanitize($vehicleCurrent->make));
+        $vehicle->addChild("Model", $this->sanitize($vehicleCurrent->model));
+        $vehicle->addChild("Uitvoering", $this->sanitize($vehicleCurrent->type));
         $vehicle->addChild("Kenteken", $vehicleCurrent->registration);
         if (!empty($vehicleCurrent->year)) $vehicle->addChild("Bouwjaar", $vehicleCurrent->year);
         if (!empty($vehicleCurrent->fuelType)) $vehicle->addChild("SoortBrandstof", $this->convertFuelType($vehicleCurrent->fuelType));
@@ -197,9 +197,9 @@ class LefApi extends BaseClass
         // Set vehicle-interest attributes
         if (!empty($vehicleInterest)) {
             $interest = $lead->addChild("GewenstVoertuig");
-            $interest->addChild("Merk", $vehicleInterest->make);
-            $interest->addChild("Model", $vehicleInterest->model);
-            $interest->addChild("Uitvoering", $vehicleInterest->type);
+            $interest->addChild("Merk", $this->sanitize($vehicleInterest->make));
+            $interest->addChild("Model", $this->sanitize($vehicleInterest->model));
+            $interest->addChild("Uitvoering", $this->sanitize($vehicleInterest->type));
             $interest->addChild("Kenteken", $vehicleInterest->registration);
             if (!empty($vehicleInterest->year)) $interest->addChild("Bouwjaar", $vehicleInterest->year);
             if (!empty($vehicleInterest->fuelType))  $interest->addChild("SoortBrandstof", $this->convertFuelType($vehicleInterest->fuelType));
@@ -229,5 +229,23 @@ class LefApi extends BaseClass
 
         // Return
         return $xml->asXML();
+    }
+
+    /**
+     * Sanitize input for XML
+     *
+     * @param string $value
+     * @return string
+     */
+    private function sanitize($value)
+    {
+        // Trim
+        $value = trim($value);
+
+        // Remove uppercase html-entities (example: &AMP; -> &amp;)
+        $value = htmlentities(strtoupper(html_entity_decode(strtolower($value))));
+
+        // Return
+        return $value;
     }
 }
