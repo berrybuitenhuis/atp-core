@@ -219,24 +219,28 @@ class Date extends BaseClass
     private function convertInterval($interval, $format) {
         // Set interval (in seconds) by format
         switch (strtolower($format)) {
+            case "second":
             case "seconds":
             case "seconden":
             case "sec":
                 $numberOfDays = floor($interval / (60*60*24));
                 $intervalSeconds = $interval - ($numberOfDays * 60*60*24);
                 break;
+            case "minute":
             case "minutes":
             case "minuten":
             case "min":
                 $numberOfDays = floor($interval / (60*24));
                 $intervalSeconds = ($interval - ($numberOfDays * 60*24)) * 60;
                 break;
+            case "hour":
             case "hours":
             case "uren":
             case "u":
                 $numberOfDays = floor($interval / 24);
                 $intervalSeconds = ($interval - ($numberOfDays * 24)) * (60*60);
                 break;
+            case "day":
             case "days":
             case "dagen":
             case "d":
