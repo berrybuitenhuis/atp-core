@@ -369,7 +369,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         foreach ($requestedFields["fields"] AS $k => $v) {
             if (!isset($record[$v])) {
                 $values = $this->transformValues($record, [$v], $recordOrig);
-                if (!empty($values[$v])) {
+                if (!empty($values[$v]) || $values[$k] === false) {
                     $record[$v] = $values[$v];
                 }
                 $processedFields[] = $v;
@@ -389,7 +389,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             if (in_array(strtolower($k), $requestedFields["fields"]) && !in_array($k, $processedFields)) {
                 // Overwrite values
                 $values = $this->transformValues($record, [$k], $recordOrig);
-                if (!empty($values[$k])) {
+                if (!empty($values[$k]) || $values[$k] === false) {
                     $record[$k] = $values[$k];
                 } elseif (is_object($record[$k]) || is_array($record[$k])) {
                     $record[$k] = null;
