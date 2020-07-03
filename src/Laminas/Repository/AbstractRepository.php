@@ -253,6 +253,11 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         // Hydrate data to object
         $this->getHydrator()->hydrate($data, $object);
 
+        // Convert object-data to prepare for validation (if function available in repository)
+        if (method_exists($this, 'prepareObjectData')) {
+            $object = $this->prepareObjectData($object, true);
+        }
+
         // Check if data is valid
         $this->getInputFilter()->setData($this->getHydrator()->extract($object));
         if (!$this->getInputFilter()->isValid()) {
