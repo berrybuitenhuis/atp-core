@@ -372,7 +372,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         // Check unknown properties of record
         $processedFields = [];
         foreach ($requestedFields["fields"] AS $k => $v) {
-            if (!isset($record[$v])) {
+            if (!array_key_exists($v, $record)) {
                 $values = $this->transformValues($record, [$v], $recordOrig);
                 if (!empty($values[$v]) || $values[$k] === false) {
                     $record[$v] = $values[$v];
