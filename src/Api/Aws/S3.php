@@ -45,7 +45,7 @@ class S3 extends BaseClass
 
     /**
      * Upload file to AWS S3-bucket
-
+     *
      * @param string $bucket
      * @param string $filename
      * @param string $file
@@ -73,11 +73,45 @@ class S3 extends BaseClass
             return false;
         }
 
+        // Get content
+        $content = fopen($file, 'r');
+
+        // Upload file
+        return $this->save($bucket, $filename, $content, $acl, $overwrite);
+    }
+
+    /**
+     * Save file into AWS S3-bucket
+     *
+     * @param string $bucket
+     * @param string $filename
+     * @param string $content
+     * @param string $acl
+     * @param boolean $overwrite
+     * @return \Aws\Result|bool
+     */
+    public function save($bucket, $filename, $content, $acl = 'private', $overwrite = false)
+    {
+        // Check content
+        if (empty($content)) {
+            $this->setMessages("No content available");
+            return false;
+        }
+
+        // Check if file already exists (if overwrite disabled)
+        if ($overwrite !== true) {
+            $exists = $this->client->doesObjectExist($bucket, $filename);
+            if ($exists === true) {
+                $this->setMessages("File already exists (no overwrite allowed)");
+                return false;
+            }
+        }
+
         try {
             return $this->client->upload(
                 $bucket,
                 $filename,
-                fopen($file, 'r'),
+                $content,
                 $acl
             );
         } catch(Throwable $e) {
