@@ -47,16 +47,16 @@ class S3 extends BaseClass
      * Upload file to AWS S3-bucket
      *
      * @param string $bucket
-     * @param string $filename
      * @param string $file
+     * @param string|null $filename
      * @param string $acl
      * @param boolean $overwrite
      * @return \Aws\Result|bool
      */
-    public function upload($bucket, $filename, $file, $acl = 'private', $overwrite = false)
+    public function upload($bucket, $file, $filename = null, $acl = 'private', $overwrite = false)
     {
         // Check if file already exists (if overwrite disabled)
-        if ($overwrite !== true) {
+        if ($overwrite !== true && !empty($filename)) {
             $exists = $this->client->doesObjectExist($bucket, $filename);
             if ($exists === true) {
                 $this->setMessages("File already exists (no overwrite allowed)");
@@ -77,25 +77,30 @@ class S3 extends BaseClass
         $content = fopen($file, 'r');
 
         // Upload file
-        return $this->save($bucket, $filename, $content, $acl, $overwrite);
+        return $this->save($bucket, $content, $filename, $acl, $overwrite);
     }
 
     /**
      * Save file into AWS S3-bucket
      *
      * @param string $bucket
-     * @param string $filename
      * @param string $content
+     * @param string|null $filename
      * @param string $acl
      * @param boolean $overwrite
      * @return \Aws\Result|bool
      */
-    public function save($bucket, $filename, $content, $acl = 'private', $overwrite = false)
+    public function save($bucket, $content, $filename = null, $acl = 'private', $overwrite = false)
     {
         // Check content
         if (empty($content)) {
             $this->setMessages("No content available");
             return false;
+        }
+
+        // Get filename if not provided
+        if (empty($filename)) {
+            $filename = md5($content);
         }
 
         // Check if file already exists (if overwrite disabled)
