@@ -15,6 +15,7 @@
         "php": "^7.0",
         "aws/aws-sdk-php": "^3.70",
         "dompdf/dompdf": "^v0.8",
+        "gumlet/php-image-resize": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
         "guzzlehttp/psr7": "^1.4",
         "mailgun/mailgun-php": "^2.6",
