@@ -44,6 +44,33 @@ class S3 extends BaseClass
     }
 
     /**
+     * Delete file from AWS S3-bucket
+     *
+     * @param string $bucket
+     * @param string $filename
+     * @return bool
+     */
+    public function delete($bucket, $filename)
+    {
+        // Check object exists
+        $exists = $this->client->doesObjectExist($bucket, $filename);
+        if ($exists !== true) {
+            return true;
+        }
+
+        // Delete file
+        try {
+            $this->client->deleteObject(["Bucket"=>$bucket, "Key"=>$filename]);
+            return true;
+        } catch(Throwable $e) {
+            $this->setMessages("Delete failed");
+            $this->setErrorData($e->getMessage());
+            return false;
+        }
+
+    }
+
+    /**
      * Upload file to AWS S3-bucket
      *
      * @param string $bucket
@@ -88,9 +115,10 @@ class S3 extends BaseClass
      * @param string|null $filename
      * @param string $acl
      * @param boolean $overwrite
+     * @param boolean $skipIfExists
      * @return \Aws\Result|bool
      */
-    public function save($bucket, $content, $filename = null, $acl = 'private', $overwrite = false)
+    public function save($bucket, $content, $filename = null, $acl = 'private', $overwrite = false, $failIfExists = false)
     {
         // Check content
         if (empty($content)) {
@@ -106,19 +134,17 @@ class S3 extends BaseClass
         // Check if file already exists (if overwrite disabled)
         if ($overwrite !== true) {
             $exists = $this->client->doesObjectExist($bucket, $filename);
-            if ($exists === true) {
+            if ($exists === true && $failIfExists !== true) {
+                return $this->client->headObject(['Bucket'=>$bucket, 'Key'=>$filename]);
+            } elseif ($exists === true && $failIfExists === true) {
                 $this->setMessages("File already exists (no overwrite allowed)");
                 return false;
             }
         }
 
+        // Upload file to S3-bucket
         try {
-            return $this->client->upload(
-                $bucket,
-                $filename,
-                $content,
-                $acl
-            );
+            return $this->client->upload($bucket, $filename, $content, $acl);
         } catch(Throwable $e) {
             $this->setMessages("Upload failed");
             $this->setErrorData($e->getMessage());
