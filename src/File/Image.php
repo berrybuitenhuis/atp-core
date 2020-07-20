@@ -61,6 +61,10 @@ class Image
      */
     public function resizeByUrl($imageUrl, $maxHeight, $maxWidth)
     {
+        // Check status-code of URL
+        $validUrl = $this->validateUrl($imageUrl);
+        if ($validUrl !== true) return false;
+        
         try {
             $content = file_get_contents($imageUrl);
             if ($content === false) {
@@ -74,6 +78,18 @@ class Image
             $this->messages[] = "Unable to resize image";
             $this->errorData[] = $e->getMessage();
             return false;
+        }
+    }
+
+    public function validateUrl($imageUrl)
+    {
+        $headers = get_headers($imageUrl);
+        $statusCode = substr($headers[0], 9, 3);
+        if ($statusCode != "200") {
+            $this->messages[] = "Invalid image-url (status-code: {$statusCode})";
+            return false;
+        } else {
+            return true;
         }
     }
 
