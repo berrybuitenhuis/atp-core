@@ -44,6 +44,54 @@ class S3 extends BaseClass
     }
 
     /**
+     * Copy file to another S3-bucket
+     *
+     * @param string $sourceBucket
+     * @param string $sourceFilename
+     * @param string $targetBucket
+     * @param string $targetFilename
+     * @param boolean $overwrite
+     * @return boolean
+     */
+    public function copy($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $overwrite = false)
+    {
+        // Check if source-file exists
+        $exists = $this->client->doesObjectExist($sourceBucket, $sourceFilename);
+        if ($exists !== true) {
+            $this->setMessages("File doesn't exist");
+            return false;
+        }
+
+        // Check if target-file already exists (if overwrite disabled)
+        if ($overwrite !== true) {
+            $exists = $this->client->doesObjectExist($targetBucket, $targetFilename);
+            if ($exists === true) {
+                $this->setMessages("File already exists (no overwrite allowed)");
+                return false;
+            }
+        }
+
+        try {
+            // Copy file to S3-bucket
+            $result = $this->client->copyObject(['Bucket'=>$targetBucket, 'Key'=>$targetFilename, 'CopySource'=>"{$sourceBucket}/{$sourceFilename}"]);
+
+            // Check if target-file exists
+            $exists = $this->client->doesObjectExist($targetBucket, $targetFilename);
+            if ($exists !== true) {
+                $this->setMessages("File (target) not copied");
+                return false;
+            }
+
+            // Return
+            return $result;
+        } catch(Throwable $e) {
+            $this->setMessages("Copying file failed");
+            $this->setErrorData($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Delete file from AWS S3-bucket
      *
      * @param string $bucket
@@ -68,6 +116,38 @@ class S3 extends BaseClass
             return false;
         }
 
+    }
+
+    /**
+     * Move file to another S3-bucket
+     *
+     * @param string $sourceBucket
+     * @param string $sourceFilename
+     * @param string $targetBucket
+     * @param string $targetFilename
+     * @param boolean $overwrite
+     * @return boolean
+     */
+    public function move($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $overwrite = false)
+    {
+        $result = $this->copy($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $overwrite);
+        if ($result === false) return false;
+
+        try {
+            // Delete source-file
+            $res = $this->delete($sourceBucket, $sourceFilename);
+            if ($res !== true) {
+                $this->setMessages("File (source) not deleted");
+                return false;
+            }
+
+            // Return
+            return $result;
+        } catch(Throwable $e) {
+            $this->setMessages("Moving file failed");
+            $this->setErrorData($e->getMessage());
+            return false;
+        }
     }
 
     /**

@@ -15,7 +15,7 @@ class Image
      * @param string $content
      * @param int $maxHeight
      * @param int $maxWidth
-     * @return string
+     * @return string|boolean
      */
     public function resizeByContent($content, $maxHeight, $maxWidth)
     {
@@ -36,7 +36,7 @@ class Image
      * @param string $imagePath
      * @param int $maxHeight
      * @param int $maxWidth
-     * @return string
+     * @return string|boolean
      */
     public function resizeByFile($imagePath, $maxHeight, $maxWidth)
     {
@@ -57,7 +57,7 @@ class Image
      * @param string $imageUrl
      * @param int $maxHeight
      * @param int $maxWidth
-     * @return string
+     * @return string|boolean
      */
     public function resizeByUrl($imageUrl, $maxHeight, $maxWidth)
     {
