@@ -51,7 +51,7 @@ class S3 extends BaseClass
      * @param string $targetBucket
      * @param string $targetFilename
      * @param boolean $overwrite
-     * @return boolean
+     * @return \AWS\Result|boolean
      */
     public function copy($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $overwrite = false)
     {
@@ -119,6 +119,84 @@ class S3 extends BaseClass
     }
 
     /**
+     * Get tags of object
+     *
+     * @param string $bucket
+     * @param string $filename
+     * @return array|bool
+     */
+    public function getFileTags($bucket, $filename)
+    {
+        // Check if object exists
+        $exists = $this->client->doesObjectExist($bucket, $filename);
+        if ($exists !== true) {
+            $this->setMessages("File doesn't exist");
+            return false;
+        }
+
+        // Get current file-tags
+        try {
+            $tags = [];
+            $tagSet = $this->client->getObjectTagging(["Bucket" => $bucket, "Key" => $filename])->toArray()['TagSet'];
+            if (!empty($tagSet)) {
+                // Convert tag-set into key-value array
+                foreach ($tagSet AS $tag) {
+                    $tags[$tag['Key']] = $tag['Value'];
+                }
+            }
+
+            // Returns
+            return $tags;
+        } catch(Throwable $e) {
+            $this->setMessages("Getting file-tags failed");
+            $this->setErrorData($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Add/modify tag on existing object
+     *
+     * @param string $bucket
+     * @param string $filename
+     * @param array $tags (as key-value pairs)
+     * @return boolean
+     */
+    public function modifyFileTags($bucket, $filename, $tags)
+    {
+        // Get current file-tags
+        $tagArray = $this->getFileTags($bucket, $filename);
+        if ($tagArray === false) return false;
+
+        // Add/modify tags in tag-array
+        $tagArray = array_merge($tagArray, $tags);
+
+        // Convert key-value array into tag-set
+        $tagSet = [];
+        foreach ($tagArray AS $tagKey => $tagValue) {
+            $tagSet[] = ['Key'=>$tagKey, 'Value'=>$tagValue];
+        }
+
+        // Update file-tags
+        try {
+            $this->client->putObjectTagging([
+                'Bucket' => $bucket,
+                'Key' => $filename,
+                'Tagging' => [
+                    'TagSet' => $tagSet,
+                ],
+            ]);
+
+            // Return
+            return true;
+        } catch(Throwable $e) {
+            $this->setMessages("Modifying file-tags failed");
+            $this->setErrorData($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Move file to another S3-bucket
      *
      * @param string $sourceBucket
@@ -157,10 +235,11 @@ class S3 extends BaseClass
      * @param string $file
      * @param string|null $filename
      * @param string $acl
+     * @param array $tags
      * @param boolean $overwrite
      * @return \Aws\Result|bool
      */
-    public function upload($bucket, $file, $filename = null, $acl = 'private', $overwrite = false)
+    public function upload($bucket, $file, $filename = null, $acl = 'private', $tags = null, $overwrite = false)
     {
         // Check if file already exists (if overwrite disabled)
         if ($overwrite !== true && !empty($filename)) {
@@ -184,7 +263,7 @@ class S3 extends BaseClass
         $content = fopen($file, 'r');
 
         // Upload file
-        return $this->save($bucket, $content, $filename, $acl, $overwrite);
+        return $this->save($bucket, $content, $filename, $acl, $tags, $overwrite);
     }
 
     /**
@@ -194,11 +273,12 @@ class S3 extends BaseClass
      * @param string $content
      * @param string|null $filename
      * @param string $acl
+     * @param array $tags
      * @param boolean $overwrite
      * @param boolean $skipIfExists
      * @return \Aws\Result|bool
      */
-    public function save($bucket, $content, $filename = null, $acl = 'private', $overwrite = false, $failIfExists = false)
+    public function save($bucket, $content, $filename = null, $acl = 'private', $tags = null, $overwrite = false, $failIfExists = false)
     {
         // Check content
         if (empty($content)) {
@@ -222,9 +302,20 @@ class S3 extends BaseClass
             }
         }
 
+        // Set tag-string
+        $options = [];
+        if (!empty($tags)) {
+            $tagging = "";
+            foreach ($tags AS $tagKey => $tagValue) {
+                if (!empty($tagging)) $tagging .= "&";
+                $tagging .= "{$tagKey}={$tagValue}";
+            }
+            $options["Tagging"] = $tagging;
+        }
+
         // Upload file to S3-bucket
         try {
-            return $this->client->upload($bucket, $filename, $content, $acl);
+            return $this->client->upload($bucket, $filename, $content, $acl, $options);
         } catch(Throwable $e) {
             $this->setMessages("Upload failed");
             $this->setErrorData($e->getMessage());
