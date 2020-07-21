@@ -50,11 +50,12 @@ class S3 extends BaseClass
      * @param string $sourceFilename
      * @param string $targetBucket
      * @param string $targetFilename
+     * @param string $acl
      * @param boolean $overwrite
      * @param boolean $failIfExists
      * @return \AWS\Result|boolean
      */
-    public function copy($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $overwrite = false, $failIfExists = false)
+    public function copy($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $acl = 'private', $overwrite = false, $failIfExists = false)
     {
         // Check if source-file exists
         $exists = $this->client->doesObjectExist($sourceBucket, $sourceFilename);
@@ -76,7 +77,12 @@ class S3 extends BaseClass
 
         try {
             // Copy file to S3-bucket
-            $result = $this->client->copyObject(['Bucket'=>$targetBucket, 'Key'=>$targetFilename, 'CopySource'=>"{$sourceBucket}/{$sourceFilename}"]);
+            $result = $this->client->copyObject([
+                'Bucket' => $targetBucket,
+                'Key' => $targetFilename,
+                'CopySource' => "{$sourceBucket}/{$sourceFilename}",
+                'ACL' => $acl,
+            ]);
 
             // Check if target-file exists
             $exists = $this->client->doesObjectExist($targetBucket, $targetFilename);
@@ -206,13 +212,14 @@ class S3 extends BaseClass
      * @param string $sourceFilename
      * @param string $targetBucket
      * @param string $targetFilename
+     * @param string $acl
      * @param boolean $overwrite
      * @param boolean $failIfExists
      * @return \AWS\Result|boolean
      */
-    public function move($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $overwrite = false, $failIfExists = false)
+    public function move($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $acl = 'private', $overwrite = false, $failIfExists = false)
     {
-        $result = $this->copy($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $overwrite, $failIfExists);
+        $result = $this->copy($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $acl, $overwrite, $failIfExists);
         if ($result === false) return false;
 
         try {
