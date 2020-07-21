@@ -310,7 +310,7 @@ class S3 extends BaseClass
                 if (!empty($tagging)) $tagging .= "&";
                 $tagging .= "{$tagKey}={$tagValue}";
             }
-            $options["Tagging"] = $tagging;
+            $options['params']["Tagging"] = $tagging;
         }
 
         // Upload file to S3-bucket
