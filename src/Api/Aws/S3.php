@@ -51,9 +51,10 @@ class S3 extends BaseClass
      * @param string $targetBucket
      * @param string $targetFilename
      * @param boolean $overwrite
+     * @param boolean $failIfExists
      * @return \AWS\Result|boolean
      */
-    public function copy($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $overwrite = false)
+    public function copy($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $overwrite = false, $failIfExists = false)
     {
         // Check if source-file exists
         $exists = $this->client->doesObjectExist($sourceBucket, $sourceFilename);
@@ -65,7 +66,9 @@ class S3 extends BaseClass
         // Check if target-file already exists (if overwrite disabled)
         if ($overwrite !== true) {
             $exists = $this->client->doesObjectExist($targetBucket, $targetFilename);
-            if ($exists === true) {
+            if ($exists === true && $failIfExists !== true) {
+                return $this->client->headObject(['Bucket'=>$targetBucket, 'Key'=>$targetFilename]);
+            } elseif ($exists === true && $failIfExists === true) {
                 $this->setMessages("File already exists (no overwrite allowed)");
                 return false;
             }
@@ -204,11 +207,12 @@ class S3 extends BaseClass
      * @param string $targetBucket
      * @param string $targetFilename
      * @param boolean $overwrite
-     * @return boolean
+     * @param boolean $failIfExists
+     * @return \AWS\Result|boolean
      */
-    public function move($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $overwrite = false)
+    public function move($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $overwrite = false, $failIfExists = false)
     {
-        $result = $this->copy($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $overwrite);
+        $result = $this->copy($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $overwrite, $failIfExists);
         if ($result === false) return false;
 
         try {
