@@ -402,7 +402,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             } elseif (array_key_exists($fieldName, $requestedFields["entities"])) {
                 // Overwrite values
                 $fields = $requestedFields["entities"][$fieldName];
-                $values = $this->transformValues($fieldName, $fields, $fieldValue);
+                $values = $this->transformValues($fieldValue, $fields, $fieldValue);
                 if (!empty($values)) $record[$fieldName] = $values;
                 else unset($record[$fieldName]);
             } elseif (is_object($fieldValue) && !($fieldValue instanceof DateTime)) {
