@@ -177,21 +177,29 @@ class S3 extends BaseClass
     }
 
     /**
-     * Add/modify tags on existing object
+     * Add tags on existing object
      *
      * @param string $bucket
      * @param string $filename
      * @param array $tags (as key-value pairs)
      * @return boolean
      */
-    public function modifyFileTags($bucket, $filename, $tags)
+    public function addFileTags($bucket, $filename, $tags)
     {
         // Get current file-tags
         $tagArray = $this->getFileTags($bucket, $filename);
         if ($tagArray === false) return false;
 
-        // Add/modify tags in tag-array
-        $tagArray = array_merge($tagArray, $tags);
+        // Add new tags into existing tags
+        foreach ($tags AS $tagKey => $tagValue) {
+            if (array_key_exists($tagKey, $tagArray)) {
+                $tagValues = explode(",", $tagArray[$tagKey]);
+                $tagValues[] = $tagValue;
+                $tagArray[$tagKey] = implode(",", $tagValues);
+            } else {
+                $tagArray[$tagKey] = $tagValue;
+            }
+        }
 
         // Convert key-value array into tag-set
         $tagSet = [];
