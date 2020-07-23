@@ -128,6 +128,19 @@ class S3 extends BaseClass
     }
 
     /**
+     * Check if file exists in AWS S3-bucket
+     *
+     * @param string $bucket
+     * @param string $filename
+     * @return bool
+     */
+    public function exist($bucket, $filename)
+    {
+        // Check if file exists
+        return $this->client->doesObjectExist($bucket, $filename);
+    }
+
+    /**
      * Get tags of object
      *
      * @param string $bucket
