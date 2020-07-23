@@ -164,7 +164,7 @@ class S3 extends BaseClass
     }
 
     /**
-     * Add/modify tag on existing object
+     * Add/modify tags on existing object
      *
      * @param string $bucket
      * @param string $filename
@@ -234,6 +234,53 @@ class S3 extends BaseClass
             return $result;
         } catch(Throwable $e) {
             $this->setMessages("Moving file failed");
+            $this->setErrorData($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Replace tags on existing object (clear existing tags)
+     *
+     * @param string $bucket
+     * @param string $filename
+     * @param array $tags (as key-value pairs)
+     * @return boolean
+     */
+    public function replaceFileTags($bucket, $filename, $tags)
+    {
+        // Delete existing file-tags
+        try {
+            $this->client->deleteObjectTagging([
+                'Bucket' => $bucket,
+                'Key' => $filename,
+            ]);
+        } catch(Throwable $e) {
+            $this->setMessages("Deleting file-tags failed");
+            $this->setErrorData($e->getMessage());
+            return false;
+        }
+
+        // Convert key-value array into tag-set
+        $tagSet = [];
+        foreach ($tags AS $tagKey => $tagValue) {
+            $tagSet[] = ['Key'=>$tagKey, 'Value'=>$tagValue];
+        }
+
+        // Create file-tags
+        try {
+            $this->client->putObjectTagging([
+                'Bucket' => $bucket,
+                'Key' => $filename,
+                'Tagging' => [
+                    'TagSet' => $tagSet,
+                ],
+            ]);
+
+            // Return
+            return true;
+        } catch(Throwable $e) {
+            $this->setMessages("Creating file-tags failed");
             $this->setErrorData($e->getMessage());
             return false;
         }
