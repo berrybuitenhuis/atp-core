@@ -371,43 +371,43 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
 
         // Check unknown properties of record
         $processedFields = [];
-        foreach ($requestedFields["fields"] AS $k => $v) {
-            if (!array_key_exists($v, $record)) {
-                $values = $this->transformValues($record, [$v], $recordOrig);
-                if (!empty($values[$v]) || $values[$k] === false) {
-                    $record[$v] = $values[$v];
+        foreach ($requestedFields["fields"] AS $fieldName) {
+            if (!array_key_exists($fieldName, $record)) {
+                $values = $this->transformValues($record, [$fieldName], $recordOrig);
+                if (!empty($values[$fieldName]) || $values[$fieldName] === false) {
+                    $record[$fieldName] = $values[$fieldName];
                 }
-                $processedFields[] = $v;
+                $processedFields[] = $fieldName;
             }
         }
 
         // Iterate data-fields
         $requestedFields["fields"] = array_map("strtolower", $requestedFields["fields"]);
-        foreach ($record AS $k => $v) {
+        foreach ($record AS $fieldName => $fieldValue) {
             // Skip field if not configured for application
-            if (!in_array(strtolower($k), $requestedFields["fields"]) && !array_key_exists($k, $requestedFields["entities"])) {
-                unset($record[$k]);
+            if (!in_array(strtolower($fieldName), $requestedFields["fields"]) && !array_key_exists($fieldName, $requestedFields["entities"])) {
+                unset($record[$fieldName]);
                 continue;
             }
 
             // Transform/unset values
-            if (in_array(strtolower($k), $requestedFields["fields"]) && !in_array($k, $processedFields)) {
+            if (in_array(strtolower($fieldName), $requestedFields["fields"]) && !in_array($fieldName, $processedFields)) {
                 // Overwrite values
-                $values = $this->transformValues($record, [$k], $recordOrig);
-                if (!empty($values[$k]) || $values[$k] === false) {
-                    $record[$k] = $values[$k];
-                } elseif (is_object($record[$k]) || is_array($record[$k])) {
-                    $record[$k] = null;
+                $values = $this->transformValues($record, [$fieldName], $recordOrig);
+                if (!empty($values[$fieldName]) || $values[$fieldName] === false) {
+                    $record[$fieldName] = $values[$fieldName];
+                } elseif (is_object($record[$fieldName]) || is_array($record[$fieldName])) {
+                    $record[$fieldName] = null;
                 }
-            } elseif (array_key_exists($k, $requestedFields["entities"])) {
+            } elseif (array_key_exists($fieldName, $requestedFields["entities"])) {
                 // Overwrite values
-                $fields = $requestedFields["entities"][$k];
-                $values = $this->transformValues($v, $fields, $v);
-                if (!empty($values)) $record[$k] = $values;
-                else unset($record[$k]);
-            } elseif (is_object($v) && !($v instanceof DateTime)) {
+                $fields = $requestedFields["entities"][$fieldName];
+                $values = $this->transformValues($fieldName, $fields, $fieldValue);
+                if (!empty($values)) $record[$fieldName] = $values;
+                else unset($record[$fieldName]);
+            } elseif (is_object($fieldValue) && !($fieldValue instanceof DateTime)) {
                 // Unset data-field if value is object
-                unset($record[$k]);
+                unset($record[$fieldName]);
             }
         }
 
