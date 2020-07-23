@@ -193,9 +193,9 @@ class S3 extends BaseClass
         // Add new tags into existing tags
         foreach ($tags AS $tagKey => $tagValue) {
             if (array_key_exists($tagKey, $tagArray)) {
-                $tagValues = explode(",", $tagArray[$tagKey]);
+                $tagValues = explode(" ", $tagArray[$tagKey]);
                 $tagValues[] = $tagValue;
-                $tagArray[$tagKey] = implode(",", array_unique($tagValues));
+                $tagArray[$tagKey] = implode(" ", array_unique($tagValues));
             } else {
                 $tagArray[$tagKey] = $tagValue;
             }
