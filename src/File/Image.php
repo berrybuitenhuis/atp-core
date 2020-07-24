@@ -20,9 +20,13 @@ class Image
     public function resizeByContent($content, $maxHeight, $maxWidth)
     {
         try {
+            // Resize image
             $image = ImageResize::createFromString($content);
             $image->resizeToBestFit($maxWidth, $maxHeight);
-            return $image->getImageAsString();
+            $resizedImageString = $image->getImageAsString();
+
+            // Optimized image
+            return $this->optimize($resizedImageString);
         } catch (\Throwable $e) {
             $this->messages[] = "Unable to resize image";
             $this->errorData[] = $e->getMessage();
@@ -41,9 +45,13 @@ class Image
     public function resizeByFile($imagePath, $maxHeight, $maxWidth)
     {
         try {
+            // Resize image
             $image = new ImageResize($imagePath);
             $image->resizeToBestFit($maxWidth, $maxHeight);
-            return $image->getImageAsString();
+            $resizedImageString = $image->getImageAsString();
+
+            // Optimized image
+            return $this->optimize($resizedImageString);
         } catch (\Throwable $e) {
             $this->messages[] = "Unable to resize image";
             $this->errorData[] = $e->getMessage();
@@ -93,4 +101,31 @@ class Image
         }
     }
 
+    private function optimize($imageString)
+    {
+        // Create temporary file
+        $filename = tempnam(sys_get_temp_dir(), "image-optimizer");
+        file_put_contents($filename, $imageString);
+
+        // Optimize image
+        try {
+            $optimizerChain = OptimizerChainFactory::create();
+            $optimizerChain->optimize($filename);
+            $optimizedImageString = file_get_contents($filename);
+
+            // Remove temporary file
+            unlink($filename);
+
+            // Return
+            return $optimizedImageString;
+        } catch (\Throwable $e) {
+            // Remove temporary file
+            unlink($filename);
+
+            // Set errors
+            $this->messages[] = "Unable to optimize image";
+            $this->errorData[] = $e->getMessage();
+            return false;
+        }
+    }
 }

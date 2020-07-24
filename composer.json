@@ -20,6 +20,7 @@
         "guzzlehttp/psr7": "^1.4",
         "mailgun/mailgun-php": "^2.6",
         "php-http/curl-client": "^v1.7",
+        "spatie/image-optimizer": "^v1.2",
         "twig/twig": "^v2.11"
     },
     "autoload": {
