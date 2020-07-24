@@ -3,6 +3,7 @@
 namespace AtpCore\File;
 
 use \Gumlet\ImageResize;
+use \Spatie\ImageOptimizer\OptimizerChainFactory;
 
 class Image
 {
