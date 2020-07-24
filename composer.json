@@ -12,7 +12,7 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.0",
         "aws/aws-sdk-php": "^3.70",
         "dompdf/dompdf": "^v0.8",
         "gumlet/php-image-resize": "^2.0",
@@ -20,7 +20,7 @@
         "guzzlehttp/psr7": "^1.4",
         "mailgun/mailgun-php": "^2.6",
         "php-http/curl-client": "^v1.7",
-        "spatie/image-optimizer": "^1.2",
+        "spatie/image-optimizer": "1.1.4",
         "twig/twig": "^v2.11"
     },
     "autoload": {
