@@ -141,8 +141,8 @@ class Image extends BaseClass
         }
 
         // Set memory-size to avoid OOM
-        ini_set('memory_limit', '500M');
-        
+        ini_set('memory_limit', '1024M');
+
         try {
             // Initialize image
             if (!empty($path)) $image = new ImageResize($path);
