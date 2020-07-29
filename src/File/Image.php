@@ -152,8 +152,10 @@ class Image extends BaseClass
 
             // Resize thumbnail (if requested)
             if ($thumb === true) {
-                $image->resizeToBestFit($thumbMaxWidth, $thumbMaxHeight);
-                $resizedThumbString = $image->getImageAsString();
+                if (!empty($path)) $thumbnail = new ImageResize($path);
+                else $thumbnail = ImageResize::createFromString($content);
+                $thumbnail->resizeToBestFit($thumbMaxWidth, $thumbMaxHeight);
+                $resizedThumbString = $thumbnail->getImageAsString();
             }
 
             // Optimize image
