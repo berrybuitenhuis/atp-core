@@ -8,6 +8,23 @@ use \Spatie\ImageOptimizer\OptimizerChainFactory;
 
 class Image extends BaseClass
 {
+
+    /**
+     * Convert base64-encoded image-content
+     * @param string $imageContent
+     * @return string
+     */
+    public static function convertBase64Content($imageContent)
+    {
+        // Check if image-content is valid base64-encoded string
+        if (preg_match("/^data:image\/(bmp|jpeg|png|gif);base64,(.*)$/", $imageContent, $data)) {
+            $imageContent = $data[2];
+        }
+
+        // Return
+        return base64_decode($imageContent);
+    }
+
     /**
      * Resize image by content
      *
