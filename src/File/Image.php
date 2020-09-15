@@ -95,6 +95,17 @@ class Image extends BaseClass
      */
     public function validateUrl($url)
     {
+        // Prevent error "Failed to enable crypto":
+        // The issue is down to the server certificate being presented as a wildcard so it can allow all sub-domains under the same certificate,
+        // but for some reason the wildcard is used literally during the SSL verify leading to failure
+        // Solution: https://stackoverflow.com/questions/40830265/php-errors-with-get-headers-and-ssl
+        stream_context_set_default([
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+            ],
+        ]);
+
         $headers = get_headers($url);
         $statusCode = substr($headers[0], 9, 3);
         if ($statusCode != "200") {
