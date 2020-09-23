@@ -12,6 +12,38 @@ class Service extends BaseClass
     protected $repository;
 
     /**
+     * @param array $data
+     * @param string $output
+     * @param array $overrule
+     * @return mixed
+     */
+    public function create($data, $output = 'object', $overrule = [])
+    {
+        $res = $this->repository->create($data, $output, $overrule);
+        if ($res === false) {
+            $this->setMessages($this->repository->getMessages());
+            $this->setErrorData($this->repository->getErrorData());
+        }
+        return $res;
+    }
+
+    /**
+     * @param int $id
+     * @param bool $remove
+     * @param bool $refresh
+     * @return mixed
+     */
+    public function delete($id, $remove = false, $refresh = false)
+    {
+        $res = $this->repository->delete($id, $remove, $refresh);
+        if ($res === false) {
+            $this->setMessages($this->repository->getMessages());
+            $this->setErrorData($this->repository->getErrorData());
+        }
+        return $res;
+    }
+
+    /**
      * @param int $id
      * @param string $output
      * @param bool $refresh
@@ -78,14 +110,15 @@ class Service extends BaseClass
     }
 
     /**
+     * @param int $id
      * @param array $data
      * @param string $output
-     * @param array $overrule
+     * @param bool $refresh
      * @return mixed
      */
-    public function create($data, $output = 'object', $overrule = [])
+    public function patch($id, $data, $output = 'object', $refresh = false)
     {
-        $res = $this->repository->create($data, $output, $overrule);
+        $res = $this->repository->update($id, $data, $output, $refresh);
         if ($res === false) {
             $this->setMessages($this->repository->getMessages());
             $this->setErrorData($this->repository->getErrorData());
@@ -103,22 +136,6 @@ class Service extends BaseClass
     public function update($id, $data, $output = 'object', $refresh = false)
     {
         $res = $this->repository->update($id, $data, $output, $refresh);
-        if ($res === false) {
-            $this->setMessages($this->repository->getMessages());
-            $this->setErrorData($this->repository->getErrorData());
-        }
-        return $res;
-    }
-
-    /**
-     * @param int $id
-     * @param bool $remove
-     * @param bool $refresh
-     * @return mixed
-     */
-    public function delete($id, $remove = false, $refresh = false)
-    {
-        $res = $this->repository->delete($id, $remove, $refresh);
         if ($res === false) {
             $this->setMessages($this->repository->getMessages());
             $this->setErrorData($this->repository->getErrorData());
