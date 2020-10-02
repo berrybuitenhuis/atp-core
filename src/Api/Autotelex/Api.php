@@ -89,6 +89,24 @@ class Api extends BaseClass
     }
 
     /**
+     * Get vehicle-data
+     *
+     * @param int $externalId
+     * @return bool|object
+     */
+    public function getVehicle($externalId)
+    {
+        $params = ["vendorToken"=>$this->token, "tp"=>["ExternalID"=>$externalId]];
+        $result = $this->client->GetVehicle($params);
+        $status = $result->GetVehicleResult->Status;
+        if ($status->Code == 0) {
+            return false;
+        } else {
+            return $result->GetVehicleResult;
+        }
+    }
+
+    /**
      * Send bid to Autotelex
      *
      * @param int $externalId
