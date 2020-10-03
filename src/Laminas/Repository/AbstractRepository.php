@@ -1119,6 +1119,34 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     }
 
     /**
+     * Get field-value (result) by field-value(s) (search)
+     *
+     * @param string $searchField
+     * @param string|array $value
+     * @param string $resultField
+     * @return string|array
+     */
+    public function getFieldByValue($searchField, $value, $resultField)
+    {
+        // Find records by field-value parameters
+        $multiple = (is_array($value)) ? true : false;
+        $records = $this->getByParameters([$searchField=>$value], "object", $multiple);
+
+        // Return
+        if (is_array($value)) {
+            // Get multiple values
+            $values = [];
+            foreach ($records AS $record) {
+                $values[] = $record->{'get' . ucfirst($resultField)}();
+            }
+
+            return $values;
+        } else {
+            return $records->{'get' . ucfirst($resultField)}();
+        }
+    }
+
+    /**
      * Get id(s) by field-value(s)
      *
      * @param string $field
