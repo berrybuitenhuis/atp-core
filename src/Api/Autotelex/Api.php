@@ -100,9 +100,11 @@ class Api extends BaseClass
         $result = $this->client->GetVehicle($params);
         $status = $result->GetVehicleResult->Status;
         if ($status->Code == 0) {
-            return false;
-        } else {
             return $result->GetVehicleResult;
+        } else {
+            $this->setErrorData($status);
+            $this->setMessages($status->Message);
+            return false;
         }
     }
 
