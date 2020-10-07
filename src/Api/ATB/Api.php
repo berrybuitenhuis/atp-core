@@ -48,7 +48,7 @@ class Api extends BaseClass
      * @param string $vehicleType
      * @return object|bool
      */
-    function getATB54($accessoryIds, $vehicleType)
+    public function getATB54($accessoryIds, $vehicleType)
     {
         // Set payload
         $body = [
