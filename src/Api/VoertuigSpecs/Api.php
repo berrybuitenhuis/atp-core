@@ -184,39 +184,23 @@ class Api extends BaseClass
     }
 
     /**
-     * Save description as lead/valuation-request
+     * Save description as valuation-request
      *
-     * @param string $requestType
+     * @param int $valuationTypeId
+     * @param array $valuationParams
      * @return false|int
      */
-    public function saveRequest($requestType)
+    public function saveValuation($valuationTypeId, $valuationParams)
     {
         $params = [];
-        if ($requestType == 'valuation') {
-            $pluginId = 2;
-            $saveActionName = 'savevaluation';
+        $params["valuationType"] = $valuationTypeId;
+        $params["valuationParams"] = $valuationParams;
+        if (!empty($this->companyId)) $params["valuationParams"]["companyId"] = $this->companyId;
+        if (!empty($this->personId)) $params["valuationParams"]["personId"] = $this->personId;
 
-            // Add specific params
-            if ($this->applicationId != 108 && $this->applicationId != 1000) {
-                $params["valuationType"] = '1'; // valuation-type "normal"
-            } else {
-                $descriptionData = $this->getDescription();
-                $params["valuationType"] = $descriptionData->Data->Objects->Valuation->Fields->tax_valuationTypeId->value;
-            }
-            if (!empty($this->companyId)) $params["valuationParams"]["companyId"] = $this->companyId;
-            if (!empty($this->personId)) $params["valuationParams"]["personId"] = $this->personId;
-        } else {
-            $pluginId = 3;
-            $saveActionName = 'savelead';
-
-            // Add specific params
-            if (!empty($this->companyId)) $params["companyId"] = $this->companyId;
-            if (!empty($this->personId)) $params["personId"] = $this->personId;
-        }
-
-        // Validate required-fields for saving valuation/lead
+        // Validate required-fields for saving valuation
         $error = null;
-        $valid = $this->validateInputRequirements($pluginId);
+        $valid = $this->validateInputRequirements(2);
         if ($valid === true) {
             // Set payload
             $body = [
@@ -225,7 +209,7 @@ class Api extends BaseClass
                         "token" => $this->token,
                         "spec_id" => $this->descriptionId
                     ],
-                    $saveActionName => $paramsSave
+                    "savevaluation" => $params
                 ]
             ];
 
@@ -236,8 +220,7 @@ class Api extends BaseClass
 
             // Return
             if (isset($response->response)) {
-                if ($requestType == 'valuation') return $response->response->data->valuationId;
-                else return $response->response->data->valuationLeadId;
+                return $response->response->data->valuationId;
             } else {
                 $this->setErrorData($response);
                 $this->setMessages($response->errors->error);
@@ -358,9 +341,10 @@ class Api extends BaseClass
     /**
      * Validate provided input by required-fields
      *
+     * @param int $pluginId
      * @return bool
      */
-    private function validateInputRequirements()
+    private function validateInputRequirements($pluginId)
     {
         // Set payload
         $body = [
