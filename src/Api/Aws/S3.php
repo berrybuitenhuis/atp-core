@@ -52,10 +52,10 @@ class S3 extends BaseClass
      * @param string $targetFilename
      * @param string $acl
      * @param boolean $overwrite
-     * @param boolean $failIfExists
+     * @param boolean $failIfTargetExists
      * @return \AWS\Result|boolean
      */
-    public function copy($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $acl = 'private', $overwrite = false, $failIfExists = false)
+    public function copy($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $acl = 'private', $overwrite = false, $failIfTargetExists = false)
     {
         // Check if source-file exists
         $exists = $this->client->doesObjectExist($sourceBucket, $sourceFilename);
@@ -67,9 +67,9 @@ class S3 extends BaseClass
         // Check if target-file already exists (if overwrite disabled)
         if ($overwrite !== true) {
             $exists = $this->client->doesObjectExist($targetBucket, $targetFilename);
-            if ($exists === true && $failIfExists !== true) {
+            if ($exists === true && $failIfTargetExists !== true) {
                 return $this->client->headObject(['Bucket'=>$targetBucket, 'Key'=>$targetFilename]);
-            } elseif ($exists === true && $failIfExists === true) {
+            } elseif ($exists === true && $failIfTargetExists === true) {
                 $this->setMessages("File already exists (no overwrite allowed)");
                 return false;
             }
@@ -235,12 +235,12 @@ class S3 extends BaseClass
      * @param string $targetFilename
      * @param string $acl
      * @param boolean $overwrite
-     * @param boolean $failIfExists
+     * @param boolean $failIfTargetExists
      * @return \AWS\Result|boolean
      */
-    public function move($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $acl = 'private', $overwrite = false, $failIfExists = false)
+    public function move($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $acl = 'private', $overwrite = false, $failIfTargetExists = false)
     {
-        $result = $this->copy($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $acl, $overwrite, $failIfExists);
+        $result = $this->copy($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $acl, $overwrite, $failIfTargetExists);
         if ($result === false) return false;
 
         try {
@@ -354,10 +354,10 @@ class S3 extends BaseClass
      * @param string $acl
      * @param array $tags
      * @param boolean $overwrite
-     * @param boolean $skipIfExists
+     * @param boolean $failIfTargetExists
      * @return \Aws\Result|bool
      */
-    public function save($bucket, $content, $filename = null, $acl = 'private', $tags = null, $overwrite = false, $failIfExists = false)
+    public function save($bucket, $content, $filename = null, $acl = 'private', $tags = null, $overwrite = false, $failIfTargetExists = false)
     {
         // Check content
         if (empty($content)) {
@@ -373,9 +373,9 @@ class S3 extends BaseClass
         // Check if file already exists (if overwrite disabled)
         if ($overwrite !== true) {
             $exists = $this->client->doesObjectExist($bucket, $filename);
-            if ($exists === true && $failIfExists !== true) {
+            if ($exists === true && $failIfTargetExists !== true) {
                 return $this->client->headObject(['Bucket'=>$bucket, 'Key'=>$filename]);
-            } elseif ($exists === true && $failIfExists === true) {
+            } elseif ($exists === true && $failIfTargetExists === true) {
                 $this->setMessages("File already exists (no overwrite allowed)");
                 return false;
             }
