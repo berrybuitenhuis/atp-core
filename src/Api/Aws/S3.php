@@ -198,7 +198,10 @@ class S3 extends BaseClass
             if (array_key_exists($tagKey, $tagArray)) {
                 $tagValues = explode(" ", $tagArray[$tagKey]);
                 $tagValues[] = $tagValue;
-                $tagArray[$tagKey] = implode(" ", array_unique($tagValues));
+                $tagValueString = implode(" ", array_unique($tagValues));
+                if (strlen($tagValueString) <= 256) {
+                    $tagArray[$tagKey] = $tagValueString;
+                }
             } else {
                 $tagArray[$tagKey] = $tagValue;
             }
