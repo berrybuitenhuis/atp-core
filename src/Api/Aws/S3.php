@@ -58,19 +58,22 @@ class S3 extends BaseClass
     public function copy($sourceBucket, $sourceFilename, $targetBucket, $targetFilename, $acl = 'private', $overwrite = false, $failIfTargetExists = false)
     {
         // Check if source-file exists
-        $exists = $this->client->doesObjectExist($sourceBucket, $sourceFilename);
-        if ($exists !== true) {
-            $this->setMessages("File doesn't exist");
+        $sourceExists = $this->client->doesObjectExist($sourceBucket, $sourceFilename);
+        if ($sourceExists !== true && $overwrite === true) {
+            $this->setMessages("Source file doesn't exist");
             return false;
         }
 
         // Check if target-file already exists (if overwrite disabled)
         if ($overwrite !== true) {
-            $exists = $this->client->doesObjectExist($targetBucket, $targetFilename);
-            if ($exists === true && $failIfTargetExists !== true) {
+            $targetExists = $this->client->doesObjectExist($targetBucket, $targetFilename);
+            if ($targetExists === true && $failIfTargetExists !== true) {
                 return $this->client->headObject(['Bucket'=>$targetBucket, 'Key'=>$targetFilename]);
-            } elseif ($exists === true && $failIfTargetExists === true) {
-                $this->setMessages("File already exists (no overwrite allowed)");
+            } elseif ($targetExists === true && $failIfTargetExists === true) {
+                $this->setMessages("Target file already exists (no overwrite allowed)");
+                return false;
+            } elseif ($sourceExists !== true) {
+                $this->setMessages("Source file doesn't exist");
                 return false;
             }
         }
