@@ -75,7 +75,7 @@ class Api extends BaseClass
             return true;
         } else {
             $this->setErrorData($response);
-            $this->setMessages($response->errors->error);
+            $this->setMessages($response->errors->error->message);
             return false;
         }
     }
@@ -112,7 +112,7 @@ class Api extends BaseClass
             return $vimImageId;
         } else {
             $this->setErrorData($response);
-            $this->setMessages($response->errors->error);
+            $this->setMessages($response->errors->error->message);
             return false;
         }
     }
@@ -145,7 +145,7 @@ class Api extends BaseClass
             return true;
         } else {
             $this->setErrorData($response);
-            $this->setMessages($response->errors->error);
+            $this->setMessages($response->errors->error->message);
             return false;
         }
     }
@@ -178,7 +178,7 @@ class Api extends BaseClass
             return $response->response->data;
         } else {
             $this->setErrorData($response);
-            $this->setMessages($response->errors->error);
+            $this->setMessages($response->errors->error->message);
             return false;
         }
     }
@@ -223,7 +223,7 @@ class Api extends BaseClass
                 return $response->response->data->valuationId;
             } else {
                 $this->setErrorData($response);
-                $this->setMessages($response->errors->error);
+                $this->setMessages($response->errors->error->message);
                 return false;
             }
         } else {
@@ -260,7 +260,7 @@ class Api extends BaseClass
             return true;
         } else {
             $this->setErrorData($response);
-            $this->setMessages($response->errors->error);
+            $this->setMessages($response->errors->error->message);
             return false;
         }
     }
@@ -292,7 +292,7 @@ class Api extends BaseClass
             return true;
         } else {
             $this->setErrorData($response);
-            $this->setMessages($response->errors->error);
+            $this->setMessages($response->errors->error->message);
             return false;
         }
     }
@@ -333,7 +333,7 @@ class Api extends BaseClass
             return true;
         } else {
             $this->setErrorData($response);
-            $this->setMessages($response->errors->error);
+            $this->setMessages($response->errors->error->message);
             return false;
         }
     }
@@ -369,7 +369,7 @@ class Api extends BaseClass
             return true;
         } else {
             $this->setErrorData($response);
-            $this->setMessages($response->errors->error);
+            $this->setMessages($response->errors->error->message);
             return false;
         }
     }
