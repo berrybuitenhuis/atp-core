@@ -7,11 +7,6 @@ namespace AtpCore\Laminas\Options;
  */
 interface OptionsInterface
 {
-    /**
-     * Constructor
-     */
-    public function __construct();
-
     /*
      * Get filter for client
      *
