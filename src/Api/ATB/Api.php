@@ -32,13 +32,14 @@ class Api extends BaseClass
         // Reset error-messages
         $this->resetErrors();
 
-        // Get token
-        $this->getToken($username, $password);
-
         // Set default header for client-requests
         $this->clientHeaders = [
-            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+            'Content-Type' => 'text/json',
         ];
+
+        // Get token
+        $this->getToken($username, $password);
     }
 
     /**
@@ -50,6 +51,12 @@ class Api extends BaseClass
      */
     public function getATB54($accessoryIds, $vehicleType)
     {
+        // Check token
+        if (empty($this->token)) {
+            $this->setMessages("Not authorized");
+            return false;
+        }
+
         // Set payload
         $body = [
             "get" => [
@@ -60,7 +67,7 @@ class Api extends BaseClass
                 "data" => [
                     "message" => "54",
                     "parameters" => [
-                        "autotelex_ids" => $accessoryIds,
+                        "autotelex_ids" => json_encode($accessoryIds),
                         "vehicletype" => $vehicleType,
                     ],
                 ],
@@ -100,7 +107,7 @@ class Api extends BaseClass
         ];
 
         // Execute call
-        $requestHeader = ["Content-Type: application/json"];
+        $requestHeader = $this->clientHeaders;
         $result = $this->client->put('gethash/', ['headers'=>$requestHeader, 'body'=>json_encode($body)]);
         $response = json_decode((string) $result->getBody());
 
