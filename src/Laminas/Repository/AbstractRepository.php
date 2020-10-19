@@ -769,8 +769,10 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         $parameters = [];
 
         // Get object and field-methods
-        $objectMethods = get_class_methods(new $this->objectName());
-        $fieldMethods = preg_filter('/^/', 'get', array_map("ucfirst", $fields));
+        if (!empty($fields)) {
+            $objectMethods = get_class_methods(new $this->objectName());
+            $fieldMethods = preg_filter('/^/', 'get', array_map("ucfirst", $fields));
+        }
 
         // Set fields
         if ($fields !== false && !empty($fields) && \AtpCore\Input::containsCapitalizedValue($fields) === false && empty(array_diff($fieldMethods, $objectMethods))) {
