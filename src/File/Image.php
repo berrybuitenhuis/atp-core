@@ -26,6 +26,34 @@ class Image extends BaseClass
     }
 
     /**
+     * Read image (content) by URL
+     *
+     * @param string $url
+     * @return false|string
+     */
+    public function readImageByUrl($url)
+    {
+        // Check status-code of URL
+        $validUrl = $this->validateUrl($url);
+        if ($validUrl !== true) return false;
+
+        try {
+            $content = file_get_contents($url);
+            if ($content === false) {
+                $this->setMessages("Unable to read image");
+                $this->setErrorData("Unknown image-url");
+                return false;
+            } else {
+                return $content;
+            }
+        } catch (\Throwable $e) {
+            $this->setMessages("Unable to read image");
+            $this->setErrorData($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Resize image by content
      *
      * @param string $content
@@ -67,24 +95,12 @@ class Image extends BaseClass
      */
     public function resizeByUrl($url, $maxHeight, $maxWidth, $thumbMaxHeight = null, $thumbMaxWidth = null)
     {
-        // Check status-code of URL
-        $validUrl = $this->validateUrl($url);
-        if ($validUrl !== true) return false;
-        
-        try {
-            $content = file_get_contents($url);
-            if ($content === false) {
-                $this->setMessages("Unable to resize image");
-                $this->setErrorData("Unknown image-url");
-                return false;
-            } else {
-                return $this->resize(null, $content, $maxHeight, $maxWidth, $thumbMaxHeight, $thumbMaxWidth);
-            }
-        } catch (\Throwable $e) {
-            $this->setMessages("Unable to resize image");
-            $this->setErrorData($e->getMessage());
-            return false;
-        }
+        // Get image-content
+        $content = $this->readImageByUrl($url);
+        if ($content === false) return false;
+
+        // Resize image
+        return $this->resize(null, $content, $maxHeight, $maxWidth, $thumbMaxHeight, $thumbMaxWidth);
     }
 
     /**
