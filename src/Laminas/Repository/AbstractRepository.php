@@ -1109,6 +1109,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         // Find records by field-value parameters
         $multiple = (is_array($id)) ? true : false;
         $records = $this->getByParameters(['id'=>$id], "object", $multiple);
+        if ($records === false) return null;
 
         // Return
         if (is_array($id)) {
@@ -1137,6 +1138,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         // Find records by field-value parameters
         $multiple = (is_array($value)) ? true : false;
         $records = $this->getByParameters([$searchField=>$value], "object", $multiple);
+        if ($records === false) return null;
 
         // Return
         if (is_array($value)) {
@@ -1164,6 +1166,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         // Find records by field-value parameters
         $multiple = (is_array($value)) ? true : false;
         $records = $this->getByParameters([$field=>$value], "object", $multiple);
+        if ($records === false) return null;
 
         // Return
         if (is_array($value)) {
