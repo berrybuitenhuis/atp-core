@@ -197,7 +197,7 @@ class Input
         return $params;
     }
 
-    public function stripSlashes($var)
+    public static function stripSlashes($var)
     {
         // Avoid converting nullable-values into empty-string ("") with stripslashes
         if ($var === null) {
