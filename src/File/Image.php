@@ -33,6 +33,9 @@ class Image extends BaseClass
      */
     public function readImageByUrl($url)
     {
+        // Strip slashes from URL (to avoid get_headers(): This function may only be used against URLs in php shell code)
+        $url = stripslashes($url);
+
         // Check status-code of URL
         $validUrl = $this->validateUrl($url);
         if ($validUrl !== true) return false;
