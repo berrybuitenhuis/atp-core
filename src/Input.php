@@ -197,4 +197,24 @@ class Input
         return $params;
     }
 
+    public function stripSlashes($var)
+    {
+        // Avoid converting nullable-values into empty-string ("") with stripslashes
+        if ($var === null) {
+            return null;
+        }
+
+        // Avoid converting integer-value into string-value with stripslashes
+        if (is_int($var)) {
+            return $var;
+        }
+
+        // Apply function on uni/multidimensional array
+        if (is_array($var)) {
+            return array_map([__CLASS__, 'stripSlashes'], $var);
+        }
+
+        // Return stripslashed-value of $var
+        return stripslashes($var);
+    }
 }
