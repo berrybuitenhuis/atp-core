@@ -232,6 +232,16 @@ class Api extends BaseClass
     }
 
     /**
+     * Set description-id (for continue existing description)
+     *
+     * @param int $descriptionId
+     */
+    public function setDescription($descriptionId)
+    {
+        $this->descriptionId = $descriptionId;
+    }
+
+    /**
      * Update description-data
      *
      * @param array $data
