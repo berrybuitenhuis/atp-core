@@ -116,9 +116,10 @@ class Api extends BaseClass
      * @param string $vatMarginType
      * @param int $bid
      * @param \DateTime $expirationDate
+     * @param int $rdwIdentificationNumber
      * @return bool|object
      */
-    public function sendBid($externalId, $statusType, $vatMarginType, $bid, $expirationDate)
+    public function sendBid($externalId, $statusType, $vatMarginType, $bid, $expirationDate, $rdwIdentificationNumber = null)
     {
         if ($statusType == "not interested") {
             return $this->sendNoInterest($externalId);
@@ -127,7 +128,7 @@ class Api extends BaseClass
         if ($bid > 0) {
             $btw = (strtolower($vatMarginType) == "btw") ? true : false;
 
-            // Send bid
+            // Compose message/parameters
             $params = [
                 "vendorToken" => $this->token,
                 "ibp" => [
@@ -139,8 +140,15 @@ class Api extends BaseClass
                     "InclExclBTW" => "Incl. BTW",
                     "GeldigTot" => $expirationDate->format('c'),
                     "Naam" => "Autotaxatie (Autotaxatie)"
-                ]
+                ],
             ];
+            if (!empty($rdwIdentificationNumber)) {
+                $params["ibp"]["Buyer"] = [
+                    "RdwNumber" => $rdwIdentificationNumber
+                ];
+            }
+
+            // Send bid
             $result = $this->client->InsertBod($params);
 
             $status = $result->InsertBodResult;
