@@ -201,38 +201,38 @@ class Mail extends BaseClass
     {
         // Check email-addresses (from, to)
         if (filter_var($from, FILTER_VALIDATE_EMAIL) === false) {
-            $this->addMessage("Invalid emailaddress (from)");
+            $this->addMessage("Invalid emailaddress (type: from, email: {$from})");
             return false;
         } elseif (!empty($fromAlternative) && filter_var($fromAlternative, FILTER_VALIDATE_EMAIL) === false) {
-            $this->addMessage("Invalid emailaddress (from_alternative)");
+            $this->addMessage("Invalid emailaddress (type: from_alternative, email: {$fromAlternative})");
             return false;
         } elseif (!is_array($to) && filter_var($to, FILTER_VALIDATE_EMAIL) === false) {
-            $this->addMessage("Invalid emailaddress (to)");
+            $this->addMessage("Invalid emailaddress (type: to, email: {$to})");
             return false;
         } elseif (is_array($to)) {
             foreach ($to AS $recipient) {
                 if (filter_var($recipient, FILTER_VALIDATE_EMAIL) === false) {
-                    $this->addMessage("Invalid emailaddress (to)");
+                    $this->addMessage("Invalid emailaddress (type: to, email: {$recipient})");
                     return false;
                 }
             }
         } elseif (!empty($cc) && !is_array($cc) && filter_var($cc, FILTER_VALIDATE_EMAIL) === false) {
-            $this->addMessage("Invalid emailaddress (cc)");
+            $this->addMessage("Invalid emailaddress (type: cc, email: {$cc})");
             return false;
         } elseif (!empty($cc) && is_array($cc)) {
             foreach ($cc AS $recipientCC) {
                 if (filter_var($recipientCC, FILTER_VALIDATE_EMAIL) === false) {
-                    $this->addMessage("Invalid emailaddress (cc)");
+                    $this->addMessage("Invalid emailaddress (type: cc, email: {$recipientCC})");
                     return false;
                 }
             }
         } elseif (!empty($bcc) && !is_array($bcc) && filter_var($bcc, FILTER_VALIDATE_EMAIL) === false) {
-            $this->addMessage("Invalid emailaddress (bcc)");
+            $this->addMessage("Invalid emailaddress (type: bcc, email: {$bcc})");
             return false;
         } elseif (!empty($bcc) && is_array($bcc)) {
             foreach ($bcc AS $recipientBCC) {
                 if (filter_var($recipientBCC, FILTER_VALIDATE_EMAIL) === false) {
-                    $this->addMessage("Invalid emailaddress (bcc)");
+                    $this->addMessage("Invalid emailaddress (type: bcc, email: {$recipientBCC})");
                     return false;
                 }
             }
