@@ -13,6 +13,7 @@ class Mail extends BaseClass
 {
 
     private $config;
+    private $debug;
     private $mailgun;
 
     /**
@@ -20,10 +21,13 @@ class Mail extends BaseClass
      *
      * @param array $config
      */
-    public function __construct($config)
+    public function __construct($config, $debug = false)
     {
         // Set mail-config
         $this->config = $config;
+
+        // Set debug-flag
+        $this->debug = $debug;
 
         // ReSet error-messages
         $this->resetErrors();
@@ -336,11 +340,15 @@ class Mail extends BaseClass
         }
 
         // Send message
-        try {
-            $this->mailgun->messages()->send($domain, $params);
-        } catch (Throwable $e) {
-            $this->addMessage($e->getCode() . ": " . $e->getMessage());
-            return false;
+        if ($this->debug !== true) {
+            try {
+                $this->mailgun->messages()->send($domain, $params);
+            } catch (Throwable $e) {
+                $this->addMessage($e->getCode() . ": " . $e->getMessage());
+                return false;
+            }
+        } else {
+            print("Email [{$subject}] sent to: {$params['to']}, cc: {$params['cc']}, bcc: {$params['bcc']}, from: {$from}\n");
         }
 
         // Return
