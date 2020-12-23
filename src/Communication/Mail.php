@@ -348,6 +348,8 @@ class Mail extends BaseClass
                 return false;
             }
         } else {
+            if (!isset($params['cc'])) $params['cc'] = "";
+            if (!isset($params['bcc'])) $params['bcc'] = "";
             print("Email [{$subject}] sent to: {$params['to']}, cc: {$params['cc']}, bcc: {$params['bcc']}, from: {$from}\n");
         }
 
