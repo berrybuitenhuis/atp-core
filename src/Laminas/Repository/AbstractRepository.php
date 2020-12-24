@@ -606,6 +606,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         if ($output == 'array') {
             $filter = ["AND"=>[["id", "eq", $id]]];
             $objects = $this->getByFilter($fields, null, $filter, null, null, null, 1, false);
+            if ($objects === false) return false;
             $object = current($objects);
         } else {
             $object = $this->objectManager
@@ -692,7 +693,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * @param integer $offset
      * @param boolean $paginator
      * @param boolean $debug
-     * @return array/object
+     * @return array|object|false
      * @throws Exception
      */
     public function getList($output = 'object', $fields = NULL, $defaultFilter = NULL, $filter = NULL, $groupBy = null, $having = null, $orderBy = NULL, $limitRecords = 25, $offset = 0, $paginator = false, $debug = false)
@@ -704,6 +705,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
 
         // Get results
         $records = $this->getByFilter($fields, $defaultFilter, $filter, $groupBy, $having, $orderBy, $limit, $paginator, $debug);
+        if ($records === false) return false;
 
         // Return if only paginator requested (fields set to false)
         if ($fields === false) {
@@ -760,7 +762,13 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         // Get client-filter
         $clientFilter = $this->options->getClientFilter();
         // Get default-filter(s)
-        $defaultFilter = $this->options->getDefaultFilter($defaultFilter);
+        if (!empty($defaultFilter)) {
+            $defaultFilter = $this->options->getDefaultFilter($defaultFilter);
+            if ($defaultFilter === false) {
+                $this->setMessages("Provided unsupported/unknown default-filter");
+                return false;
+            }
+        }
         // Set allowed operators (for custom/default filters)
         $allowedOperators = ['eq','neq','like','lt','lte','gt','gte','isnull','isnotnull','in','notin'];
 
