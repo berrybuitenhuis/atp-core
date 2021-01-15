@@ -51,10 +51,11 @@ class Route
         $childRoute = [];
         $childRoute['type'] = Segment::class;
         $childRoute['options'] = [
-            'route'    => $routePrefix . '/:action[/:actionId][/]',
+            'route'    => $routePrefix . '/:action[/:actionId][/:subAction][/]',
             'constraints' => [
                 'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                 'actionId' => '[0-9]+',
+                'subAction' => '[a-zA-Z]+',
             ],
             'defaults' => [
                 'controller' => $controller,
