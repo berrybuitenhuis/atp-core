@@ -1063,7 +1063,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * Return all objects from the repository with parameters
      *
      * @param array $parameters
-     * @param string $output [object, array]
+     * @param string $output [boolean, object, array]
      * @param boolean $multiple
      * @return array|object|bool
      */
