@@ -161,10 +161,7 @@ class TradeApi extends BaseClass
             // Return
             if (!isset($response->errors) || empty($response->errors)) {
                 return true;
-            } elseif (strtolower($response->errors[0]->message) == "bidding is no longer allowed due to status closed" ||
-                        strtolower($response->errors[0]->message) == "bidding is no longer allowed due to status bid" ||
-                            strtolower($response->errors[0]->message) == "bidding is no longer allowed due to status expired" ||
-                                strtolower($response->errors[0]->message) == "bidding is no longer allowed due to status nointerest") {
+            } elseif (stristr($response->errors[0]->message, "bidding is no longer allowed due to status")) {
                 return true;
             } else {
                 $this->setErrorData($response);
