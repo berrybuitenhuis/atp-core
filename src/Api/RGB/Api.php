@@ -79,22 +79,22 @@ class Api extends BaseClass
     {
         // Add data to XML
         $address = $this->xml->addChild($type);
-        $address->addChild('remarks', html_entity_decode($comment));
+        $address->addChild('remarks', htmlspecialchars(html_entity_decode($comment)));
         $addressLocation = $address->addChild('location');
         $addressLocationContactDetails = $addressLocation->addChild('contact-details');
-        $addressLocationContactDetails->addChild('contact', html_entity_decode($personName));
+        $addressLocationContactDetails->addChild('contact', htmlspecialchars(html_entity_decode($personName)));
         $addressLocationContactDetails->addChild('email-address', $email);
         $addressLocationContactDetails->addChild('phone-number', $phone);
         $addressLocationCoordinates = $addressLocation->addChild('coordinates');
         $addressLocationCoordinates->addChild('longitude', 0);
         $addressLocationCoordinates->addChild('latitude', 0);
         $addressLocation->addChild('country', 'NLD');
-        $addressLocation->addChild('city', html_entity_decode($city));
+        $addressLocation->addChild('city', htmlspecialchars(html_entity_decode($city)));
         $addressLocation->addChild('postal-code', $zipcode);
         $addressLocation->addChild('house-number', trim($number));
-        $addressLocation->addChild('street', html_entity_decode($street));
-        $addressLocation->addChild('name', html_entity_decode($companyName));
-        $addressLocation->addChild('remarks', html_entity_decode($comment));
+        $addressLocation->addChild('street', htmlspecialchars(html_entity_decode($street)));
+        $addressLocation->addChild('name', htmlspecialchars(html_entity_decode($companyName)));
+        $addressLocation->addChild('remarks', htmlspecialchars(html_entity_decode($comment)));
     }
 
     public function setGeneral($orderNumber, $reference, $dateDeadline)
@@ -125,10 +125,10 @@ class Api extends BaseClass
         $shipment->addChild('vin', $vin);
         $shipment->addChild('vehicle-registration-plate', $registration);
         $shipment->addChild('type', $vehicleType);
-        $shipment->addChild('make', html_entity_decode(trim(preg_replace('/ {2,}/', ' ', $make))));
-        $shipment->addChild('model', html_entity_decode(trim(preg_replace('/ {2,}/', ' ', $model))));
-        $shipment->addChild('colour', html_entity_decode($color));
-        $shipment->addChild('remarks', html_entity_decode($comment));
+        $shipment->addChild('make', htmlspecialchars(html_entity_decode(trim(preg_replace('/ {2,}/', ' ', $make)))));
+        $shipment->addChild('model', htmlspecialchars(html_entity_decode(trim(preg_replace('/ {2,}/', ' ', $model)))));
+        $shipment->addChild('colour', htmlspecialchars(html_entity_decode($color)));
+        $shipment->addChild('remarks', htmlspecialchars(html_entity_decode($comment)));
     }
 
 }
