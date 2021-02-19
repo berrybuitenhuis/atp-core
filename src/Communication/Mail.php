@@ -185,11 +185,12 @@ class Mail extends BaseClass
      * @param string $text
      * @param string $html
      * @param array $attachments
+     * @param array $images
      * @return boolean
      */
-    public function send($from, $fromAlternative, $to, $cc, $bcc, $subject, $text, $html = null, $attachments = [])
+    public function send($from, $fromAlternative, $to, $cc, $bcc, $subject, $text, $html = null, $attachments = [], $images = [])
     {
-        $result = $this->sendMailgun($from, $fromAlternative, $to, $cc, $bcc, $subject, $text, $html, $attachments);
+        $result = $this->sendMailgun($from, $fromAlternative, $to, $cc, $bcc, $subject, $text, $html, $attachments, $images);
         return $result;
     }
 
@@ -205,9 +206,10 @@ class Mail extends BaseClass
      * @param string $text
      * @param string $html
      * @param array $attachments
+     * @param array $images
      * @return boolean
      */
-    private function sendMailgun($from, $fromAlternative, $to, $cc, $bcc, $subject, $text, $html = null, $attachments = [])
+    private function sendMailgun($from, $fromAlternative, $to, $cc, $bcc, $subject, $text, $html = null, $attachments = [], $images = [])
     {
         // Check email-addresses (from, to)
         if (filter_var($from, FILTER_VALIDATE_EMAIL) === false) {
@@ -341,8 +343,11 @@ class Mail extends BaseClass
         if (!empty($bcc)) {
             $params['bcc'] = (is_array($bcc)) ? implode(",", $bcc) : $bcc;
         }
-        if (is_array($attachments) && count($attachments) > 0){
-            $params['attachment'] =  $attachments;
+        if (is_array($attachments) && count($attachments) > 0) {
+            $params['attachment'] = $attachments;
+        }
+        if (is_array($images) && count($images) > 0) {
+            $params['inline'] = $images;
         }
 
         // Send message
