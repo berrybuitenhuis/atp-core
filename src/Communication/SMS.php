@@ -8,21 +8,16 @@ use Exception;
 class SMS extends BaseClass
 {
 
-    private $application;
     private $client;
 
     /**
      * Constructor
      *
-     * @param string $application
      * @param array $config
      * @param bool $debug
      */
-    public function __construct($application, $config, $debug = false)
+    public function __construct($config, $debug = false)
     {
-        // Initialize private variables
-        $this->application = $application;
-
         // Set client
         $this->client = new \AtpCore\Api\MessageBird\SMS($config['messageBird']['apiKey'], $debug);
 
