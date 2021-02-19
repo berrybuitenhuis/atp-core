@@ -71,7 +71,7 @@ class SMS extends BaseClass
             $result = $this->client->messages->create($message);
 
             // Check status message
-            $item = current($result->recipients['items']);
+            $item = current($result->recipients->items);
             if ($item->status == "delivery_failed") {
                 $this->setErrorData($item);
                 $this->setMessages("Message failed ({$item->status}, {$item->statusReason})");
