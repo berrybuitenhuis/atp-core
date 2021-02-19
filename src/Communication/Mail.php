@@ -59,17 +59,22 @@ class Mail extends BaseClass
     /**
      * Compose mail-message by template (and variables)
      *
+     * @param string $layoutPath
      * @param string $templatePath
      * @param string $templateFile
      * @param array $templateVariables
-     * @param string $layoutPath
-     * @param string $layoutFile
      * @return bool|string
      */
-    public function composeMessage($templatePath, $templateFile, $templateVariables = [], $layoutPath = null, $layoutFile = null)
+    public function composeMessage($layoutPath, $templatePath, $templateFile, $templateVariables = [])
     {
+        // Set paths (layout/template)
+        $paths = [
+            getcwd(). $layoutPath,
+            getcwd(). $templatePath,
+        ];
+
         // Setup twig-template
-        $templateLoader = new FilesystemLoader(getcwd(). $templatePath);
+        $templateLoader = new FilesystemLoader($paths);
         $templateWrapper = new Environment($templateLoader);
         try {
             $template = $templateWrapper->load($templateFile);
@@ -79,25 +84,7 @@ class Mail extends BaseClass
         }
 
         // Compose message-body by template
-        $messageBody = $template->render($templateVariables);
-
-        // Compose message by layout (if provided)
-        if (!empty($layoutPath) && !empty($layoutFile)) {
-            // Setup twig-layout
-            $layoutLoader = new FilesystemLoader(getcwd(). $layoutPath);
-            $layoutWrapper = new Environment($layoutLoader);
-            try {
-                $layout = $layoutWrapper->load($layoutFile);
-            } catch (Throwable $e) {
-                $this->setMessages($e->getCode() . ": " . $e->getMessage());
-                return false;
-            }
-
-            // Compose message
-            $message = $layout->render(["messageBody"=>$messageBody]);
-        } else {
-            $message = $messageBody;
-        }
+        $message = $template->render($templateVariables);
 
         // Return
         return $message;
