@@ -19,6 +19,7 @@
         "guzzlehttp/guzzle": "^6.3",
         "guzzlehttp/psr7": "^1.4",
         "mailgun/mailgun-php": "^2.6",
+        "messagebird/php-rest-api": "^v1.19",
         "php-http/curl-client": "^v1.7",
         "spatie/image-optimizer": "1.1.4",
         "twig/twig": "^v2.11"
