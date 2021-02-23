@@ -14,7 +14,8 @@ class Mail extends BaseClass
 
     private $config;
     private $debug;
-    private $mailgun;
+    private $mailgunEU;
+    private $mailgunUS;
 
     /**
      * Constructor
@@ -33,19 +34,22 @@ class Mail extends BaseClass
         $this->resetErrors();
 
         // Set mail-client
-        $this->mailgun = Mailgun::create($this->config['mailgun']['api_key']);
+        $this->mailgunEU = Mailgun::create($this->config['mailgun']['api_key'], "https://api.eu.mailgun.net/");
+        $this->mailgunUS = Mailgun::create($this->config['mailgun']['api_key'], "https://api.mailgun.net/");
     }
 
     /**
      * Check if domain is active
      *
      * @param string $domainName
+     * @param string $region
      * @return bool
      */
-    public function checkActiveDomain($domainName)
+    public function checkActiveDomain($domainName, $region = "US")
     {
         try {
-            $domain = $this->mailgun->domains()->show($domainName);
+            if ($region == "EU") $domain = $this->mailgunEU->domains()->show($domainName);
+            else $domain = $this->mailgunUS->domains()->show($domainName);
             if ($domain->getDomain()->getState() == 'active') {
                 return true;
             } else {
@@ -120,12 +124,13 @@ class Mail extends BaseClass
      *
      * @param \DateTime $startDate
      * @param string $type
+     * @param string $region
      * @return array
      */
-    public function getEvents($startDate, $type = null)
+    public function getEvents($startDate, $type = null, $region = "US")
     {
         // Get active domains
-        $domains = $this->getActiveDomains();
+        $domains = $this->getActiveDomains($region);
 
         // Set parameters
         $result = [];
@@ -138,7 +143,8 @@ class Mail extends BaseClass
         // Iterate domains
         foreach ($domains AS $domain) {
             // Get events by domain/parameters
-            $events = $this->mailgun->events()->get($domain->getName(), $params);
+            if ($region == "EU") $events = $this->mailgunEU->events()->get($domain->getName(), $params);
+            else $events = $this->mailgunUS->events()->get($domain->getName(), $params);
             if (count($events->getItems()) > 0) {
                 $result[$domain->getName()] = [];
                 // Iterate items
@@ -158,12 +164,14 @@ class Mail extends BaseClass
     /**
      * Get list of active domains
      *
+     * @param string $region
      * @return array
      */
-    public function getActiveDomains()
+    public function getActiveDomains($region = "US")
     {
         $activeDomains = [];
-        $domains = $this->mailgun->domains()->index();
+        if ($region == "EU") $domains = $this->mailgunEU->domains()->index();
+        else $domains = $this->mailgunUS->domains()->index();
         foreach ($domains->getDomains() AS $domain) {
             if ($domain->getState() == 'active') {
                 $activeDomains[] = $domain;
@@ -251,15 +259,21 @@ class Mail extends BaseClass
         }
 
         // Set sender (overwrite from config)
+        $region = "US";
         $domainVerified = false;
         if (!empty($this->config['mailgun']['default_from'])) {
             $from = $this->config['mailgun']['default_from'];
         } else {
             try {
-                // Check if sender-maildomain is verified (by DNS - https://documentation.mailgun.com/en/latest/quickstart-sending.html#verify-your-domain)
+                // Check if sender-maildomain is verified/active (by DNS - https://documentation.mailgun.com/en/latest/quickstart-sending.html#verify-your-domain)
                 $domainName = substr($from, strrpos($from, '@') + 1);
-                $domain = $this->mailgun->domains()->show($domainName);
-                if ($domain->getDomain()->getState() == 'active') {
+                $result = $this->checkActiveDomain($domainName);
+                if ($result === false) {
+                    $result = $this->checkActiveDomain($domainName, "EU");
+                    if ($result === true) $region = "EU";
+                }
+
+                if ($result == true) {
                     $domainVerified = true;
                 } else {
                     $from = $fromAlternative;
@@ -299,17 +313,22 @@ class Mail extends BaseClass
         // Check sender-domain is activated (verified) for Mailgun (skip if already checked)
         if ($domainVerified === false) {
             try {
-                // Get domain-item by Mailgun
-                $domainItem = $this->mailgun->domains()->show($domain);
+                // Check if sender-maildomain is verified/active (by DNS - https://documentation.mailgun.com/en/latest/quickstart-sending.html#verify-your-domain)
+                $result = $this->checkActiveDomain($domain);
+                if ($result === false) {
+                    $result = $this->checkActiveDomain($domain, "EU");
+                    if ($result === true) $region = "EU";
+                }
 
                 // Get state of domain, if not active (not verified) unset FROM-address to fallback-sender
-                if ($domainItem->getDomain()->getState() != 'active') {
+                if ($result === false) {
                     $from = $this->config['mailgun']['fallback_from'];
                     $domain = substr($from, strrpos($from, '@') + 1);
                 }
             } catch (Throwable $e) {
                 // Check if sender-maildomain not available in mailgun, then replace by alternative-sender
                 if ($e->getCode() == 404) {
+                    $region = "US";
                     $from = $this->config['mailgun']['fallback_from'];
                     $domain = substr($from, strrpos($from, '@') + 1);
                 } else {
@@ -353,7 +372,8 @@ class Mail extends BaseClass
         // Send message
         if ($this->debug !== true) {
             try {
-                $this->mailgun->messages()->send($domain, $params);
+                if ($region == "EU") $this->mailgunEU->messages()->send($domain, $params);
+                else $this->mailgunUS->messages()->send($domain, $params);
             } catch (Throwable $e) {
                 $this->addMessage($e->getCode() . ": " . $e->getMessage());
                 return false;
