@@ -144,6 +144,32 @@ class S3 extends BaseClass
     }
 
     /**
+     * Get object
+     *
+     * @param string $bucket
+     * @param string $filename
+     * @return array|bool
+     */
+    public function getFile($bucket, $filename)
+    {
+        // Check if object exists
+        $exists = $this->client->doesObjectExist($bucket, $filename);
+        if ($exists !== true) {
+            $this->setMessages("File doesn't exist");
+            return false;
+        }
+
+        // Get current file-tags
+        try {
+            return $this->client->getObject(["Bucket" => $bucket, "Key" => $filename])->toArray();
+        } catch(Throwable $e) {
+            $this->setMessages("Getting file failed");
+            $this->setErrorData($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Get tags of object
      *
      * @param string $bucket
