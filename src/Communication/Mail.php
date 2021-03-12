@@ -203,6 +203,26 @@ class Mail extends BaseClass
     }
 
     /**
+     * Validate email-address
+     * 
+     * @param string $emailAddress
+     * @return bool
+     */
+    public function validateEmailAddress($emailAddress)
+    {
+        // Check format email-address
+        if (filter_var($emailAddress, FILTER_VALIDATE_EMAIL) === false) {
+            $this->addMessage("Invalid emailaddress");
+            return false;
+        }
+
+        // TODO: Validate email address (Mailgun)
+
+        // Return
+        return true;
+    }
+
+    /**
      * Send mail by Mailgun
      *
      * @param string $from
