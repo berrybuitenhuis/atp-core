@@ -135,6 +135,54 @@ class Date extends BaseClass
     }
 
     /**
+     * Get date-range for maximum number of days (except weekend-days and days-off)
+     *
+     * @param int $numberOfDays
+     * @param array|bool $weekendDays
+     * @return false|array
+     */
+    public function getDateRange($numberOfDays, $weekendDays = null)
+    {
+        // Initialize date-range
+        $range = [];
+
+        // Iterate over number-of-days
+        for ($i = 1; $i <= $numberOfDays; $i++) {
+            try {
+                $this->date->add(new DateInterval("P1D"));
+            } catch (Throwable $e) {
+                $this->addMessage("Invalid format provided");
+                $this->setErrorData($e);
+                return false;
+            }
+
+            if ($weekendDays !== false) {
+                try {
+                    while ($this->isDayOff($weekendDays)) {
+                        try {
+                            $this->date->add(new DateInterval("P1D"));
+                        } catch (Throwable $e) {
+                            $this->addMessage("Invalid format provided");
+                            $this->setErrorData($e);
+                            return false;
+                        }
+                    }
+                } catch (Throwable $e) {
+                    $this->addMessage("Function isDayOff failed");
+                    $this->setErrorData($e);
+                    return false;
+                }
+            }
+
+            // Add date to range
+            $range[] = clone $this->date;
+        }
+
+        // Return
+        return $range;
+    }
+
+    /**
      * Add number of workdays to date
      *
      * @param int $numberOfDays
