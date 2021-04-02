@@ -333,7 +333,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * @param array $fields
      * @return array
      */
-    public function transformData($data, $fields = NULL)
+    public function transformData($data, $fields = null)
     {
         if (isset($data['results']) && is_array($data['results'])) {
             foreach ($data['results'] AS $k => $record) {
@@ -356,7 +356,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * @param array $fields
      * @return array
      */
-    public function transformRecord($record, $fields = NULL)
+    public function transformRecord($record, $fields = null)
     {
         // Get data-fields configured by application
         $dataFields = $this->options->getDataFields();
@@ -374,7 +374,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         foreach ($requestedFields["fields"] AS $fieldName) {
             if (!array_key_exists($fieldName, $record)) {
                 $values = $this->transformValues($record, [$fieldName], $recordOrig);
-                if (!empty($values[$fieldName]) || $values[$fieldName] === false) {
+                if (array_key_exists($fieldName, $values)) {
                     $record[$fieldName] = $values[$fieldName];
                 }
                 $processedFields[] = $fieldName;
@@ -394,7 +394,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             if (in_array(strtolower($fieldName), $requestedFields["fields"]) && !in_array($fieldName, $processedFields)) {
                 // Overwrite values
                 $values = $this->transformValues($record, [$fieldName], $recordOrig);
-                if (!empty($values[$fieldName]) || $values[$fieldName] === false) {
+                if (array_key_exists($fieldName, $values)) {
                     $record[$fieldName] = $values[$fieldName];
                 } elseif (is_object($record[$fieldName]) || is_array($record[$fieldName])) {
                     $record[$fieldName] = null;
@@ -600,7 +600,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * @return object|array|bool
      * @throws Exception
      */
-    public function get($id, $output = 'object', $refresh = false, $fields = NULL)
+    public function get($id, $output = 'object', $refresh = false, $fields = null)
     {
         // get object from the repository specified by primary key
         if ($output == 'array') {
@@ -649,7 +649,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * @param array $fields
      * @return object|array
      */
-    public function getAll($output = 'object', $refresh = false, $fields = NULL)
+    public function getAll($output = 'object', $refresh = false, $fields = null)
     {
         // get all objects from the repository
         $objects = $this->objectManager
@@ -696,7 +696,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * @return array|object|false
      * @throws Exception
      */
-    public function getList($output = 'object', $fields = NULL, $defaultFilter = NULL, $filter = NULL, $groupBy = null, $having = null, $orderBy = NULL, $limitRecords = 25, $offset = 0, $paginator = false, $debug = false)
+    public function getList($output = 'object', $fields = null, $defaultFilter = null, $filter = null, $groupBy = null, $having = null, $orderBy = null, $limitRecords = 25, $offset = 0, $paginator = false, $debug = false)
     {
         if (!empty((int) $limitRecords)) $limit['limit'] = (int) $limitRecords;
         else $limit['limit'] = 25;
@@ -757,7 +757,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * @return array/object
      * @throws Exception
      */
-    public function getByFilter($fields = NULL, $defaultFilter = NULL, $filter = NULL, $groupBy = null, $having = null, $orderBy = null, $limit = NULL, $paginator = false, $debug = false)
+    public function getByFilter($fields = null, $defaultFilter = null, $filter = null, $groupBy = null, $having = null, $orderBy = null, $limit = null, $paginator = false, $debug = false)
     {
         // Get client-filter
         $clientFilter = $this->options->getClientFilter();
@@ -776,8 +776,14 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         $query = $this->objectManager->createQueryBuilder();
         $parameters = [];
 
-        // Get object and field-methods
+        // Validate fields if provided
         if (!empty($fields)) {
+            // Add required conversion-fields (used in conversion-function)
+            if (method_exists($this->options, 'getRequiredConversionFields')) {
+                $fields = $this->options->getRequiredConversionFields($fields);
+            }
+
+            // Get object and field-methods
             $objectMethods = get_class_methods(new $this->objectName());
             $fieldMethods = preg_filter('/^/', 'get', array_map("ucfirst", $fields));
         }
@@ -1199,7 +1205,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * @param array $fields
      * @return array|bool
      */
-    public function create($data, $output = 'object', $overrule = [], $fields = NULL)
+    public function create($data, $output = 'object', $overrule = [], $fields = null)
     {
         // Reset errors
         $this->resetErrors();
@@ -1240,7 +1246,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * @param array $fields
      * @return array|bool
      */
-    public function createBulk($data, $output = 'object', $overrule = [], $fields = NULL)
+    public function createBulk($data, $output = 'object', $overrule = [], $fields = null)
     {
         // Reset errors
         $this->resetErrors();
@@ -1291,7 +1297,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * @param array $fields
      * @return array|object|bool
      */
-    public function update($id, $data, $output = 'object', $refresh = false, $fields = NULL)
+    public function update($id, $data, $output = 'object', $refresh = false, $fields = null)
     {
         // Reset errors
         $this->resetErrors();
@@ -1351,7 +1357,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * @param array $fields
      * @return array|bool
      */
-    public function updateBulk($data, $output = 'object', $refresh = false, $fields = NULL)
+    public function updateBulk($data, $output = 'object', $refresh = false, $fields = null)
     {
         // Reset errors
         $this->resetErrors();
