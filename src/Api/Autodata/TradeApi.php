@@ -67,6 +67,33 @@ class TradeApi extends BaseClass
     }
 
     /**
+     * Get bid-requests
+     *
+     * @param \DateTime $startDate
+     * @return object|bool
+     */
+    function getRequests($startDate = null)
+    {
+        // Set timestamp
+        if (empty($startDate)) $timestamp = (new \DateTime('yesterday'))->getTimestamp();
+        else $timestamp = $startDate->getTimestamp();
+
+        // Get bid-requests
+        $requestHeader = $this->clientHeaders;
+        $result = $this->client->get('bid?ts=' . $timestamp, ['headers'=>$requestHeader]);
+        $response = json_decode((string) $result->getBody());
+
+        // Return
+        if (!isset($response->errors) || empty($response->errors)) {
+            return $response;
+        } else {
+            $this->setErrorData($response);
+            $this->setMessages($response->errors);
+            return false;
+        }
+    }
+
+    /**
      * Get token
      *
      * @param string $clientId
