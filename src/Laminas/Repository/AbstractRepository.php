@@ -1053,6 +1053,15 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     $query->setMaxResults($paginatorData['records']);
                 }
                 $results = $query->getQuery()->getResult();
+
+                // Sometimes paginator is not showing correct values (for example: group-by queries)
+                $resultCount = count($results);
+                if ($resultCount < $limit['limit'] && $resultCount < $paginatorData['records']) {
+                    $paginatorData['records'] = (int) $resultCount;
+                    $paginatorData['pages'] = (int) ceil($paginatorData['records'] / $limit['limit']);
+                    $paginatorData['currentPage'] = (int) (ceil($limit['offset'] / $limit['limit']) + 1);
+                    $paginatorData['recordsPage'] = (int) $limit['limit'];
+                }
             } else {
                 $results = [];
             }
