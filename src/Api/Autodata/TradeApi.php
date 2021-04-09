@@ -67,12 +67,38 @@ class TradeApi extends BaseClass
     }
 
     /**
+     * Get bid-request (by vehicle-id) from ASPRO-request
+     *
+     * @param int $vehicleId
+     * @param boolean $origResponse
+     * @return object|bool
+     */
+    function getRequestByVehicleId($vehicleId, $origResponse = false)
+    {
+        // Get bid
+        $requestHeader = $this->clientHeaders;
+        $result = $this->client->get('bid/?vehicle.id=' . $vehicleId, ['headers'=>$requestHeader]);
+        $response = json_decode((string) $result->getBody());
+
+        // Return
+        if (!isset($response->errors) || empty($response->errors)) {
+            if ($origResponse === true) return $response;
+            else return $response->data;
+        } else {
+            $this->setErrorData($response);
+            $this->setMessages($response->errors);
+            return false;
+        }
+    }
+
+    /**
      * Get bid-requests
      *
      * @param \DateTime $startDate
+     * @param boolean $origResponse
      * @return object|bool
      */
-    function getRequests($startDate = null)
+    function getRequests($startDate = null, $origResponse = false)
     {
         // Set timestamp
         if (empty($startDate)) $timestamp = (new \DateTime('yesterday'))->getTimestamp();
@@ -85,7 +111,8 @@ class TradeApi extends BaseClass
 
         // Return
         if (!isset($response->errors) || empty($response->errors)) {
-            return $response;
+            if ($origResponse === true) return $response;
+            else return $response->data;
         } else {
             $this->setErrorData($response);
             $this->setMessages($response->errors);
@@ -127,9 +154,10 @@ class TradeApi extends BaseClass
      * Get vehicle from ASPRO-request
      *
      * @param int $externalId
+     * @param boolean $origResponse
      * @return object|bool
      */
-    function getVehicle($externalId) {
+    function getVehicle($externalId, $origResponse = false) {
         // Get vehicle
         $requestHeader = $this->clientHeaders;
         $result = $this->client->get('bid/' . $externalId . "/vehicle", ['headers'=>$requestHeader]);
@@ -137,7 +165,8 @@ class TradeApi extends BaseClass
 
         // Return
         if (!isset($response->errors) || empty($response->errors)) {
-            return $response;
+            if ($origResponse === true) return $response;
+            else return $response->data;
         } else {
             $this->setErrorData($response);
             $this->setMessages($response->errors);
