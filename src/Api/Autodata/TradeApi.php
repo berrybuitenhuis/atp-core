@@ -77,7 +77,7 @@ class TradeApi extends BaseClass
     {
         // Get bid
         $requestHeader = $this->clientHeaders;
-        $result = $this->client->get('bid/?vehicle.id=' . $vehicleId, ['headers'=>$requestHeader]);
+        $result = $this->client->get('bid?vehicle.id=' . $vehicleId, ['headers'=>$requestHeader]);
         $response = json_decode((string) $result->getBody());
 
         // Return
