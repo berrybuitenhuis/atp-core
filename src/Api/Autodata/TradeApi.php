@@ -71,19 +71,24 @@ class TradeApi extends BaseClass
      *
      * @param int $vehicleId
      * @param boolean $origResponse
+     * @param boolean $multiple
      * @return object|bool
      */
-    function getRequestByVehicleId($vehicleId, $origResponse = false)
+    function getRequestByVehicleId($vehicleId, $origResponse = false, $multiple = false)
     {
         // Get bid
         $requestHeader = $this->clientHeaders;
         $result = $this->client->get('bid?vehicle.id=' . $vehicleId, ['headers'=>$requestHeader]);
+        if ($result->getStatusCode() != 200) {
+            $this->setMessages("Failed call to requestByVehicleId: {$result->getStatusCode()}");
+            return false;
+        }
         $response = json_decode((string) $result->getBody());
 
         // Return
         if (!isset($response->errors) || empty($response->errors)) {
             if ($origResponse === true) return $response;
-            else return $response->data;
+            else return ($multiple === true) ? $response->data : current($response->data);
         } else {
             $this->setErrorData($response);
             $this->setMessages($response->errors);
@@ -228,5 +233,4 @@ class TradeApi extends BaseClass
             return false;
         }
     }
-
 }
