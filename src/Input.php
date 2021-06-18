@@ -15,6 +15,27 @@ class Input
     }
 
     /**
+     * Convert boolean into string/integer
+     *
+     * @param boolean $value
+     * @param string $output
+     * @return string|integer|null
+     */
+    public function convertBoolean($value, $output = "string")
+    {
+        // Return empty value
+        if ($value === null) return null;
+
+        // Return integer-value of boolean
+        if (strtolower($output) == "integer" || strtolower($output) == "int") {
+            return $value ? 1 : 0;
+        }
+
+        // Return string-value of boolean
+        return $value ? 'true' : 'false';
+    }
+
+    /**
      * Convert JSON-string (or object/array) into array/object
      *
      * @param $dataString
