@@ -21,7 +21,7 @@ class Input
      * @param string $output
      * @return string|integer|null
      */
-    public function convertBoolean($value, $output = "string")
+    public static function convertBoolean($value, $output = "string")
     {
         // Return empty value
         if ($value === null) return null;
