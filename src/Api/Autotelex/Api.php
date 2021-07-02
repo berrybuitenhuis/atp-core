@@ -112,16 +112,16 @@ class Api extends BaseClass
      * Send bid to Autotelex
      *
      * @param int $externalId
-     * @param string $statusType
+     * @param string $resultType
      * @param string $vatMarginType
      * @param int $bid
      * @param \DateTime $expirationDate
      * @param int $rdwIdentificationNumber
      * @return bool|object
      */
-    public function sendBid($externalId, $statusType, $vatMarginType, $bid, $expirationDate, $rdwIdentificationNumber = null)
+    public function sendBid($externalId, $resultType, $vatMarginType, $bid, $expirationDate, $rdwIdentificationNumber = null)
     {
-        if ($statusType == "not interested") {
+        if ($resultType == "not_interested") {
             return $this->sendNoInterest($externalId);
         }
 

@@ -183,16 +183,16 @@ class TradeApi extends BaseClass
      * Send bid to ASPRO
      *
      * @param int $externalId
-     * @param string $statusType
+     * @param string $resultType
      * @param int $bid
      * @param \DateTime $expirationDate
      * @return bool|object
      */
-    function sendBid($externalId, $statusType, $bid, $expirationDate)
+    function sendBid($externalId, $resultType, $bid, $expirationDate)
     {
-        if ($bid > 0 || $statusType == "not interested") {
+        if ($bid > 0 || $resultType == "not_interested") {
             // Send bid
-            if ($statusType == "not interested") {
+            if ($resultType == "not_interested") {
                 $body = [
                     "data"=>[
                         "type"=>"bid",
