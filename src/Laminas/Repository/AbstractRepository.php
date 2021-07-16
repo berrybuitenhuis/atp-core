@@ -1056,7 +1056,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
 
                 // Sometimes paginator is not showing correct values (for example: group-by queries)
                 $resultCount = count($results);
-                if ($resultCount < $limit['limit'] && $resultCount < $paginatorData['records']) {
+                if ($resultCount < $limit['limit'] && $resultCount < $paginatorData['records'] && $paginatorData['currentPage'] == 1) {
                     $paginatorData['records'] = (int) $resultCount;
                     $paginatorData['pages'] = (int) ceil($paginatorData['records'] / $limit['limit']);
                     $paginatorData['currentPage'] = (int) (ceil($limit['offset'] / $limit['limit']) + 1);
