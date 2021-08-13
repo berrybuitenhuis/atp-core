@@ -185,15 +185,14 @@ class Date extends BaseClass
     /**
      * Calculate difference between dates (in specific unit)
      *
-     * @param \DateTime $date
-     * @param \DateTime$dateFuture
+     * @param \DateTime $dateFuture
      * @param string $unit
      * @return int
      */
-    public function difference($date, $dateFuture, $unit = "days")
+    public function difference($dateFuture, $unit = "days")
     {
         // Subtract dates
-        $dateInterval = $dateFuture->diff($date);
+        $dateInterval = $dateFuture->diff($this->date);
 
         // Convert difference into specified unit
         switch (strtolower($unit)) {
