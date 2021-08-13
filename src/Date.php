@@ -183,6 +183,42 @@ class Date extends BaseClass
     }
 
     /**
+     * Calculate difference between dates (in specific unit)
+     *
+     * @param \DateTime $date
+     * @param \DateTime$dateFuture
+     * @param string $unit
+     * @return int
+     */
+    public function difference($date, $dateFuture, $unit = "days")
+    {
+        // Subtract dates
+        $dateInterval = $dateFuture->diff($date);
+
+        // Convert difference into specified unit
+        switch (strtolower($unit)) {
+            case "day":
+            case "days":
+            case "dagen":
+            case "d":
+                $diff = $dateInterval->days;
+                break;
+            case "month":
+            case "months":
+            case "maanden":
+            case "m":
+                $diff = ($dateInterval->y * 12) + $dateInterval->m;
+                break;
+            default:
+                $diff = 0;
+                break;
+        }
+
+        // Return
+        return $diff;
+    }
+
+    /**
      * Add number of workdays to date
      *
      * @param int $numberOfDays
