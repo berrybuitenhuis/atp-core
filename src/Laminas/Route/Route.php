@@ -71,7 +71,7 @@ class Route
             'route'    => $routePrefix . '/:action/:actionId[/:subAction][/]',
             'constraints' => [
                 'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                'actionId' => '[0-9]+',
+                'actionId' => '[0-9._-]+',
                 'subAction' => '[a-zA-Z]+',
             ],
             'defaults' => [
@@ -109,7 +109,7 @@ class Route
             'constraints' => [
                 'id' => '[0-9]+',
                 'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                'actionId' => '[a-zA-Z0-9]+',
+                'actionId' => '[a-zA-Z0-9._-]+',
             ],
             'defaults' => [
                 'controller' => $controller,
@@ -129,8 +129,8 @@ class Route
                 'mainAction' => '[a-zA-Z][a-zA-Z0-9_-]*',
                 'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                 'id' => '[0-9]+',
-                'mainActionId' => '[0-9]+',
-                'actionId' => '[0-9]+',
+                'mainActionId' => '[0-9._-]+',
+                'actionId' => '[0-9._-]+',
             ],
             'defaults' => [
                 'controller' => $controller,
