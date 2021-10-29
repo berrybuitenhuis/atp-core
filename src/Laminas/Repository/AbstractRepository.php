@@ -680,6 +680,47 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     }
 
     /**
+     * Return total number of objects from the repository
+     *
+     * @return int
+     */
+    public function getCount()
+    {
+        // Return count of objects from the repository
+        return (int) $this->objectManager->createQueryBuilder()
+            ->select('count(f.id)')
+            ->from($this->objectName, 'f')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Return all (active) id's from the repository
+     *
+     * @return array
+     */
+    public function getIds()
+    {
+        // Get all objects from the repository
+        $objects = $this->objectManager
+            ->getRepository($this->objectName)
+            ->findAll();
+
+        // Convert objects to list of id's
+        $ids = [];
+        foreach ($objects as $object) {
+            // Skip deleted objects
+            if (property_exists($object, 'status') && $object->getStatus() === false) {
+                continue;
+            }
+            $ids[] = $object->getId();
+        }
+
+        // Return
+        return $ids;
+    }
+
+    /**
      * Return a list of objects from the repository
      *
      * @param string $output
@@ -1274,6 +1315,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             // Set default data (if not available)
             if (property_exists($objects[$key], 'created')) $this->inputData['created'] = new DateTime();
             if (property_exists($objects[$key], 'status')) $this->inputData['status'] = true;
+            if (property_exists($objects[$key], 'deleted')) $this->inputData['deleted'] = false;
             $recordData[$key] = $this->inputData;
         }
 
@@ -1288,6 +1330,8 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     else $records[$key] = $record;
                 }
                 return $records;
+            } elseif ($output == 'boolean') {
+                return true;
             } else {
                 return $objects;
             }
