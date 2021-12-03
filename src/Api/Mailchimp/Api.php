@@ -41,7 +41,7 @@ class Api extends BaseClass
      *
      * @param string $emailAddress
      * @param string $listId
-     * @return bool
+     * @return object|bool
      */
     public function getMemberInfo($emailAddress, $listId) {
         // Get member-info
