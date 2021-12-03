@@ -37,6 +37,27 @@ class Api extends BaseClass
     }
 
     /**
+     * Get member-info in list
+     *
+     * @param string $emailAddress
+     * @param string $listId
+     * @return bool
+     */
+    public function getMemberInfo($emailAddress, $listId) {
+        // Get member-info
+        try {
+            $member = $this->client->lists->getListMember($listId, $this->getSubscriberHash($emailAddress));
+        } catch (\Exception $ex) {
+            $this->setErrorData($ex->getTrace());
+            $this->setMessages($ex->getCode() . ": " . $ex->getMessage());
+            return false;
+        }
+
+        // Return
+        return $member;
+    }
+
+    /**
      * Update member-tag in list
      *
      * @param string $emailAddress
