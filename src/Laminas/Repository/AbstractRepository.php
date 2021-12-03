@@ -241,17 +241,21 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     public abstract function prepareInputData();
 
     /**
-     * Hydrate object, apply inputfilter, save it, and return result
+     * Hydrate object (if applicable), apply inputfilter, save it, and return result
      *
-     * @param array $data
+     * @param mixed $data
      * @param $object
      * @param bool $flush
      * @return bool
      */
     public function filterAndPersist($data, &$object, $flush = true)
     {
-        // Hydrate data to object
-        $this->getHydrator()->hydrate($data, $object);
+        // Hydrate data to object (if applicable)
+        if ($data instanceof $object) {
+            $object = $data;
+        } else {
+            $this->getHydrator()->hydrate($data, $object);
+        }
 
         // Convert object-data to prepare for validation (if function available in repository)
         if (method_exists($this, 'prepareObjectData')) {
