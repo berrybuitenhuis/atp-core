@@ -63,6 +63,35 @@ class Input
     }
 
     /**
+     * Find (longest) match of strings
+     *
+     * @param string $string
+     * @param string $otherString
+     * @return string
+     */
+    public static function findMatch($string, $otherString)
+    {
+        // Initialize matched string
+        $match = "";
+
+        // Split (source) string into array for every character
+        $chars = str_split($string);
+
+        // Iterate every character
+        foreach ($chars as $char) {
+            // Check if "new" matched string in other-string (add character to matched-string), else stop/return matched-string
+            if(strpos($otherString, $match . $char) === 0) {
+                $match .= $char;
+            } else {
+                break;
+            }
+        }
+
+        // Return
+        return $match;
+    }
+
+    /**
      * Decode x-form-encoded data
      *
      * @param string $dataString example: test=1&test2=3&data=1+2

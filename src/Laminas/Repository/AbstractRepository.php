@@ -8,10 +8,10 @@ use Exception;
 use Throwable;
 use Laminas\InputFilter\InputFilterAwareInterface;
 use Laminas\InputFilter\InputFilterInterface;
+use Doctrine\Laminas\Hydrator\DoctrineObject;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 
 /**
  * Class AbstractRepository
@@ -34,7 +34,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     protected $filterAssociations;
 
     /**
-     * @var \DoctrineModule\Stdlib\Hydrator\DoctrineObject
+     * @var DoctrineObject
      */
     private $hydrator;
 
@@ -54,7 +54,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     private $methodCheck;
 
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var EntityManager
      */
     protected $objectManager;
 
