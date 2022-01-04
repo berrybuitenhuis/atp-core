@@ -80,7 +80,7 @@ class Input
         // Iterate every character
         foreach ($chars as $char) {
             // Check if "new" matched string in other-string (add character to matched-string), else stop/return matched-string
-            if(strpos($otherString, $match . $char) === 0) {
+            if(stripos($otherString, $match . $char) === 0) {
                 $match .= $char;
             } else {
                 break;
