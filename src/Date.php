@@ -187,9 +187,10 @@ class Date extends BaseClass
      *
      * @param \DateTime $dateFuture
      * @param string $unit
+     * @param boolean $exact
      * @return int
      */
-    public function difference($dateFuture, $unit = "days")
+    public function difference($dateFuture, $unit = "days", $exact = true)
     {
         // Subtract dates
         $dateInterval = $dateFuture->diff($this->date);
@@ -208,7 +209,22 @@ class Date extends BaseClass
             case "maand":
             case "maanden":
             case "m":
-                $diff = ($dateInterval->y * 12) + $dateInterval->m;
+                // Subtract years
+                $years = $dateFuture->format("Y") - $this->date->format("Y");
+                $diff = $years * 12;
+                // Subtract months
+                $months = intval($dateFuture->format("m")) - intval($this->date->format("m"));
+                $diff = $diff + $months;
+                // Verify day-of-month (takes day-of-month into account), only if outcome should be exact
+                // Examples:
+                //  - Difference between 31 January and 28 February results in 0 month (with exact = true)
+                //  - Difference between 31 January and 28 February results in 1 month (with exact = false)
+                //  - Difference between 31 January and 1 March results in 1 month (with exact = true)
+                //  - Difference between 31 January and 1 March results in 2 month (with exact = false)
+                if ($exact !== false) {
+                    $days = intval($dateFuture->format("d")) - intval($this->date->format("d"));
+                    if ($days < 0) $diff--;
+                }
                 break;
             case "year":
             case "years":
