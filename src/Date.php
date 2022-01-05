@@ -198,15 +198,24 @@ class Date extends BaseClass
         switch (strtolower($unit)) {
             case "day":
             case "days":
+            case "dag":
             case "dagen":
             case "d":
                 $diff = $dateInterval->days;
                 break;
             case "month":
             case "months":
+            case "maand":
             case "maanden":
             case "m":
                 $diff = ($dateInterval->y * 12) + $dateInterval->m;
+                break;
+            case "year":
+            case "years":
+            case "jaar":
+            case "jaren":
+            case "y":
+                $diff = $dateInterval->y;
                 break;
             default:
                 $diff = 0;
