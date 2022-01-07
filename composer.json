@@ -15,6 +15,7 @@
         "php": "^7.3",
         "aws/aws-sdk-php": "^3.202",
         "dompdf/dompdf": "^v1.1",
+        "elasticsearch/elasticsearch": "^7.0",
         "gumlet/php-image-resize": "^2.0",
         "guzzlehttp/guzzle": "^7.4",
         "guzzlehttp/psr7": "^2.1",
