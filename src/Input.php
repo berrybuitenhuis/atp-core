@@ -247,6 +247,25 @@ class Input
         return $params;
     }
 
+    /**
+     * Sort an array by keys with customized order
+     *
+     * @param array $array
+     * @param array $order
+     * @return array
+     */
+    public static function sortArrayByKey($array, $order)
+    {
+        uksort($array, function($a, $b) use($order) {
+            foreach($order as $value){
+                if ($a == $value) return 0;
+                if ($b == $value) return 1;
+            }
+        });
+
+        return $array;
+    }
+
     public static function stripSlashes($var)
     {
         // Avoid converting nullable-values into empty-string ("") with stripslashes
