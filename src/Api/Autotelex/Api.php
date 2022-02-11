@@ -184,11 +184,11 @@ class Api extends BaseClass
     private function log($type, $soapFunction, $message)
     {
         $date = (new \DateTime())->format("Y-m-d H:i:s");
-        $message = "[$date][$this->sessionId][$type][$soapFunction] $message\n";
+        $message = "[$date][$this->sessionId][$type][$soapFunction] $message";
         if (!empty($this->logger)) {
             $this->logger($message);
         } else {
-            print($message);
+            print("$message\n");
         }
     }
 
