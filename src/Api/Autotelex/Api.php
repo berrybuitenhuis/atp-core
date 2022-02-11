@@ -13,6 +13,7 @@ class Api extends BaseClass
 
     private $client;
     private $debug;
+    private $logger;
     private $sessionId;
     private $token;
 
@@ -23,13 +24,17 @@ class Api extends BaseClass
      * @param string $username
      * @param string $password
      * @param boolean $debug
+     * @param \Closure|null $logger
      */
-    public function __construct($wsdl, $username, $password, $debug = false)
+    public function __construct($wsdl, $username, $password, $debug = false, \Closure $logger = null)
     {
         $this->client = new Client($wsdl, ['encoding' => 'UTF-8']);
         $this->client->setSoapVersion(SOAP_1_1);
         $this->sessionId = session_id();
         $this->debug = $debug;
+
+        // Set custom logger
+        $this->logger = $logger;
 
         // Reset error-messages
         $this->resetErrors();
@@ -170,6 +175,7 @@ class Api extends BaseClass
 
     /**
      * Log message in default format
+     *
      * @param string $type (request/response)
      * @param string $soapFunction
      * @param string $message
@@ -178,7 +184,24 @@ class Api extends BaseClass
     private function log($type, $soapFunction, $message)
     {
         $date = (new \DateTime())->format("Y-m-d H:i:s");
-        print("[$date][$this->sessionId][$type][$soapFunction] $message\n");
+        $message = "[$date][$this->sessionId][$type][$soapFunction] $message\n";
+        if (!empty($this->logger)) {
+            $this->logger($message);
+        } else {
+            print($message);
+        }
+    }
+
+    /**
+     * Log message via custom log-function
+     *
+     * @param string $message
+     * @return void
+     */
+    private function logger($message)
+    {
+        $logger = $this->logger;
+        return $logger($message);
     }
 
     /**
