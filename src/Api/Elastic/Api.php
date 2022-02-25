@@ -35,85 +35,6 @@ class Api extends BaseClass
     }
 
     /**
-     * Bulk insert
-     *     
-     * @param string $index
-     * @param string $id
-     * @param array $body
-     * @return bool
-     */
-
-    /*
-    $params['index']                  = (string) Default index for items which don't provide one
-    $params['type']                   = DEPRECATED (string) Default document type for items which don't provide one
-    $params['wait_for_active_shards'] = (string) Sets the number of shard copies that must be active before proceeding with the bulk operation. Defaults to 1, meaning the primary shard only. Set to `all` for all shard copies, otherwise set to any non-negative value less than or equal to the total number of copies for the shard (number of replicas + 1)
-    $params['refresh']                = (enum) If `true` then refresh the effected shards to make this operation visible to search, if `wait_for` then wait for a refresh to make this operation visible to search, if `false` (the default) then do nothing with refreshes. (Options = true,false,wait_for)
-    $params['routing']                = (string) Specific routing value
-    $params['timeout']                = (time) Explicit operation timeout
-    $params['_source']                = (list) True or false to return the _source field or not, or default list of fields to return, can be overridden on each sub-request
-    $params['_source_excludes']       = (list) Default list of fields to exclude from the returned _source field, can be overridden on each sub-request
-    $params['_source_includes']       = (list) Default list of fields to extract and return from the _source field, can be overridden on each sub-request
-    $params['pipeline']               = (string) The pipeline id to preprocess incoming documents with
-    $params['body']                   = (array) The operation definition and data (action-data pairs), separated by newlines (Required)
-    */
-    public function bulk($index)
-    {
-        try {
-            $params = [
-                'index' => $index,
-            ];
-
-            $this->client->bulk($params);
-        } catch (Throwable $e) {
-            $this->setMessages("Bulk action failed");
-            $this->setErrorData($e->getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * Update index
-     *     
-     * @param string $index
-     * @param string $id
-     * @param array $body
-     * @return bool
-     */
-    /*
-    $params['id']                     = (string) Document ID (Required)
-    $params['index']                  = (string) The name of the index (Required)
-    $params['type']                   = DEPRECATED (string) The type of the document
-    $params['wait_for_active_shards'] = (string) Sets the number of shard copies that must be active before proceeding with the update operation. Defaults to 1, meaning the primary shard only. Set to `all` for all shard copies, otherwise set to any non-negative value less than or equal to the total number of copies for the shard (number of replicas + 1)
-    $params['_source']                = (list) True or false to return the _source field or not, or a list of fields to return
-    $params['_source_excludes']       = (list) A list of fields to exclude from the returned _source field
-    $params['_source_includes']       = (list) A list of fields to extract and return from the _source field
-    $params['lang']                   = (string) The script language (default: painless)
-    $params['refresh']                = (enum) If `true` then refresh the effected shards to make this operation visible to search, if `wait_for` then wait for a refresh to make this operation visible to search, if `false` (the default) then do nothing with refreshes. (Options = true,false,wait_for)
-    $params['retry_on_conflict']      = (number) Specify how many times should the operation be retried when a conflict occurs (default: 0)
-    $params['routing']                = (string) Specific routing value
-    $params['timeout']                = (time) Explicit operation timeout
-    $params['if_seq_no']              = (number) only perform the update operation if the last operation that has changed the document has the specified sequence number
-    $params['if_primary_term']        = (number) only perform the update operation if the last operation that has changed the document has the specified primary term
-    $params['body']                   = (array) The request definition requires either `script` or partial `doc` (Required)
-    */
-    public function update($index, $id, $body)
-    {
-        try {
-            $params = [
-                'index' => $index,
-                'id' => $id,
-                'body'  => $body
-            ];
-
-            return ($this->client->update($params));
-        } catch (Throwable $e) {
-            $this->setMessages("Update action failed");
-            $this->setErrorData($e->getMessage());
-            return false;
-        }
-    }
-
-    /**
      * Create new index
      *     
      * @param string $index
@@ -149,6 +70,121 @@ class Api extends BaseClass
             return ($this->client->index($params));
         } catch (Throwable $e) {
             $this->setMessages("Index action failed");
+            $this->setErrorData($e->getMessage());
+            return $e;
+        }
+    }
+
+    /**
+     * Update index
+     *     
+     * @param string $index
+     * @param string $id
+     * @param array $body
+     * @return bool
+     */
+    /*
+    $params['id']                     = (string) Document ID (Required)
+    $params['index']                  = (string) The name of the index (Required)
+    $params['type']                   = DEPRECATED (string) The type of the document
+    $params['wait_for_active_shards'] = (string) Sets the number of shard copies that must be active before proceeding with the update operation. Defaults to 1, meaning the primary shard only. Set to `all` for all shard copies, otherwise set to any non-negative value less than or equal to the total number of copies for the shard (number of replicas + 1)
+    $params['_source']                = (list) True or false to return the _source field or not, or a list of fields to return
+    $params['_source_excludes']       = (list) A list of fields to exclude from the returned _source field
+    $params['_source_includes']       = (list) A list of fields to extract and return from the _source field
+    $params['lang']                   = (string) The script language (default: painless)
+    $params['refresh']                = (enum) If `true` then refresh the effected shards to make this operation visible to search, if `wait_for` then wait for a refresh to make this operation visible to search, if `false` (the default) then do nothing with refreshes. (Options = true,false,wait_for)
+    $params['retry_on_conflict']      = (number) Specify how many times should the operation be retried when a conflict occurs (default: 0)
+    $params['routing']                = (string) Specific routing value
+    $params['timeout']                = (time) Explicit operation timeout
+    $params['if_seq_no']              = (number) only perform the update operation if the last operation that has changed the document has the specified sequence number
+    $params['if_primary_term']        = (number) only perform the update operation if the last operation that has changed the document has the specified primary term
+    $params['body']                   = (array) The request definition requires either `script` or partial `doc` (Required)
+    */
+    public function updateIndex($index, $id, $body)
+    {
+        try {
+            $params = [
+                'index' => $index,
+                'id' => $id,
+                'body'  => $body
+            ];
+
+            return ($this->client->update($params));
+        } catch (Throwable $e) {
+            $this->setMessages("Update action failed");
+            $this->setErrorData($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Delete action
+     *     
+     * @param string $index
+     * @param string $id
+     * @return bool
+     */
+    /*
+    $params['id']                     = (string) The document ID (Required)
+    $params['index']                  = (string) The name of the index (Required)
+    $params['type']                   = DEPRECATED (string) The type of the document
+    $params['wait_for_active_shards'] = (string) Sets the number of shard copies that must be active before proceeding with the delete operation. Defaults to 1, meaning the primary shard only. Set to `all` for all shard copies, otherwise set to any non-negative value less than or equal to the total number of copies for the shard (number of replicas + 1)
+    $params['refresh']                = (enum) If `true` then refresh the effected shards to make this operation visible to search, if `wait_for` then wait for a refresh to make this operation visible to search, if `false` (the default) then do nothing with refreshes. (Options = true,false,wait_for)
+    $params['routing']                = (string) Specific routing value
+    $params['timeout']                = (time) Explicit operation timeout
+    $params['if_seq_no']              = (number) only perform the delete operation if the last operation that has changed the document has the specified sequence number
+    $params['if_primary_term']        = (number) only perform the delete operation if the last operation that has changed the document has the specified primary term
+    $params['version']                = (number) Explicit version number for concurrency control
+    $params['version_type']           = (enum) Specific version type (Options = internal,external,external_gte,force)
+    */
+    public function deleteIndex($index, $id)
+    {
+        try {
+            $params = [
+                'index' => $index,
+                'id'    => $id
+            ];
+
+            return ($this->client->delete($params));
+        } catch (Throwable $e) {
+            $this->setMessages("Delete action failed");
+            $this->setErrorData($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Bulk insert
+     *     
+     * @param string $index
+     * @param string $id
+     * @param array $body
+     * @return bool
+     */
+
+    /*
+    $params['index']                  = (string) Default index for items which don't provide one
+    $params['type']                   = DEPRECATED (string) Default document type for items which don't provide one
+    $params['wait_for_active_shards'] = (string) Sets the number of shard copies that must be active before proceeding with the bulk operation. Defaults to 1, meaning the primary shard only. Set to `all` for all shard copies, otherwise set to any non-negative value less than or equal to the total number of copies for the shard (number of replicas + 1)
+    $params['refresh']                = (enum) If `true` then refresh the effected shards to make this operation visible to search, if `wait_for` then wait for a refresh to make this operation visible to search, if `false` (the default) then do nothing with refreshes. (Options = true,false,wait_for)
+    $params['routing']                = (string) Specific routing value
+    $params['timeout']                = (time) Explicit operation timeout
+    $params['_source']                = (list) True or false to return the _source field or not, or default list of fields to return, can be overridden on each sub-request
+    $params['_source_excludes']       = (list) Default list of fields to exclude from the returned _source field, can be overridden on each sub-request
+    $params['_source_includes']       = (list) Default list of fields to extract and return from the _source field, can be overridden on each sub-request
+    $params['pipeline']               = (string) The pipeline id to preprocess incoming documents with
+    $params['body']                   = (array) The operation definition and data (action-data pairs), separated by newlines (Required)
+    */
+    public function bulk($index)
+    {
+        try {
+            $params = [
+                'index' => $index,
+            ];
+
+            $this->client->bulk($params);
+        } catch (Throwable $e) {
+            $this->setMessages("Bulk action failed");
             $this->setErrorData($e->getMessage());
             return false;
         }
@@ -195,42 +231,6 @@ class Api extends BaseClass
             return $this->client->search($params);
         } catch (Throwable $e) {
             $this->setMessages("Search action failed");
-            $this->setErrorData($e->getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * Delete action
-     *     
-     * @param string $index
-     * @param string $id
-     * @return bool
-     */
-    /*
-    $params['id']                     = (string) The document ID (Required)
-    $params['index']                  = (string) The name of the index (Required)
-    $params['type']                   = DEPRECATED (string) The type of the document
-    $params['wait_for_active_shards'] = (string) Sets the number of shard copies that must be active before proceeding with the delete operation. Defaults to 1, meaning the primary shard only. Set to `all` for all shard copies, otherwise set to any non-negative value less than or equal to the total number of copies for the shard (number of replicas + 1)
-    $params['refresh']                = (enum) If `true` then refresh the effected shards to make this operation visible to search, if `wait_for` then wait for a refresh to make this operation visible to search, if `false` (the default) then do nothing with refreshes. (Options = true,false,wait_for)
-    $params['routing']                = (string) Specific routing value
-    $params['timeout']                = (time) Explicit operation timeout
-    $params['if_seq_no']              = (number) only perform the delete operation if the last operation that has changed the document has the specified sequence number
-    $params['if_primary_term']        = (number) only perform the delete operation if the last operation that has changed the document has the specified primary term
-    $params['version']                = (number) Explicit version number for concurrency control
-    $params['version_type']           = (enum) Specific version type (Options = internal,external,external_gte,force)
-    */
-    public function delete($index, $id)
-    {
-        try {
-            $params = [
-                'index' => $index,
-                'id'    => $id
-            ];
-
-            return ($this->client->delete($params));
-        } catch (Throwable $e) {
-            $this->setMessages("Delete action failed");
             $this->setErrorData($e->getMessage());
             return false;
         }
