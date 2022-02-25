@@ -222,8 +222,6 @@ class TradeApi extends BaseClass
             // Return
             if (!isset($response->errors) || empty($response->errors)) {
                 return true;
-            } elseif (stristr($response->errors[0]->message, "bidding is no longer allowed due to status")) {
-                return true;
             } else {
                 $this->setErrorData($response);
                 $this->setMessages($response->errors);
