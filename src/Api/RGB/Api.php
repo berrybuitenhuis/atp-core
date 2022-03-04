@@ -41,6 +41,17 @@ class Api extends BaseClass
     }
 
     /**
+     * Compose payload based on provided data (XML)
+     *
+     * @return string
+     */
+    public function composePayload()
+    {
+        // Convert XML into string
+        return $this->xml->asXML();
+    }
+
+    /**
      * Create transport-request
      *
      * @return object|SimpleXMLElement
@@ -52,8 +63,8 @@ class Api extends BaseClass
             return false;
         }
 
-        // Convert XML into string
-        $body = $this->xml->asXML();
+        // Compose payload
+        $body = $this->composePayload();
 
         // Execute call
         $requestHeader = $this->clientHeaders;
