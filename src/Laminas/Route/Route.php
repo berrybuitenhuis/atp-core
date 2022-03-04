@@ -90,7 +90,7 @@ class Route
             'route'    => $routePrefix . '/:action[/:subAction][/]',
             'constraints' => [
                 'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                'subAction' => '[a-zA-Z]+',
+                'subAction' => '[a-zA-Z-]+',
             ],
             'defaults' => [
                 'controller' => $controller,
