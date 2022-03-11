@@ -67,23 +67,40 @@ class Input
      *
      * @param string $string
      * @param string $otherString
+     * @param booolean $completeWords
      * @return string
      */
-    public static function findMatch($string, $otherString)
+    public static function findMatch($string, $otherString, $completeWords = false)
     {
         // Initialize matched string
         $match = "";
 
-        // Split (source) string into array for every character
-        $chars = str_split($string);
+        if ($completeWords === true) {
+            // Split (source) string into array for words
+            $words = explode(" ", $string);
 
-        // Iterate every character
-        foreach ($chars as $char) {
-            // Check if "new" matched string in other-string (add character to matched-string), else stop/return matched-string
-            if(stripos($otherString, $match . $char) === 0) {
-                $match .= $char;
-            } else {
-                break;
+            // Iterate every word
+            foreach ($words AS $word) {
+                // Check if "new" matched string in other-string (add word to matched-string), else stop/return matched-string
+                if(stripos($otherString, $match . $word . " ") === 0 || $otherString == $match . $word) {
+                    $match .= $word . " ";
+                } else {
+                    $match = trim($match);
+                    break;
+                }
+            }
+        } else {
+            // Split (source) string into array for every character
+            $chars = str_split($string);
+
+            // Iterate every character
+            foreach ($chars as $char) {
+                // Check if "new" matched string in other-string (add character to matched-string), else stop/return matched-string
+                if(stripos($otherString, $match . $char) === 0) {
+                    $match .= $char;
+                } else {
+                    break;
+                }
             }
         }
 
