@@ -64,6 +64,11 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     protected $objectName;
 
     /**
+     * @var string for (possible) selection input-filter
+     */
+    protected $operation;
+
+    /**
      * @var mixed options
      */
     protected $options;
@@ -1261,6 +1266,9 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      */
     public function create($data, $output = 'object', $overrule = [], $fields = null)
     {
+        // Set operation
+        $this->operation = __FUNCTION__;
+
         // Reset errors
         $this->resetErrors();
 
@@ -1302,6 +1310,9 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      */
     public function createBulk($data, $output = 'object', $overrule = [], $fields = null)
     {
+        // Set operation
+        $this->operation = __FUNCTION__;
+
         // Reset errors
         $this->resetErrors();
 
@@ -1356,6 +1367,9 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      */
     public function update($id, $data, $output = 'object', $refresh = false, $fields = null)
     {
+        // Set operation
+        $this->operation = __FUNCTION__;
+
         // Reset errors
         $this->resetErrors();
 
@@ -1416,6 +1430,9 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      */
     public function updateBulk($data, $output = 'object', $refresh = false, $fields = null)
     {
+        // Set operation
+        $this->operation = __FUNCTION__;
+
         // Reset errors
         $this->resetErrors();
 
