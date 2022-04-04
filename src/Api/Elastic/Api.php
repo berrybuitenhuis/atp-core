@@ -186,9 +186,14 @@ class Api extends BaseClass
     $params['_source_includes']              = (list) A list of fields to extract and return from the _source field
     $params['terminate_after']               = (number) The maximum number of documents to collect for each shard, upon reaching which the query execution will terminate early.
     */
-    public function search($params)
+    public function search($index, $body)
     {
         try {
+            $params = [
+                'index' => $index,
+                'body' => $body
+            ];
+
             return $this->client->search($params);
         } catch (Throwable $e) {
             $this->setMessages("Search action failed");
