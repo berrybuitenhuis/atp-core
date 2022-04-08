@@ -106,13 +106,14 @@ class Api extends BaseClass
      * @param string $vatMarginType
      * @param int $bid
      * @param \DateTime $expirationDate
+     * @param string $comment
      * @param int $rdwIdentificationNumber
      * @return bool|object
      */
-    public function sendBid($externalId, $resultType, $vatMarginType, $bid, $expirationDate, $rdwIdentificationNumber = null)
+    public function sendBid($externalId, $resultType, $vatMarginType, $bid, $expirationDate, $comment = null, $rdwIdentificationNumber = null)
     {
         if ($resultType == "not_interested") {
-            return $this->sendNoInterest($externalId);
+            return $this->sendNoInterest($externalId, $comment);
         }
 
         if ($bid > 0) {
@@ -129,7 +130,8 @@ class Api extends BaseClass
                     "Status" => 3,
                     "InclExclBTW" => "Incl. BTW",
                     "GeldigTot" => $expirationDate->format('c'),
-                    "Naam" => "Autotaxatie (Autotaxatie)"
+                    "Naam" => "Autotaxatie (Autotaxatie)",
+                    "Opmerking" => $comment
                 ],
             ];
             if (!empty($rdwIdentificationNumber)) {
@@ -157,11 +159,16 @@ class Api extends BaseClass
      * Send no-interest to Autotelex
      *
      * @param int $externalId
+     * @param string $comment
      * @return bool|object
      */
-    public function sendNoInterest($externalId)
+    public function sendNoInterest($externalId, $comment = null)
     {
-        $params = ["vendorToken"=>$this->token, "vehicleId"=>$externalId];
+        $params = [
+            "vendorToken" => $this->token,
+            "vehicleId" => $externalId,
+            "comment" => $comment
+        ];
         if ($this->debug) $this->log("request", "NoInterest", json_encode($params));
         $result = $this->client->NoInterest($params);
         if ($this->debug) $this->log("response", "NoInterest", json_encode($result));
