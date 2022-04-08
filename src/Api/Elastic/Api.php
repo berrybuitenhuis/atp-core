@@ -42,8 +42,14 @@ class Api extends BaseClass
     public function bulk($params)
     {
         try {
-            $this->client->bulk($params);
-            return true;
+            $res = $this->client->bulk($params);
+            if ($res['errors'] == true) {
+                $this->setMessages("Bulk action failed");
+                $this->setErrorData($res);
+                return false;
+            } else {
+                return true;
+            }
         } catch (Throwable $e) {
             $this->setMessages("Bulk action failed");
             $this->setErrorData($e->getMessage());
@@ -68,7 +74,14 @@ class Api extends BaseClass
                 'body'  => $body
             ];
 
-            return ($this->client->update($params));
+            $res = $this->client->update($params);
+            if ($res['errors'] == true) {
+                $this->setMessages("Update action failed");
+                $this->setErrorData($res);
+                return false;
+            } else {
+                return true;
+            }
         } catch (Throwable $e) {
             $this->setMessages("Update action failed");
             $this->setErrorData($e->getMessage());
@@ -93,8 +106,14 @@ class Api extends BaseClass
                 'body'  => $body
             ];
 
-            $this->client->index($params);
-            return true;
+            $res = $this->client->index($params);
+            if ($res['errors'] == true) {
+                $this->setMessages("Index action failed");
+                $this->setErrorData($res);
+                return false;
+            } else {
+                return true;
+            }
         } catch (Throwable $e) {
             $this->setMessages("Index action failed");
             $this->setErrorData($e->getMessage());
@@ -140,7 +159,14 @@ class Api extends BaseClass
                 'id'    => $id
             ];
 
-            return ($this->client->delete($params));
+            $res = ($this->client->delete($params));
+            if ($res['errors'] == true) {
+                $this->setMessages("Delete action failed");
+                $this->setErrorData($res);
+                return false;
+            } else {
+                return true;
+            }
         } catch (Throwable $e) {
             $this->setMessages("Delete action failed");
             $this->setErrorData($e->getMessage());
