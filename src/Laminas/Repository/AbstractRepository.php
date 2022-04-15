@@ -804,7 +804,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * @param null|array $limit
      * @param boolean $paginator
      * @param boolean$debug
-     * @return array/object
+     * @return array|object|boolean
      * @throws Exception
      */
     public function getByFilter($fields = null, $defaultFilter = null, $filter = null, $groupBy = null, $having = null, $orderBy = null, $limit = null, $paginator = false, $debug = false)
@@ -858,6 +858,8 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     $match = true;
                 } elseif (!empty($filter["OR_AND"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($filter["OR_AND"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
+                } elseif (!empty($filter["AND_OR"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($filter["AND_OR"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
+                    $match = true;
                 } elseif (!empty($clientFilter["filter"]) && stristr($clientFilter["filter"], $filterAssociation['alias'] . ".") && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
                 } elseif (!empty($defaultFilter["AND"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($defaultFilter["AND"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
@@ -865,6 +867,8 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                 } elseif (!empty($defaultFilter["OR"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($defaultFilter["OR"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
                 } elseif (!empty($defaultFilter["OR_AND"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($defaultFilter["OR_AND"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
+                    $match = true;
+                } elseif (!empty($defaultFilter["AND_OR"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($defaultFilter["AND_OR"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
                 } elseif (!empty($defaultFilter["filter"]) && stristr($defaultFilter["filter"], $filterAssociation['alias'] . ".") && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
@@ -964,6 +968,24 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                 // Add filter-conditions to query
                 $query->orWhere($filterConditions);
             }
+            // Set OR-conditions (if available)
+            if (isset($filter['AND_OR'])) {
+                $filterConditions = $query->expr()->orX();
+                // Iterate conditions
+                foreach ($filter['AND_OR'] AS $k => $filterParams) {
+                    $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
+                    $operator = $filterParams[1];
+                    $valueKey = "customAndOr" . ucfirst(str_replace(".", "", $field)) . $k;
+                    if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
+
+                    // Check if operator is allowed
+                    if (!in_array(strtolower($operator), $allowedOperators)) throw new Exception("Not allowed operator: " . $operator);
+                    // Set filter-condition
+                    $filterConditions->add($query->expr()->{$operator}($field, ':' . $valueKey));
+                }
+                // Add filter-conditions to query
+                $query->andWhere($filterConditions);
+            }
         }
         // Set customized default-filter (if available)
         if (!empty($defaultFilter)) {
@@ -1020,6 +1042,24 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                 }
                 // Add filter-conditions to query
                 $query->orWhere($filterConditions);
+            }
+            // Set OR-conditions (if available)
+            if (isset($defaultFilter['AND_OR'])) {
+                $filterConditions = $query->expr()->orX();
+                // Iterate conditions
+                foreach ($defaultFilter['AND_OR'] AS $k => $filterParams) {
+                    $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
+                    $operator = $filterParams[1];
+                    $valueKey = "defaultAndOr" . ucfirst(str_replace(".", "", $field)) . $k;
+                    if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
+
+                    // Check if operator is allowed
+                    if (!in_array(strtolower($operator), $allowedOperators)) throw new Exception("Not allowed operator: " . $operator);
+                    // Set filter-condition
+                    $filterConditions->add($query->expr()->{$operator}($field, ':' . $valueKey));
+                }
+                // Add filter-conditions to query
+                $query->andWhere($filterConditions);
             }
             // Set filter (if available)
             if (isset($defaultFilter['filter'])) {
