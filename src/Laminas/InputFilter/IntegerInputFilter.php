@@ -23,7 +23,9 @@ class IntegerInputFilter
                 'name' => $name,
                 'required' => $required,
                 'validators' => [
-                    ['name' => \AtpCore\Laminas\Validator\Digits::class],
+                    [
+                        'name' => \AtpCore\Laminas\Validator\Digits::class,
+                    ],
                 ],
             ];
 

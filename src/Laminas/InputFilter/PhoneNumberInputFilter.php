@@ -3,6 +3,7 @@
 namespace AtpCore\Laminas\InputFilter;
 
 use Laminas\InputFilter\InputFilter;
+use Laminas\I18n\Validator\PhoneNumber;
 
 class PhoneNumberInputFilter
 {
@@ -27,7 +28,7 @@ class PhoneNumberInputFilter
                 'filters' => [],
                 'validators' => [
                     [
-                        'name' => 'PhoneNumber',
+                        'name' => PhoneNumber::class,
                         'options' => [
                             'country' => $countryCode,
                             'allowed_types' => (!empty($allowedTypes)) ? $allowedTypes : null,

@@ -3,6 +3,7 @@
 namespace AtpCore\Laminas\InputFilter;
 
 use Laminas\InputFilter\InputFilter;
+use Laminas\Validator\Iban;
 
 class IbanInputFilter
 {
@@ -25,7 +26,7 @@ class IbanInputFilter
                 'filters' => [],
                 'validators' => [
                     [
-                        'name' => 'Iban',
+                        'name' => Iban::class,
                         'options' => [
                             'allow_non_sepa' => $allowNonSepa,
                         ],

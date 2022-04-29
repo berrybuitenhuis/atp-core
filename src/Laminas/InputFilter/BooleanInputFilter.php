@@ -28,10 +28,10 @@ class BooleanInputFilter
                 'filters' => [],
                 'validators' => [
                     [
-                        'name' => 'InArray',
+                        'name' => InArray::class,
                         'options' => [
                             'haystack' => [true, false, 1, 0, "1", "0"],
-                            'strict' => InArray::COMPARE_STRICT
+                            'strict' => InArray::COMPARE_STRICT,
                         ],
                     ],
                 ],

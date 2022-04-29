@@ -27,10 +27,10 @@ class EnumInputFilter
                 'filters' => [],
                 'validators' => [
                     [
-                        'name' => 'InArray',
+                        'name' => InArray::class,
                         'options' => [
                             'haystack' => $enumValues,
-                            'strict' => InArray::COMPARE_STRICT
+                            'strict' => InArray::COMPARE_STRICT,
                         ],
                     ],
                 ],

@@ -2,7 +2,11 @@
 
 namespace AtpCore\Laminas\InputFilter;
 
+use Laminas\Filter\StripTags;
+use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilter;
+use Laminas\Validator\Regex;
+use Laminas\Validator\StringLength;
 
 class PasswordInputFilter
 {
@@ -28,33 +32,33 @@ class PasswordInputFilter
                 'name'      => $name,
                 'required'  => $required,
                 'filters'   => [
-                    ['name' => 'StripTags'],
-                    ['name' => 'StringTrim'],
+                    ['name' => StripTags::class],
+                    ['name' => StringTrim::class],
                 ],
                 'validators' => [
                     [
-                        'name' => 'StringLength',
+                        'name' => StringLength::class,
                         'options' => [
                             'min' => $minLength,
                             'max' => 250,
                         ]
                     ],[
-                        'name' => 'Regex',
+                        'name' => Regex::class,
                         'options' => [
                             'pattern' => '/[A-Z]{' . $minUppercase . ',}/',
                         ]
                     ],[
-                        'name' => 'Regex',
+                        'name' => Regex::class,
                         'options' => [
                             'pattern' => '/[a-z]{' . $minLowercase . ',}/',
                         ]
                     ],[
-                        'name' => 'Regex',
+                        'name' => Regex::class,
                         'options' => [
                             'pattern' => '/[0-9]{' . $minDigits . ',}/',
                         ]
                     ],[
-                        'name' => 'Regex',
+                        'name' => Regex::class,
                         'options' => [
                             'pattern' => '/[!@$%^&*()<>,.?\/[\]{}=_+-]{' . $minSpecialCharacters . ',}/',
                         ]

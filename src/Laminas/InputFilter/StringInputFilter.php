@@ -2,6 +2,8 @@
 
 namespace AtpCore\Laminas\InputFilter;
 
+use Laminas\Filter\StripTags;
+use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilter;
 
 class StringInputFilter
@@ -23,8 +25,8 @@ class StringInputFilter
                 'name'      => $name,
                 'required'  => $required,
                 'filters'   => [
-                    ['name' => 'StripTags'],
-                    ['name' => 'StringTrim'],
+                    ['name' => StripTags::class],
+                    ['name' => StringTrim::class],
                 ],
             ];
 

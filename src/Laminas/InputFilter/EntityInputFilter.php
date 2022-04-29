@@ -3,6 +3,7 @@
 namespace AtpCore\Laminas\InputFilter;
 
 use Laminas\InputFilter\InputFilter;
+use Laminas\Validator\NotEmpty;
 
 class EntityInputFilter
 {
@@ -28,7 +29,9 @@ class EntityInputFilter
                 $filter = [
                     'name' => $name,
                     'validators' => [
-                        ['name' => 'NotEmpty'],
+                        [
+                            'name' => NotEmpty::class,
+                        ],
                     ],
                 ];
             }

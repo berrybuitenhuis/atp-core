@@ -3,6 +3,7 @@
 namespace AtpCore\Laminas\InputFilter;
 
 use Laminas\InputFilter\InputFilter;
+use Laminas\Validator\Regex;
 
 class DecimalInputFilter
 {
@@ -26,7 +27,7 @@ class DecimalInputFilter
                 'required'  => $required,
                 'validators'   => [
                     [
-                        'name' => 'Regex',
+                        'name' => Regex::class,
                         'options' => [
                             'pattern' => '/^\d{1,' . ($precision - $scale) . '}\.\d{1,' . $scale . '}$/',
                         ],

@@ -3,6 +3,7 @@
 namespace AtpCore\Laminas\InputFilter;
 
 use Laminas\InputFilter\InputFilter;
+use Laminas\Validator\EmailAddress;
 
 class EmailInputFilter
 {
@@ -23,7 +24,9 @@ class EmailInputFilter
                 'name' => $name,
                 'required' => $required,
                 'validators' => [
-                    ['name' => \AtpCore\Laminas\Validator\EmailAddress::class],
+                    [
+                        'name' => EmailAddress::class,
+                    ],
                 ],
             ];
 

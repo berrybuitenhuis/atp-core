@@ -3,6 +3,7 @@
 namespace AtpCore\Laminas\InputFilter;
 
 use Laminas\InputFilter\InputFilter;
+use Laminas\Validator\Date;
 
 class DateInputFilter
 {
@@ -23,7 +24,9 @@ class DateInputFilter
                 'name' => $name,
                 'required' => $required,
                 'validators' => [
-                    ['name' => 'Date'],
+                    [
+                        'name' => Date::class,
+                    ],
                 ],
             ];
 
