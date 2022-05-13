@@ -77,6 +77,33 @@ class Api extends BaseClass
     }
 
     /**
+     * Get (vehicle) data from Autotelex-PRO
+     *
+     * @param string $registration
+     * @param string|null $atlCode
+     * @param string|null $mileage
+     * @return object|false
+     */
+    public function getData($registration, $atlCode = null, $mileage = null)
+    {
+        // Set parameters
+        $vehicleParams = ["kenteken" => $registration];
+        if (!empty($atlCode)) $vehicleParams["AutotelexUitvoeringID"] = $atlCode;
+        if (!empty($mileage)) $vehicleParams["kilometerstand"] = $mileage;
+        $params = ["token"=>$this->token, "vehicle"=>$vehicleParams];
+
+        if ($this->debug) $this->log("request", "GetVehicleDataPRO", json_encode($params));
+        $result = $this->client->GetVehicleDataPRO($params);
+        if ($this->debug) $this->log("response", "GetVehicleDataPRO", json_encode($result));
+        $status = $result->GetVehicleDataPROResult->Status;
+        if ($status->Code == 0) {
+            return $result->GetVehicleDataPROResult;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Get vehicle-data
      *
      * @param int $externalId
