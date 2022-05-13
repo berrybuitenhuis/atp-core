@@ -96,7 +96,7 @@ class Api extends BaseClass
         $result = $this->client->GetVehicleDataPRO($params);
         if ($this->debug) $this->log("response", "GetVehicleDataPRO", json_encode($result));
         $status = $result->GetVehicleDataPROResult->Status;
-        if ($status->Code == 0) {
+        if ($status->Code == 0 || $status->Code == 11) {
             return $result->GetVehicleDataPROResult;
         } else {
             return false;
