@@ -80,10 +80,14 @@ class TradeApi extends BaseClass
         $requestHeader = $this->clientHeaders;
         $result = $this->client->get('bid?vehicle.id=' . $vehicleId, ['headers'=>$requestHeader]);
         if ($result->getStatusCode() != 200) {
-            $this->setMessages("Failed call to requestByVehicleId: {$result->getStatusCode()}");
+            $this->setMessages("Failed call to requestByVehicleId $vehicleId: status-code {$result->getStatusCode()}");
             return false;
         }
         $response = json_decode((string) $result->getBody());
+        if (empty($response)) {
+            $this->setMessages("Failed call to requestByVehicleId $vehicleId: empty response-body");
+            return false;
+        }
 
         // Return
         if (!isset($response->errors) || empty($response->errors)) {
