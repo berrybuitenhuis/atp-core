@@ -22,27 +22,6 @@ class Date extends BaseClass
     }
 
     /**
-     * Return format of date-string
-     *
-     * @param string $dateString
-     * @return string|null
-     */
-    public static function getDateFormat($dateString) {
-        // Initialize date-format
-        $dateFormat = null;
-
-        // Check format of date-string
-        if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $dateString)) {
-            $dateFormat = "Y-m-d";
-        } elseif (preg_match("/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$/", $dateString)) {
-            $dateFormat = "d-m-Y";
-        }
-
-        // Return
-        return $dateFormat;
-    }
-
-    /**
      * Add interval (minutes, hours, days) to date-time
      *
      * @param int $interval
@@ -86,100 +65,6 @@ class Date extends BaseClass
 
         // Return (new) date
         return $this->date;
-    }
-
-    /**
-     * Subtract interval (minutes, hours, days) from date-time
-     *
-     * @param int $interval
-     * @param string $format
-     * @param array|bool $weekendDays
-     * @return bool|DateTime
-     */
-    public function subtractInterval($interval, $format = "seconds", $weekendDays = null)
-    {
-        // Convert interval
-        $res = $this->convertInterval($interval, $format);
-        if ($res !== false) {
-            $numberOfDays = $res['numberOfDays'];
-            $intervalSeconds = $res['intervalSeconds'];
-        } else {
-            return false;
-        }
-
-        // Subtract (number of) days from date
-        try {
-            $result = $this->subtractWorkDays($numberOfDays, $weekendDays);
-            if ($result === false) return false;
-        } catch (Throwable $e) {
-            $this->addMessage("Function addWorkDays failed");
-            $this->setErrorData($e);
-            return false;
-        }
-
-
-        // Subtract remainder seconds
-        if ($intervalSeconds > 0) {
-            try {
-                $interval = new DateInterval("PT" . $intervalSeconds . "S");
-                $this->date->sub($interval);
-            } catch (Throwable $e) {
-                $this->addMessage("Invalid format provided (PT{$intervalSeconds}S)");
-                $this->setErrorData($e);
-                return false;
-            }
-        }
-
-        // Return (new) date
-        return $this->date;
-    }
-
-    /**
-     * Get date-range for maximum number of days (except weekend-days and days-off)
-     *
-     * @param int $numberOfDays
-     * @param array|bool $weekendDays
-     * @return false|array
-     */
-    public function getDateRange($numberOfDays, $weekendDays = null)
-    {
-        // Initialize date-range
-        $range = [];
-
-        // Iterate over number-of-days
-        for ($i = 1; $i <= $numberOfDays; $i++) {
-            try {
-                $this->date->add(new DateInterval("P1D"));
-            } catch (Throwable $e) {
-                $this->addMessage("Invalid format provided");
-                $this->setErrorData($e);
-                return false;
-            }
-
-            if ($weekendDays !== false) {
-                try {
-                    while ($this->isDayOff($weekendDays)) {
-                        try {
-                            $this->date->add(new DateInterval("P1D"));
-                        } catch (Throwable $e) {
-                            $this->addMessage("Invalid format provided");
-                            $this->setErrorData($e);
-                            return false;
-                        }
-                    }
-                } catch (Throwable $e) {
-                    $this->addMessage("Function isDayOff failed");
-                    $this->setErrorData($e);
-                    return false;
-                }
-            }
-
-            // Add date to range
-            $range[] = clone $this->date;
-        }
-
-        // Return
-        return $range;
     }
 
     /**
@@ -243,14 +128,87 @@ class Date extends BaseClass
     }
 
     /**
-     * Add number of workdays to date
+     * Convert date-object into specified format
+     *
+     * @param string $format
+     * @param string|null $language
+     * @return string
+     */
+    public function format($format, $language = "en")
+    {
+        // Conver date-object into string (by specified format)
+        $result = $this->date->format($format);
+
+        // Translate day/month-names into dutch
+        if (strtolower($language) == "nl") {
+            $dayNames = [
+                'Sunday' => 'zondag',
+                'Monday' => 'maandag',
+                'Tuesday' => 'dinsdag',
+                'Wednesday' => 'eoensdag',
+                'Thursday' => 'donderdag',
+                'Friday' => 'vrijdag',
+                'Saturday' => 'zaterdag',
+            ];
+
+            $monthNames = [
+                "January" => 'januari',
+                "February" => 'februari',
+                "March" => 'maart',
+                "April" => 'april',
+                "May" => 'mei',
+                "June" => 'juni',
+                "July" => 'juli',
+                "August" => 'augustus',
+                "September" => 'september',
+                "October" => 'oktober',
+                "November" => 'november',
+                "December" => 'december',
+            ];
+
+            // Replace/translate day/month-names
+            foreach ($dayNames AS $source => $target) $result = str_ireplace($source, $target, $result);
+            foreach ($monthNames AS $source => $target) $result = str_ireplace($source, $target, $result);
+        }
+
+        // Return
+        return $result;
+    }
+
+    /**
+     * Return format of date-string
+     *
+     * @param string $dateString
+     * @return string|null
+     */
+    public static function getDateFormat($dateString) {
+        // Initialize date-format
+        $dateFormat = null;
+
+        // Check format of date-string
+        if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $dateString)) {
+            $dateFormat = "Y-m-d";
+        } elseif (preg_match("/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$/", $dateString)) {
+            $dateFormat = "d-m-Y";
+        }
+
+        // Return
+        return $dateFormat;
+    }
+
+    /**
+     * Get date-range for maximum number of days (except weekend-days and days-off)
      *
      * @param int $numberOfDays
      * @param array|bool $weekendDays
-     * @return boolean
+     * @return false|array
      */
-    private function addWorkDays($numberOfDays, $weekendDays = null)
+    public function getDateRange($numberOfDays, $weekendDays = null)
     {
+        // Initialize date-range
+        $range = [];
+
+        // Iterate over number-of-days
         for ($i = 1; $i <= $numberOfDays; $i++) {
             try {
                 $this->date->add(new DateInterval("P1D"));
@@ -277,24 +235,73 @@ class Date extends BaseClass
                     return false;
                 }
             }
+
+            // Add date to range
+            $range[] = clone $this->date;
         }
 
         // Return
-        return true;
+        return $range;
     }
 
     /**
-     * Subtract number of workdays to date
+     * Subtract interval (minutes, hours, days) from date-time
+     *
+     * @param int $interval
+     * @param string $format
+     * @param array|bool $weekendDays
+     * @return bool|DateTime
+     */
+    public function subtractInterval($interval, $format = "seconds", $weekendDays = null)
+    {
+        // Convert interval
+        $res = $this->convertInterval($interval, $format);
+        if ($res !== false) {
+            $numberOfDays = $res['numberOfDays'];
+            $intervalSeconds = $res['intervalSeconds'];
+        } else {
+            return false;
+        }
+
+        // Subtract (number of) days from date
+        try {
+            $result = $this->subtractWorkDays($numberOfDays, $weekendDays);
+            if ($result === false) return false;
+        } catch (Throwable $e) {
+            $this->addMessage("Function addWorkDays failed");
+            $this->setErrorData($e);
+            return false;
+        }
+
+
+        // Subtract remainder seconds
+        if ($intervalSeconds > 0) {
+            try {
+                $interval = new DateInterval("PT" . $intervalSeconds . "S");
+                $this->date->sub($interval);
+            } catch (Throwable $e) {
+                $this->addMessage("Invalid format provided (PT{$intervalSeconds}S)");
+                $this->setErrorData($e);
+                return false;
+            }
+        }
+
+        // Return (new) date
+        return $this->date;
+    }
+
+    /**
+     * Add number of workdays to date
      *
      * @param int $numberOfDays
      * @param array|bool $weekendDays
      * @return boolean
      */
-    private function subtractWorkDays($numberOfDays, $weekendDays = null)
+    private function addWorkDays($numberOfDays, $weekendDays = null)
     {
         for ($i = 1; $i <= $numberOfDays; $i++) {
             try {
-                $this->date->sub(new DateInterval("P1D"));
+                $this->date->add(new DateInterval("P1D"));
             } catch (Throwable $e) {
                 $this->addMessage("Invalid format provided");
                 $this->setErrorData($e);
@@ -305,7 +312,7 @@ class Date extends BaseClass
                 try {
                     while ($this->isDayOff($weekendDays)) {
                         try {
-                            $this->date->sub(new DateInterval("P1D"));
+                            $this->date->add(new DateInterval("P1D"));
                         } catch (Throwable $e) {
                             $this->addMessage("Invalid format provided");
                             $this->setErrorData($e);
@@ -426,4 +433,44 @@ class Date extends BaseClass
         return false;
     }
 
+    /**
+     * Subtract number of workdays to date
+     *
+     * @param int $numberOfDays
+     * @param array|bool $weekendDays
+     * @return boolean
+     */
+    private function subtractWorkDays($numberOfDays, $weekendDays = null)
+    {
+        for ($i = 1; $i <= $numberOfDays; $i++) {
+            try {
+                $this->date->sub(new DateInterval("P1D"));
+            } catch (Throwable $e) {
+                $this->addMessage("Invalid format provided");
+                $this->setErrorData($e);
+                return false;
+            }
+
+            if ($weekendDays !== false) {
+                try {
+                    while ($this->isDayOff($weekendDays)) {
+                        try {
+                            $this->date->sub(new DateInterval("P1D"));
+                        } catch (Throwable $e) {
+                            $this->addMessage("Invalid format provided");
+                            $this->setErrorData($e);
+                            return false;
+                        }
+                    }
+                } catch (Throwable $e) {
+                    $this->addMessage("Function isDayOff failed");
+                    $this->setErrorData($e);
+                    return false;
+                }
+            }
+        }
+
+        // Return
+        return true;
+    }
 }
