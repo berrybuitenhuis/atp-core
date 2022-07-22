@@ -88,6 +88,29 @@ class Api extends BaseClass
         return $response;
     }
 
+    /**
+     * Get profile information
+     *
+     * @return false|SimpleXMLElement
+     */
+    public function getProfile()
+    {
+        // Execute call
+        $requestHeaders = $this->clientHeaders;
+        $result = $this->client->get('profile', ['headers'=>$requestHeaders]);
+        if ($result->getStatusCode() !== 200) {
+            $this->setErrorData((string) $result->getBody());
+            $this->setMessages("{$result->getStatusCode()}: {$result->getReasonPhrase()}");
+            return false;
+        }
+
+        // Convert result into response
+        $response = new SimpleXMLElement($result->getBody()->getContents());
+
+        // Return
+        return $response;
+    }
+
     public function setAddress($type, $companyName, $personName, $street, $number, $zipcode, $city, $country, $email, $phone, $comment)
     {
         // Add data to XML
