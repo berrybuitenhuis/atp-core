@@ -11,6 +11,7 @@ use SimpleXMLElement;
 class Api extends BaseClass
 {
 
+    private $hostname;
     private $client;
     private $clientHeaders;
     private $xml;
@@ -26,7 +27,8 @@ class Api extends BaseClass
     public function __construct($hostname, $apiKey, $recipientClientId, $debug = false)
     {
         // Set client
-        $this->client = new Client(['base_uri'=>$hostname, 'http_errors'=>false, 'debug'=>$debug]);
+        $this->hostname = $hostname;
+        $this->client = new Client(['base_uri'=>$this->hostname, 'http_errors'=>false, 'debug'=>$debug]);
 
         // Reset error-messages
         $this->resetErrors();
@@ -123,8 +125,15 @@ class Api extends BaseClass
 
     public function setVehicle($vin, $registration, $vehicleType, $make, $model, $color, $comment)
     {
-        // Add data to XML
-        $shipment = $this->xml->addChild('shipment');
+        if ($this->hostname == "https://exchange.transplan.nl/api/v2/") {
+            // Add data to XML
+            $shipments = $this->xml->addChild('shipments');
+            $shipment = $shipments->addChild('vehicle');
+        } else {
+            // Add data to XML
+            $shipment = $this->xml->addChild('shipment');
+        }
+
         //$shipmentDimensions = $shipment->addChild('dimensions');
         //$shipmentDimensions->addChild('length', '');
         //$shipmentDimensions->addChild('height', '');
@@ -139,7 +148,12 @@ class Api extends BaseClass
         $shipment->addChild('make', htmlspecialchars(html_entity_decode(trim(preg_replace('/ {2,}/', ' ', $make)))));
         $shipment->addChild('model', htmlspecialchars(html_entity_decode(trim(preg_replace('/ {2,}/', ' ', $model)))));
         $shipment->addChild('colour', htmlspecialchars(html_entity_decode($color)));
-        $shipment->addChild('remarks', htmlspecialchars(html_entity_decode($comment)));
+
+        if ($this->hostname == "https://exchange.transplan.nl/api/v2/") {
+            $this->xml->addChild('remarks', htmlspecialchars(html_entity_decode($comment)));
+        } else {
+            $shipment->addChild('remarks', htmlspecialchars(html_entity_decode($comment)));
+        }
     }
 
 }
