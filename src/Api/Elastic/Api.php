@@ -58,6 +58,28 @@ class Api extends BaseClass
     }
 
     /**
+     * Count action
+     *     
+     * @param array $params
+     * @return bool
+     */
+    public function count($index, $body)
+    {
+        try {
+            $params = [
+                'index' => $index,
+                'body' => $body
+            ];
+
+            return $this->client->count($params);
+        } catch (Throwable $e) {
+            $this->setMessages("Count action failed");
+            $this->setErrorData($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Update index
      *     
      * @param string $index
