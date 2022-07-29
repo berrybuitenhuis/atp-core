@@ -3,6 +3,7 @@
 namespace AtpCore\File;
 
 use AtpCore\BaseClass;
+use finfo;
 use \Gumlet\ImageResize;
 use \Spatie\ImageOptimizer\OptimizerChainFactory;
 
@@ -23,6 +24,18 @@ class Image extends BaseClass
 
         // Return
         return base64_decode($imageContent);
+    }
+
+    /**
+     * Returns mime-type of content-string or file
+     *
+     * @param string $resource path to the file or content-string
+     * @param string $type
+     * @return string|false
+     */
+    public static function getMimeType($resource, $type = "string") {
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        return ($type =='string') ? $finfo->buffer($resource) : $finfo->file($resource);
     }
 
     /**
