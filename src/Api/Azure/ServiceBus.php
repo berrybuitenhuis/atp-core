@@ -49,6 +49,7 @@ class ServiceBus extends BaseClass
             // Get messages
             $result = $this->client->get("messages/head?api-version={$this->version}", ["headers"=>$this->clientHeaders]);
             switch ($result->getStatusCode()) {
+                case "200":
                 case "201":
                     return $result->getBody();
                 case "204":
