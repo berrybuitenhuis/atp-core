@@ -136,7 +136,11 @@ class Api extends BaseClass
     public function setGeneral($orderNumber, $reference, $dateDeadline)
     {
         // Initialize XML
-        $this->xml = new SimpleXMLElement('<order xmlns="http://schema.transplan.nl/v1/order-exchange"/>');
+        if ($this->hostname == "https://exchange.transplan.nl/api/v2/") {
+            $this->xml = new SimpleXMLElement('<order xmlns="http://schema.transplan.nl/v2/order-exchange"/>');
+        } else {
+            $this->xml = new SimpleXMLElement('<order xmlns="http://schema.transplan.nl/v1/order-exchange"/>');
+        }
 
         // Add data to XML
         $this->xml->addChild('order-id', $orderNumber);
