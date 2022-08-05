@@ -171,6 +171,25 @@ class Input
     }
 
     /**
+     * Check if string is XML-string
+     *
+     * @param string $dataString
+     * @return boolean
+     */
+    public static function isXml($dataString)
+    {
+        if (!is_string($dataString)) return false;
+
+        $currentValue = libxml_use_internal_errors(true);
+        $doc = simplexml_load_string($dataString);
+        $errors = libxml_get_errors();
+        libxml_clear_errors();
+        libxml_use_internal_errors($currentValue);
+
+        return $doc !== false && empty($errors);
+    }
+
+    /**
      * Re-index array-collection by property-name (instead of numeric sequence)
      *
      * @param array $arrayCollection

@@ -51,7 +51,10 @@ class ServiceBus extends BaseClass
             switch ($result->getStatusCode()) {
                 case "200":
                 case "201":
-                    return $result->getBody();
+                    return [
+                        "headers" => $result->getHeaders(),
+                        "messages" => (string) $result->getBody(),
+                    ];
                 case "204":
                     return;
                 default:
