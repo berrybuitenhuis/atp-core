@@ -54,6 +54,27 @@ class Api extends BaseClass
     }
 
     /**
+     * Confirm received message
+     *
+     * @param string $message_id
+     * @return bool
+     */
+    public function confirmMessage($message_id)
+    {
+        // Execute call
+        $requestHeader = $this->clientHeaders;
+        $result = $this->client->post("message/$message_id/confirm", ['headers'=>$requestHeader]);
+        if ($result->getStatusCode() !== 204) {
+            $this->setErrorData((string) $result->getBody());
+            $this->setMessages("{$result->getStatusCode()}: {$result->getReasonPhrase()}");
+            return false;
+        }
+
+        // Return
+        return true;
+    }
+
+    /**
      * Create transport-request
      *
      * @return object|SimpleXMLElement
@@ -73,6 +94,7 @@ class Api extends BaseClass
         $requestHeader['Content-Length'] = strlen($body);
         $result = $this->client->post('order', ['headers'=>$requestHeader, 'body'=>$body]);
         if ($result->getStatusCode() !== 202) {
+            $this->setErrorData((string) $result->getBody());
             $this->setMessages("{$result->getStatusCode()}: {$result->getReasonPhrase()}");
             return false;
         }
