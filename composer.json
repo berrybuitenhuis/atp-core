@@ -14,6 +14,7 @@
     "require": {
         "php": "^7.3",
         "aws/aws-sdk-php": "^3.202",
+        "cache/filesystem-adapter": "^1.1",
         "dompdf/dompdf": "^v1.1",
         "elasticsearch/elasticsearch": "^7.0",
         "gumlet/php-image-resize": "^2.0",
@@ -24,7 +25,8 @@
         "messagebird/php-rest-api": "^v2.1",
         "php-http/curl-client": "^2.2",
         "spatie/image-optimizer": "^1.5",
-        "twig/twig": "^v3.3"
+        "twig/twig": "^v3.3",
+        "unleash/client": "v1.7.073"
     },
     "autoload": {
         "psr-4": {
