@@ -60,7 +60,7 @@ class S3 extends BaseClass
         // Check if source-file exists
         $sourceExists = $this->client->doesObjectExist($sourceBucket, $sourceFilename);
         if ($sourceExists !== true && $overwrite === true) {
-            $this->setMessages("Source file doesn't exist");
+            $this->setMessages("Source file doesn't exist (file: $sourceBucket/$sourceFilename)");
             return false;
         }
 
@@ -70,10 +70,10 @@ class S3 extends BaseClass
             if ($targetExists === true && $failIfTargetExists !== true) {
                 return $this->client->headObject(['Bucket'=>$targetBucket, 'Key'=>$targetFilename]);
             } elseif ($targetExists === true && $failIfTargetExists === true) {
-                $this->setMessages("Target file already exists (no overwrite allowed)");
+                $this->setMessages("Target file (file: $targetBucket/$targetFilename) already exists (no overwrite allowed)");
                 return false;
             } elseif ($sourceExists !== true) {
-                $this->setMessages("Source file doesn't exist");
+                $this->setMessages("Source file doesn't exist (file: $sourceBucket/$sourceFilename)");
                 return false;
             }
         }
