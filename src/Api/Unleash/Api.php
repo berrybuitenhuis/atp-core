@@ -17,6 +17,7 @@ use Unleash\Client\Configuration\UnleashContext;
 class Api extends BaseClass
 {
     private Unleash $client;
+    private bool $clientInitialized;
     private UnleashContext $context;
 
     /**
@@ -29,23 +30,31 @@ class Api extends BaseClass
      */
     public function __construct($appUrl, $instanceId, $environment, $cacheTTL = 600, $debug = false)
     {
-        // Set client
-        $this->client = UnleashBuilder::createForGitlab()
-            ->withInstanceId($instanceId)
-            ->withAppUrl($appUrl)
-            ->withGitlabEnvironment($environment)
-            ->withCacheHandler(
-                new FilesystemCachePool(
-                    new Filesystem(
-                        new Local(sys_get_temp_dir()),
-                    ),
-                )
-            )
-            ->withCacheTimeToLive($cacheTTL)
-            ->build();
-
         // Reset error-messages
         $this->resetErrors();
+
+        // Set client
+        try {
+            $this->client = UnleashBuilder::createForGitlab()
+                ->withInstanceId($instanceId)
+                ->withAppUrl($appUrl)
+                ->withGitlabEnvironment($environment)
+                ->withCacheHandler(
+                    new FilesystemCachePool(
+                        new Filesystem(
+                            new Local(sys_get_temp_dir()),
+                        ),
+                    )
+                )
+                ->withCacheTimeToLive($cacheTTL)
+                ->build();
+
+            $this->clientInitialized = true;
+        } catch (\Exception $e) {
+            $this->setErrorData($e->getTrace());
+            $this->setMessages($e->getMessage());
+            $this->clientInitialized = false;
+        }
     }
 
     public function setContext($userId, $ipAddress, $sessionId)
@@ -55,6 +64,7 @@ class Api extends BaseClass
 
     public function checkFeature($featureName, $defaulValue = false)
     {
+        if ($this->clientInitialized === false) return $defaulValue;
         return $this->client->isEnabled($featureName, $this->context, $defaulValue);
     }
 }
