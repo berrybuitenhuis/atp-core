@@ -62,9 +62,16 @@ class Api extends BaseClass
         $this->context = new UnleashContext($userId, $ipAddress, $sessionId);
     }
 
-    public function checkFeature($featureName, $defaulValue = false)
+    public function checkFeature($featureName, $defaultValue = false)
     {
-        if ($this->clientInitialized === false) return $defaulValue;
-        return $this->client->isEnabled($featureName, $this->context, $defaulValue);
+        if ($this->clientInitialized === false) return $defaultValue;
+        try {
+            $isEnabled = $this->client->isEnabled($featureName, $this->context, $defaultValue);
+            return $isEnabled;
+        } catch (\Exception $e) {
+            $this->setErrorData($e->getTrace());
+            $this->setMessages($e->getMessage());
+            return $defaultValue;
+        }
     }
 }
