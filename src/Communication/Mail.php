@@ -95,6 +95,43 @@ class Mail extends BaseClass
     }
 
     /**
+     * Compose pdf-attachment by template (and variables)
+     *
+     * @param string $templatePath
+     * @param string $templateFile
+     * @param array $templateVariables
+     * @return bool|string
+     */
+    public function composePDF($templatePath, $templateFile, $templateVariables = [])
+    {
+        // Set paths (template)
+        $paths = [
+            getcwd(). $templatePath,
+        ];
+
+        // Setup twig-template
+        $templateLoader = new FilesystemLoader($paths);
+        $templateWrapper = new Environment($templateLoader);
+        $templateWrapper->getExtension(\Twig\Extension\CoreExtension::class)->setNumberFormat(0, ',', '.');
+        try {
+            $template = $templateWrapper->load($templateFile);
+        } catch (Throwable $e) {
+            $this->setMessages($e->getCode() . ": " . $e->getMessage());
+            return false;
+        }
+
+        // Compose content by template
+        $content = $template->render($templateVariables);
+
+        // Generate PDF-document
+        $pdfCreator = new \AtpCore\File\PDF();
+        $pdfContent = $pdfCreator->generate($content, ["isRemoteEnabled"=>true, "chroot"=>\Api\Module::ROOT_DIR . "public"]);
+
+        // Return
+        return $pdfContent;
+    }
+
+    /**
      * Compose text
      *
      * @param string $text
