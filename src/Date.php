@@ -145,7 +145,7 @@ class Date extends BaseClass
                 'Sunday' => 'zondag',
                 'Monday' => 'maandag',
                 'Tuesday' => 'dinsdag',
-                'Wednesday' => 'eoensdag',
+                'Wednesday' => 'woensdag',
                 'Thursday' => 'donderdag',
                 'Friday' => 'vrijdag',
                 'Saturday' => 'zaterdag',
