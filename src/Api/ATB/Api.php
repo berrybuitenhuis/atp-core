@@ -90,41 +90,7 @@ class Api extends BaseClass
     }
 
     /**
-     * Get token
-     *
-     * @return boolean
-     */
-    private function getToken($username, $password)
-    {
-        // Set payload
-        $body = [
-            "get" => [
-                "security" => [
-                    "username" => $username,
-                    "password" => md5($password),
-                ],
-            ],
-        ];
-
-        // Execute call
-        $requestHeader = $this->clientHeaders;
-        $result = $this->client->put('gethash/', ['headers'=>$requestHeader, 'body'=>json_encode($body)]);
-        $response = json_decode((string) $result->getBody());
-
-        // Return
-        if (isset($response->hash) && !empty($response->hash)) {
-            $this->token = $response->hash;
-            $this->userId = $response->id;
-            return true;
-        } else {
-            $this->setErrorData($response);
-            $this->setMessages("Unauthorized for ATB");
-            return false;
-        }
-    }
-
-    /**
-     * Get ATB56: Retrieve VWE-data by license-plate
+     * Get ATB56: Retrieve VWE vehicle-data by license-plate
      *
      * @param string $licensePlate
      * @param int|null $mileage
@@ -170,6 +136,98 @@ class Api extends BaseClass
         } else {
             $this->setErrorData($response);
             $this->setMessages($response);
+            return false;
+        }
+    }
+
+    /**
+     * Get ATB57: Retrieve VWE type-data by license-plate
+     *
+     * @param string $licensePlate
+     * @param int $atlCode
+     * @param string $bodyType
+     * @param string $category
+     * @param boolean $valuable
+     * @param boolean $distinctive
+     * @return object|bool
+     */
+    public function getATB57($licensePlate, $atlCode, $bodyType, $category = null, $valuable = false, $distinctive = false)
+    {
+        // Check token
+        if (empty($this->token)) {
+            $this->setMessages("Not authorized");
+            return false;
+        }
+
+        // Set payload
+        $body = [
+            "get" => [
+                "security" => [
+                    "userid" => $this->userId,
+                    "hash" => $this->token,
+                ],
+                "data" => [
+                    "message" => "57",
+                    "parameters" => [
+                        "registration" => $licensePlate,
+                        "atl_code" => $atlCode,
+                        'category' => $category,
+                        "valuating" => $valuable,
+                        "typical" => $distinctive,
+                        "typical_standard" => $distinctive,
+                        "overrides" => [
+                            "detail_carrosserie" => $bodyType
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        // Execute call
+        $requestHeader = $this->clientHeaders;
+        $result = $this->client->put('getdata/', ['headers'=>$requestHeader, 'body'=>json_encode($body)]);
+        $response = json_decode((string) $result->getBody());
+
+        // Return
+        if (isset($response->data)) {
+            return $response->data;
+        } else {
+            $this->setErrorData($response);
+            $this->setMessages($response);
+            return false;
+        }
+    }
+
+    /**
+     * Get token
+     *
+     * @return boolean
+     */
+    private function getToken($username, $password)
+    {
+        // Set payload
+        $body = [
+            "get" => [
+                "security" => [
+                    "username" => $username,
+                    "password" => md5($password),
+                ],
+            ],
+        ];
+
+        // Execute call
+        $requestHeader = $this->clientHeaders;
+        $result = $this->client->put('gethash/', ['headers'=>$requestHeader, 'body'=>json_encode($body)]);
+        $response = json_decode((string) $result->getBody());
+
+        // Return
+        if (isset($response->hash) && !empty($response->hash)) {
+            $this->token = $response->hash;
+            $this->userId = $response->id;
+            return true;
+        } else {
+            $this->setErrorData($response);
+            $this->setMessages("Unauthorized for ATB");
             return false;
         }
     }
