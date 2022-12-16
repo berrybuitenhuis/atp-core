@@ -122,4 +122,55 @@ class Api extends BaseClass
             return false;
         }
     }
+
+    /**
+     * Get ATB56: Retrieve VWE-data by license-plate
+     *
+     * @param string $licensePlate
+     * @param int|null $mileage
+     * @param boolean $historicOwners
+     * @param boolean $historicStatus
+     * @return object|bool
+     */
+    public function getATB56($licensePlate, $mileage = null, $historicOwners = false, $historicStatus = false)
+    {
+        // Check token
+        if (empty($this->token)) {
+            $this->setMessages("Not authorized");
+            return false;
+        }
+
+        // Set payload
+        $body = [
+            "get" => [
+                "security" => [
+                    "userid" => $this->userId,
+                    "hash" => $this->token,
+                ],
+                "data" => [
+                    "message" => "56",
+                    "parameters" => [
+                        "registration" => $licensePlate,
+                        "mileage" => $mileage,
+                        "historic_owners" => $historicOwners,
+                        "historic_status" => $historicStatus,
+                    ],
+                ],
+            ],
+        ];
+
+        // Execute call
+        $requestHeader = $this->clientHeaders;
+        $result = $this->client->put('getdata/', ['headers'=>$requestHeader, 'body'=>json_encode($body)]);
+        $response = json_decode((string) $result->getBody());
+
+        // Return
+        if (isset($response->data)) {
+            return $response->data;
+        } else {
+            $this->setErrorData($response);
+            $this->setMessages($response);
+            return false;
+        }
+    }
 }
