@@ -49,8 +49,10 @@ class Image extends BaseClass
         // Strip slashes from URL (to avoid get_headers(): This function may only be used against URLs in php shell code)
         $url = stripslashes($url);
 
-        // Check status-code of URL
-        $validUrl = $this->validateUrl($url);
+        // Check status-code of URL (or valid local file)
+        $localFile = (preg_match("/^(?:https?):\/\//i", $url)) ? false : true;
+        if ($localFile) $validUrl = $this->validateLocalFile($url);
+        else $validUrl = $this->validateUrl($url);
         if ($validUrl !== true) return false;
 
         try {
@@ -235,4 +237,20 @@ class Image extends BaseClass
         }
     }
 
+    /**
+     * Validate local file
+     *
+     * @param string $url
+     * @return boolean
+     */
+    private function validateLocalFile($url)
+    {
+        $valid = is_file($url) && is_readable($url);
+        if ($valid === false) {
+            $this->setMessages("Invalid local file");
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
