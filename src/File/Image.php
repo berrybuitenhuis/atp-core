@@ -50,8 +50,8 @@ class Image extends BaseClass
         $url = stripslashes($url);
 
         // Check status-code of URL (or valid local file)
-        $localFile = (preg_match("/^(?:https?):\/\//i", $url)) ? false : true;
-        if ($localFile) $validUrl = $this->validateLocalFile($url);
+        $tempFile = (preg_match("/^(?:https?):\/\//i", $url)) ? false : true;
+        if ($tempFile) $validUrl = $this->validateTempFile($url);
         else $validUrl = $this->validateUrl($url);
         if ($validUrl !== true) return false;
 
@@ -240,14 +240,20 @@ class Image extends BaseClass
     /**
      * Validate local file
      *
-     * @param string $url
+     * @param string $path
      * @return boolean
      */
-    private function validateLocalFile($url)
+    private function validateTempFile($path)
     {
-        $valid = is_file($url) && is_readable($url);
+        $tmpDir = sys_get_temp_dir();
+        if (substr($path, 0, (strlen($tmpDir) + 1)) != $tmpDir . "/") {
+            $this->setMessages("Invalid local file ($path)");
+            return false;
+        }
+
+        $valid = is_file($path) && is_readable($path);
         if ($valid === false) {
-            $this->setMessages("Invalid local file");
+            $this->setMessages("Invalid local file ($path)");
             return false;
         } else {
             return true;
