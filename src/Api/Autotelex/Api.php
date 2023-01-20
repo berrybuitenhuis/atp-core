@@ -14,6 +14,7 @@ class Api extends BaseClass
     private $client;
     private $debug;
     private $logger;
+    private $originalResponse;
     private $sessionId;
     private $token;
 
@@ -54,6 +55,7 @@ class Api extends BaseClass
         $params = ["vendorToken"=>$this->token, "tp"=>["ExternalID"=>$externalId]];
         if ($this->debug) $this->log("request", "GetVehicle", json_encode($params));
         $result = $this->client->GetVehicle($params);
+        $this->setOriginalResponse($result);
         if ($this->debug) $this->log("response", "GetVehicle", json_encode($result));
         $status = $result->GetVehicleResult->Status;
 
@@ -94,6 +96,7 @@ class Api extends BaseClass
 
         if ($this->debug) $this->log("request", "GetVehicleDataPRO", json_encode($params));
         $result = $this->client->GetVehicleDataPRO($params);
+        $this->setOriginalResponse($result);
         if ($this->debug) $this->log("response", "GetVehicleDataPRO", json_encode($result));
         $status = $result->GetVehicleDataPROResult->Status;
         if ($status->Code == 0 || $status->Code == 11) {
@@ -114,6 +117,7 @@ class Api extends BaseClass
         $params = ["vendorToken"=>$this->token, "tp"=>["ExternalID"=>$externalId]];
         if ($this->debug) $this->log("request", "GetVehicle", json_encode($params));
         $result = $this->client->GetVehicle($params);
+        $this->setOriginalResponse($result);
         if ($this->debug) $this->log("response", "GetVehicle", json_encode($result));
         $status = $result->GetVehicleResult->Status;
         if ($status->Code == 0) {
@@ -170,6 +174,7 @@ class Api extends BaseClass
             // Send bid
             if ($this->debug) $this->log("request", "InsertBod", json_encode($params));
             $result = $this->client->InsertBod($params);
+            $this->setOriginalResponse($result);
             if ($this->debug) $this->log("response", "InsertBod", json_encode($result));
             $status = $result->InsertBodResult;
             if ($status->Code == 0) {
@@ -198,12 +203,43 @@ class Api extends BaseClass
         ];
         if ($this->debug) $this->log("request", "NoInterest", json_encode($params));
         $result = $this->client->NoInterest($params);
+        $this->setOriginalResponse($result);
         if ($this->debug) $this->log("response", "NoInterest", json_encode($result));
         $status = $result->NoInterestResult;
         if ($status->Code == 0) {
             return true;
         } else {
             return $status;
+        }
+    }
+
+    /**
+     * Get original-response
+     *
+     * @return mixed
+     */
+    public function getOriginalResponse()
+    {
+        return $this->originalResponse;
+    }
+
+    /**
+     * Get token
+     *
+     * @param string $username
+     * @param string $password
+     * @return string
+     */
+    private function getToken($username, $password)
+    {
+        $params = ["username"=>$username, "password"=>$password];
+        $result = $this->client->GetVendorToken($params);
+        $status = $result->GetVendorTokenResult->Status;
+        if ($status->Code == 0) {
+            $token = $result->GetVendorTokenResult->Token;
+            return $token;
+        } else {
+            return null;
         }
     }
 
@@ -237,24 +273,13 @@ class Api extends BaseClass
         $logger = $this->logger;
         return $logger($message);
     }
-
     /**
-     * Get token
+     * Set original-response
      *
-     * @param string $username
-     * @param string $password
-     * @return string
+     * @param $originalResponse
      */
-    private function getToken($username, $password)
+    private function setOriginalResponse($originalResponse)
     {
-        $params = ["username"=>$username, "password"=>$password];
-        $result = $this->client->GetVendorToken($params);
-        $status = $result->GetVendorTokenResult->Status;
-        if ($status->Code == 0) {
-            $token = $result->GetVendorTokenResult->Token;
-            return $token;
-        } else {
-            return null;
-        }
+        $this->originalResponse = $originalResponse;
     }
 }
