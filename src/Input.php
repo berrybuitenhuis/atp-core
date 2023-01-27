@@ -160,6 +160,28 @@ class Input
     }
 
     /**
+     * Check if value is empty (false/0 results in non-empty)
+     *
+     * @param mixed $value
+     * @return boolean
+     */
+    public static function isEmpty($value)
+    {
+        // Initialize output
+        $output = false;
+
+        // Verify if value is empty
+        if (is_array($value)) $output = empty($value);
+        elseif (is_object($value)) $output = empty($value);
+        elseif (is_bool($value)) $output = false;
+        elseif ($value === null) $output = true;
+        elseif (trim($value) == "") $output = true;
+
+        // Return
+        return $output;
+    }
+
+    /**
      * Check if string is JSON-string
      *
      * @param string $dataString
