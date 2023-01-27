@@ -182,6 +182,21 @@ class Input
     }
 
     /**
+     * Check if value is NOT empty (false/0 results in non-empty)
+     *
+     * @param mixed $value
+     * @return boolean
+     */
+    public static function isNotEmpty($value)
+    {
+        // Initialize output
+        $empty = self::isEmpty($value);
+
+        // Return
+        return !($empty === true);
+    }
+
+    /**
      * Check if string is JSON-string
      *
      * @param string $dataString
