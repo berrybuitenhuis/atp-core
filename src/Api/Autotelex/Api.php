@@ -99,7 +99,14 @@ class Api extends BaseClass
         $this->setOriginalResponse($result);
         if ($this->debug) $this->log("response", "GetVehicleDataPRO", json_encode($result));
         $status = $result->GetVehicleDataPROResult->Status;
-        if ($status->Code == 0 || $status->Code == 11) {
+
+        // Check for valid status-code
+        // Status-code: 0, OK
+        // Status-code: 1, OK, with addition info (choose type-commercial)
+        // Status-code: 2, General error
+        // Status-code: 3, Customer-token invalid
+        // Status-code: 4, Vendor-token invalid
+        if (in_array($status->GenericCode, [0, 1]) || ($status->GenericCode == 2 && stristr($status->Message, "Ongeldig of onbekend kenteken"))) {
             return $result->GetVehicleDataPROResult;
         } else {
             return false;
