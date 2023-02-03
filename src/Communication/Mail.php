@@ -241,9 +241,9 @@ class Mail extends BaseClass
 
     /**
      * Validate email-address
-     * 
+     *
      * @param string $emailAddress
-     * @return bool
+     * @return bool|null
      */
     public function validateEmailAddress($emailAddress)
     {
@@ -253,10 +253,59 @@ class Mail extends BaseClass
             return false;
         }
 
-        // TODO: Validate email address (Mailgun)
+        // Validate email address (Mailgun)
+        $valid = true;
+        try {
+            $result = $this->mailgunEU->emailValidationV4()->validate($emailAddress, true);
+            switch ($result->getResult()) {
+                case "catch_all": // The validity of the recipient address cannot be determined as the provider accepts any and all email regardless of whether or not the recipient’s mailbox exists.
+                case "deliverable": // The recipient address is considered to be valid and should accept email.
+                    break;
+                case "do_not_send": // The recipient address is considered to be highly risky and will negatively impact sending reputation if sent to.
+                    $this->addMessage("Invalid emailaddress (high risk)");
+                    $valid = false;
+                    break;
+                case "undeliverable": // The recipient address is considered to be invalid and will result in a bounce if sent to.
+                    $this->addMessage("Invalid emailaddress (undeliverable)");
+                    $valid = false;
+                    break;
+                case "unknown": // The validity of the recipient address cannot be determined for a variety of potential reasons. Please refer to the associated ‘reason’ array returned in the response.
+                    foreach ($result->getReason() AS $reason) {
+                        switch ($reason) {
+                            case "failed custom grammar check": // The mailbox failed our custom ESP local-part grammar check.
+                            case "high_risk_domain": // Information obtained about the domain indicates it is high risk to send email to.
+                            case "no_mx": // The recipient domain does not have a valid MX host.
+                            case "No MX host found": // The recipient domain does not have a valid MX host. Note: this reason will be consolidated to only “no_mx” in the future.
+                            case "no_mx / No MX host found": // The recipient domain does not have a valid MX host. Note: this reason will be consolidated to only “no_mx” in the future.
+                            case "mailbox_does_not_exist": // The mailbox is undeliverable or does not exist.
+                            case "mailbox_is_disposable_address": // The mailbox has been identified to be a disposable address. Disposable address are temporary, generally one time use, addresses.
+                            case "tld_risk": // The domain has a top-level-domain (TLD) that has been identified as high risk.
+                            case "unknown_provider": // The MX provider is an unknown provider.
+                                $this->addMessage("Invalid emailaddress ($reason)");
+                                $valid = false;
+                                break;
+                            case "catch_all": // The validity of the recipient address cannot be determined as the provider accepts any and all email regardless of whether or not the recipient’s mailbox exists.
+                            case "immature_domain": // The domain is newly created based on the WHOIS information.
+                            case "long_term_disposable": // The mailbox has been identified as a long term disposable address. Long term disposable addresses can be quickly and easily deactivated by users, but they will not expire without user intervention.
+                            case "mailbox_is_role_address": // The mailbox is a role based address (ex. support@…, marketing@…).
+                            case "subdomain_mailer": // The recipient domain is identified to be a subdomain and is not on our exception list. Subdomains are considered to be high risk as many spammers and malicious actors utilize them.
+                                break;
+                            default:
+                                $this->addMessage("Invalid emailaddress ($reason)");
+                                $valid = false;
+                                break;
+                        }
+                    }
+                    break;
+            }
+        } catch (\Exception $exception) {
+            $this->setMessages("{$exception->getCode()}: {$exception->getMessage()}");
+            $this->setMessages($exception->getMessage());
+            $valid = null;
+        }
 
         // Return
-        return true;
+        return $valid;
     }
 
     /**
