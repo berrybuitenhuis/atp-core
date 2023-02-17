@@ -15,8 +15,10 @@ class Api extends BaseClass
     private $debug;
     private $logger;
     private $originalResponse;
+    private $password;
     private $sessionId;
     private $token;
+    private $username;
 
     /**
      * Constructor
@@ -32,6 +34,8 @@ class Api extends BaseClass
         $this->client = new Client($wsdl, ['encoding' => 'UTF-8']);
         $this->client->setSoapVersion(SOAP_1_1);
         $this->sessionId = session_id();
+        $this->username = $username;
+        $this->password = $password;
         $this->debug = $debug;
 
         // Set custom logger
@@ -39,9 +43,6 @@ class Api extends BaseClass
 
         // Reset error-messages
         $this->resetErrors();
-
-        // Get token
-        $this->token = $this->getToken($username, $password);
     }
 
     /**
@@ -52,6 +53,10 @@ class Api extends BaseClass
      */
     public function getBid($externalId)
     {
+        // Set token
+        $this->setToken();
+
+        // Get vehicle-data
         $params = ["vendorToken"=>$this->token, "tp"=>["ExternalID"=>$externalId]];
         if ($this->debug) $this->log("request", "GetVehicle", json_encode($params));
         $result = $this->client->GetVehicle($params);
@@ -88,6 +93,9 @@ class Api extends BaseClass
      */
     public function getData($registration, $atlCode = null, $mileage = null)
     {
+        // Set token
+        $this->setToken();
+
         // Set parameters
         $vehicleParams = ["kenteken" => $registration];
         if (!empty($atlCode)) $vehicleParams["AutotelexUitvoeringID"] = $atlCode;
@@ -121,6 +129,10 @@ class Api extends BaseClass
      */
     public function getVehicle($externalId)
     {
+        // Set token
+        $this->setToken();
+
+        // Get vehicle-data
         $params = ["vendorToken"=>$this->token, "tp"=>["ExternalID"=>$externalId]];
         if ($this->debug) $this->log("request", "GetVehicle", json_encode($params));
         $result = $this->client->GetVehicle($params);
@@ -156,6 +168,9 @@ class Api extends BaseClass
 
         if ($bid > 0) {
             $btw = (strtolower($vatMarginType) == "btw") ? true : false;
+
+            // Set token
+            $this->setToken();
 
             // Compose message/parameters
             $params = [
@@ -203,6 +218,10 @@ class Api extends BaseClass
      */
     public function sendNoInterest($externalId, $comment = null)
     {
+        // Set token
+        $this->setToken();
+
+        // Send no-interest
         $params = [
             "vendorToken" => $this->token,
             "vehicleId" => $externalId,
@@ -228,26 +247,6 @@ class Api extends BaseClass
     public function getOriginalResponse()
     {
         return $this->originalResponse;
-    }
-
-    /**
-     * Get token
-     *
-     * @param string $username
-     * @param string $password
-     * @return string
-     */
-    private function getToken($username, $password)
-    {
-        $params = ["username"=>$username, "password"=>$password];
-        $result = $this->client->GetVendorToken($params);
-        $status = $result->GetVendorTokenResult->Status;
-        if ($status->Code == 0) {
-            $token = $result->GetVendorTokenResult->Token;
-            return $token;
-        } else {
-            return null;
-        }
     }
 
     /**
@@ -280,6 +279,7 @@ class Api extends BaseClass
         $logger = $this->logger;
         return $logger($message);
     }
+
     /**
      * Set original-response
      *
@@ -288,5 +288,25 @@ class Api extends BaseClass
     private function setOriginalResponse($originalResponse)
     {
         $this->originalResponse = $originalResponse;
+    }
+
+    /**
+     * Set token
+     * 
+     * @return void
+     */
+    private function setToken()
+    {
+        // Check if token already set
+        if (!empty($this->token)) return;
+
+        $params = ["username"=>$this->username, "password"=>$this->password];
+        $result = $this->client->GetVendorToken($params);
+        $status = $result->GetVendorTokenResult->Status;
+        if ($status->Code == 0) {
+            $this->token = $result->GetVendorTokenResult->Token;
+        } else {
+            $this->token = null;
+        }
     }
 }
