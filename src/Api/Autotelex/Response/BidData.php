@@ -4,6 +4,6 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class BidData
 {
-    /** @var BidDataItem[] */
+    /** @var BidDataItem */
     public $biedingData;
 }
