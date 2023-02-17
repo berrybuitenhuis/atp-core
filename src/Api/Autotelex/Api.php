@@ -5,7 +5,9 @@
  */
 namespace AtpCore\Api\Autotelex;
 
+use AtpCore\Api\Autotelex\Response\Vehicle;
 use AtpCore\BaseClass;
+use JsonMapper;
 use Laminas\Soap\Client;
 
 class Api extends BaseClass
@@ -125,9 +127,9 @@ class Api extends BaseClass
      * Get vehicle-data
      *
      * @param int $externalId
-     * @return bool|object
+     * @return Vehicle|object|bool
      */
-    public function getVehicle($externalId)
+    public function getVehicle($externalId, $output = null)
     {
         // Set token
         $this->setToken();
@@ -140,7 +142,11 @@ class Api extends BaseClass
         if ($this->debug) $this->log("response", "GetVehicle", json_encode($result));
         $status = $result->GetVehicleResult->Status;
         if ($status->Code == 0) {
-            return $result->GetVehicleResult;
+            if ($output == "object") {
+                return $this->mapVehicleResponse($result->GetVehicleResult);
+            } else {
+                return $result->GetVehicleResult;
+            }
         } else {
             $this->setErrorData($status);
             $this->setMessages($status->Message);
@@ -280,6 +286,32 @@ class Api extends BaseClass
         return $logger($message);
     }
 
+    private function mapVehicleResponse($response)
+    {
+        // Setup JsonMapper
+        $mapper = new JsonMapper();
+        $mapper->bExceptionOnUndefinedProperty = true;
+        $mapper->bStrictObjectTypeChecking = true;
+        $mapper->bExceptionOnMissingData = true;
+        $mapper->bStrictNullTypes = true;
+
+        // Fix inconsistent types (array/single object -> always array)
+        foreach ($response->VehicleInfo->Opties->Options AS $k => $option) {
+            if (isset($option->ManufacturerOptionCodes->ManufacturerOption->Code)) {
+                $response->VehicleInfo->Opties->Options[$k]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
+            }
+        }
+
+        // Map response to internal object
+        try {
+            return $mapper->map($response, new Vehicle());
+        } catch (\Exception $e) {
+            $this->setMessages($e->getMessage());
+            $this->setErrorData($e->getTrace());
+            return false;
+        }
+    }
+
     /**
      * Set original-response
      *
@@ -292,7 +324,7 @@ class Api extends BaseClass
 
     /**
      * Set token
-     * 
+     *
      * @return void
      */
     private function setToken()

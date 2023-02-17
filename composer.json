@@ -23,6 +23,7 @@
         "mailchimp/marketing": "^3.0",
         "mailgun/mailgun-php": "^3.5",
         "messagebird/php-rest-api": "^v2.1",
+        "netresearch/jsonmapper": "^4.1",
         "php-http/curl-client": "^2.2",
         "spatie/image-optimizer": "^1.5",
         "twig/twig": "^v3.3",
