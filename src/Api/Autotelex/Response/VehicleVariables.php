@@ -6,7 +6,7 @@ class VehicleVariables
 {
     /** @var integer */
     public $aantalSleutels;
-    /** @var object|null */
+    /** @var \stdClass */
     public $accessoires;
     /** @var boolean */
     public $aircoAanwezig;
@@ -38,7 +38,7 @@ class VehicleVariables
     public $datumVerwacht;
     /** @var boolean */
     public $distributieriemVervangen;
-    /** @var object|null */
+    /** @var \stdClass */
     public $dmsData;
     /** @var boolean */
     public $driveable;
@@ -70,7 +70,7 @@ class VehicleVariables
     public $kmstandDistributieriemVervangen;
     /** @var string */
     public $laksoort;
-    /** @var object|null */
+    /** @var \stdClass */
     public $loadAddress;
     /** @var boolean */
     public $motorManagementLampjeAan;

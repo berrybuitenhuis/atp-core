@@ -30,11 +30,13 @@ class NAPData
     public $_errorMessageOverzicht;
     /** @var integer|null */
     public $_errorMessageOverzichtCode;
+    /** @var \stdClass */
     public $_kilometerstanden;
     /** @var string|null */
     public $_tellersoort;
     /** @var string|null */
     public $_tellerstand;
+    /** @var \stdClass */
     public $_tellerstandoverzicht;
     /** @var string|null */
     public $_toelichting;

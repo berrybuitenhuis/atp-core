@@ -4,7 +4,7 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class VehicleInfo2
 {
-    /** @var object|null */
+    /** @var \stdClass */
     public $advertentiePortalURLs;
     /** @var Behavior */
     public $behavior;
