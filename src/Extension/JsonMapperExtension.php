@@ -119,7 +119,7 @@ class JsonMapperExtension extends JsonMapper {
 
             if (!$hasProperty) {
                 if ($this->bExceptionOnUndefinedProperty) {
-                    throw new JsonMapper_Exception(
+                    throw new \JsonMapper_Exception(
                         'JSON property "' . $key . '" does not exist'
                         . ' in object of type ' . $strClassName
                     );
@@ -140,7 +140,7 @@ class JsonMapperExtension extends JsonMapper {
 
             if ($accessor === null) {
                 if ($this->bExceptionOnUndefinedProperty) {
-                    throw new JsonMapper_Exception(
+                    throw new \JsonMapper_Exception(
                         'JSON property "' . $key . '" has no public setter method'
                         . ' in object of type ' . $strClassName
                     );
@@ -160,7 +160,7 @@ class JsonMapperExtension extends JsonMapper {
                 }
                 $type = $this->removeNullable($type);
             } else if ($jvalue === null) {
-                throw new JsonMapper_Exception(
+                throw new \JsonMapper_Exception(
                     'JSON property "' . $key . '" in class "'
                     . $strClassName . '" must not be NULL'
                 );
@@ -178,7 +178,7 @@ class JsonMapperExtension extends JsonMapper {
                 continue;
             } else if ($this->isSimpleType($type)) {
                 if ($type === 'string' && is_object($jvalue)) {
-                    throw new JsonMapper_Exception(
+                    throw new \JsonMapper_Exception(
                         'JSON property "' . $key . '" in class "'
                         . $strClassName . '" is an object and'
                         . ' cannot be converted to a string'
@@ -193,12 +193,12 @@ class JsonMapperExtension extends JsonMapper {
 
             //FIXME: check if type exists, give detailed error message if not
             if ($type === '') {
-                throw new JsonMapper_Exception(
+                throw new \JsonMapper_Exception(
                     'Empty type at property "'
                     . $strClassName . '::$' . $key . '"'
                 );
             } else if (strpos($type, '|')) {
-                throw new JsonMapper_Exception(
+                throw new \JsonMapper_Exception(
                     'Cannot decide which of the union types shall be used: '
                     . $type
                 );
@@ -225,7 +225,7 @@ class JsonMapperExtension extends JsonMapper {
 
             if ($array !== null) {
                 if (!is_array($jvalue) && $this->isFlatType(gettype($jvalue))) {
-                    throw new JsonMapper_Exception(
+                    throw new \JsonMapper_Exception(
                         'JSON property "' . $key . '" must be an array, '
                         . gettype($jvalue) . ' given'
                     );
@@ -238,7 +238,7 @@ class JsonMapperExtension extends JsonMapper {
                 //use constructor parameter if we have a class
                 // but only a flat type (i.e. string, int)
                 if ($this->bStrictObjectTypeChecking) {
-                    throw new JsonMapper_Exception(
+                    throw new \JsonMapper_Exception(
                         'JSON property "' . $key . '" must be an object, '
                         . gettype($jvalue) . ' given'
                     );
@@ -304,7 +304,7 @@ class JsonMapperExtension extends JsonMapper {
                     }
                 }
             } else if ($this->isFlatType($class)) {
-                throw new JsonMapper_Exception(
+                throw new \JsonMapper_Exception(
                     'JSON property "' . ($parent_key ? $parent_key : '?') . '"'
                     . ' is an array of type "' . $class . '"'
                     . ' but contained a value of type'

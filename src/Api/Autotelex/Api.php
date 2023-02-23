@@ -327,7 +327,7 @@ class Api extends BaseClass
             $object = $mapper->map($response, $class);
             $valid = $mapper->isValid($object, get_class($class));
             if ($valid === false) {
-                $this->setMessages($mapper->getMessage());
+                $this->setMessages($mapper->getMessages());
                 return false;
             }
         } catch (\Exception $e) {
