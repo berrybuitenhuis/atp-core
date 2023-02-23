@@ -34,7 +34,7 @@ class NAPData
     public $_kilometerstanden;
     /** @var string|null */
     public $_tellersoort;
-    /** @var string|null */
+    /** @var integer|null */
     public $_tellerstand;
     /** @var \stdClass */
     public $_tellerstandoverzicht;
