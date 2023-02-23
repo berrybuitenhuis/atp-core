@@ -7,7 +7,7 @@ namespace AtpCore\Api\Autotelex;
 
 use AtpCore\Api\Autotelex\Response\Vehicle;
 use AtpCore\BaseClass;
-use JsonMapper;
+use AtpCore\Extension\JsonMapperExtension;
 use Laminas\Soap\Client;
 
 class Api extends BaseClass
@@ -286,30 +286,58 @@ class Api extends BaseClass
         return $logger($message);
     }
 
+    /**
+     * Map response to (internal) Vehicle-object
+     *
+     * @param object $response
+     * @return Vehicle|false
+     */
     private function mapVehicleResponse($response)
     {
         // Setup JsonMapper
-        $mapper = new JsonMapper();
+        $mapper = new JsonMapperExtension();
         $mapper->bExceptionOnUndefinedProperty = true;
         $mapper->bStrictObjectTypeChecking = true;
         $mapper->bExceptionOnMissingData = true;
         $mapper->bStrictNullTypes = true;
+        $mapper->bCastToExpectedType = false;
 
         // Fix inconsistent types (array/single object -> always array)
-        foreach ($response->VehicleInfo->Opties->Options AS $k => $option) {
+        foreach ($response->VehicleInfo->Opties->Options AS $key => $option) {
             if (isset($option->ManufacturerOptionCodes->ManufacturerOption->Code)) {
-                $response->VehicleInfo->Opties->Options[$k]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
+                $response->VehicleInfo->Opties->Options[$key]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
+            }
+        }
+        foreach ($response->VehicleInfo->Pakketten->Packets AS $key => $packages) {
+            foreach ($packages->Opties->Options AS $k => $option) {
+                if (isset($option->ManufacturerOptionCodes->ManufacturerOption->Code)) {
+                    $response->VehicleInfo->Pakketten->Packets[$key]->Opties->Options[$k]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
+                }
+            }
+        }
+        foreach ($response->VehicleInfo->StandaardOpties->Options AS $key => $option) {
+            if (isset($option->ManufacturerOptionCodes->ManufacturerOption->Code)) {
+                $response->VehicleInfo->StandaardOpties->Options[$key]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
             }
         }
 
         // Map response to internal object
         try {
-            return $mapper->map($response, new Vehicle());
+            $class = new Vehicle();
+            $object = $mapper->map($response, $class);
+            $valid = $mapper->isValid($object, get_class($class));
+            if ($valid === false) {
+                $this->setMessages($mapper->getMessage());
+                return false;
+            }
         } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
             $this->setErrorData($e->getTrace());
             return false;
         }
+
+        // Return
+        return $object;
     }
 
     /**
