@@ -294,14 +294,6 @@ class Api extends BaseClass
      */
     private function mapVehicleResponse($response)
     {
-        // Setup JsonMapper
-        $mapper = new JsonMapperExtension();
-        $mapper->bExceptionOnUndefinedProperty = true;
-        $mapper->bStrictObjectTypeChecking = true;
-        $mapper->bExceptionOnMissingData = true;
-        $mapper->bStrictNullTypes = true;
-        $mapper->bCastToExpectedType = false;
-
         // Fix inconsistent types (array/single object -> always array)
         foreach ($response->VehicleInfo->Opties->Options AS $key => $option) {
             if (isset($option->ManufacturerOptionCodes->ManufacturerOption->Code)) {
@@ -323,16 +315,22 @@ class Api extends BaseClass
 
         // Map response to internal object
         try {
-            $class = new Vehicle();
-            $object = $mapper->map($response, $class);
-            $valid = $mapper->isValid($object, get_class($class));
+            // Setup JsonMapper
+            $responseClass = new Vehicle();
+            $mapper = new JsonMapperExtension();
+            $mapper->bExceptionOnUndefinedProperty = true;
+            $mapper->bStrictObjectTypeChecking = true;
+            $mapper->bExceptionOnMissingData = true;
+            $mapper->bStrictNullTypes = true;
+            $mapper->bCastToExpectedType = false;
+            $object = $mapper->map($response, $responseClass);
+            $valid = $mapper->isValid($object, get_class($responseClass));
             if ($valid === false) {
                 $this->setMessages($mapper->getMessages());
                 return false;
             }
         } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
-            $this->setErrorData($e->getTrace());
             return false;
         }
 

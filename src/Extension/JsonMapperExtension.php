@@ -87,13 +87,13 @@ class JsonMapperExtension extends JsonMapper {
     public function map($json, $object)
     {
         if ($this->bEnforceMapType && !is_object($json)) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'JsonMapper::map() requires first argument to be an object'
                 . ', ' . gettype($json) . ' given.'
             );
         }
         if (!is_object($object)) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'JsonMapper::map() requires second argument to be an object'
                 . ', ' . gettype($object) . ' given.'
             );
