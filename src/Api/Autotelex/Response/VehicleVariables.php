@@ -4,7 +4,7 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class VehicleVariables
 {
-    /** @var RegisterData */
+    /** @var RegisterData|null */
     public $aanmeldData;
     /** @var integer */
     public $aantalSleutels;
