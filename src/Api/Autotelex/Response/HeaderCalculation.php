@@ -4,9 +4,9 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class HeaderCalculation
 {
-    /** @var integer */
+    /** @var integer|null */
     public $consumentenprijs;
-    /** @var integer */
+    /** @var integer|null */
     public $consumentenprijsInclOpties;
     /** @var string */
     public $eersteToelating;
@@ -14,11 +14,11 @@ class HeaderCalculation
     public $isGevuld;
     /** @var integer */
     public $nieuwprijsAutotelex;
-    /** @var integer */
+    /** @var integer|null */
     public $nieuwprijsRdw;
     /** @var integer */
     public $optieBedrag;
-    /** @var string */
+    /** @var string|null */
     public $prijslijstDatum;
     /** @var integer */
     public $selectedOptions;

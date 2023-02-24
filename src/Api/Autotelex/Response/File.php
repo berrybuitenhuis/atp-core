@@ -4,6 +4,10 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class File
 {
+    /** @var string|null */
+    public $aanzicht;
+    /** @var integer|null */
+    public $aanzichtID;
     /** @var integer */
     public $fotoIndex;
     /** @var integer */

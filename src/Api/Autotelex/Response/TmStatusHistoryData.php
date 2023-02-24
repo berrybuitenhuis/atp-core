@@ -4,6 +4,6 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class TmStatusHistoryData
 {
-    /** @var TmStatusHistoryDataItem */
+    /** @var TmStatusHistoryDataItem[] */
     public $tmStatusHistorie;
 }

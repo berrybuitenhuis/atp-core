@@ -8,7 +8,7 @@ class VehicleInfo2
     public $advertentiePortalURLs;
     /** @var Behavior */
     public $behavior;
-    /** @var string */
+    /** @var string|null */
     public $datumTaxatie;
     /** @var UserData */
     public $gebruikerGegevens;
@@ -16,6 +16,8 @@ class VehicleInfo2
     public $napGegevens;
     /** @var RDWData */
     public $rdwGegevens;
+    /** @var integer|null */
+    public $restWaardenMeldingId;
     /** @var ResidualValues */
     public $restwaarden;
     /** @var VehicleVariables */

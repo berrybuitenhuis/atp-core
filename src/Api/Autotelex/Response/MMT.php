@@ -6,11 +6,11 @@ class MMT
 {
     /** @var string */
     public $brand;
-    /** @var string */
+    /** @var string|null */
     public $fotoURLFront;
-    /** @var string */
+    /** @var string|null */
     public $fotoURLInterior;
-    /** @var string */
+    /** @var string|null */
     public $fotoURLRear;
     /** @var integer */
     public $id;

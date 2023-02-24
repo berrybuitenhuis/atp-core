@@ -4,19 +4,21 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class VehicleVariables
 {
+    /** @var RegisterData */
+    public $aanmeldData;
     /** @var integer */
     public $aantalSleutels;
-    /** @var \stdClass */
+    /** @var Options */
     public $accessoires;
-    /** @var boolean */
+    /** @var boolean|null */
     public $aircoAanwezig;
-    /** @var boolean */
+    /** @var boolean|null */
     public $aircoWerkt;
-    /** @var integer */
+    /** @var integer|null */
     public $autotelexUitvoeringID;
     /** @var TiresData */
     public $bandenGegevens;
-    /** @var string */
+    /** @var string|null */
     public $bekleding;
     /** @var Destination */
     public $bestemming;
@@ -24,19 +26,27 @@ class VehicleVariables
     public $biedingID;
     /** @var BidData */
     public $biedingen;
+    /** @var ChargingCableType|null  */
+    public $chargingCableTypes;
+    /** @var boolean|null */
+    public $chargingCablesPresent;
     /** @var string */
     public $chassisnummer;
     /** @var string */
     public $conditieExterieur;
     /** @var string */
     public $conditieInterieur;
+    /** @var integer|null */
+    public $consumerInspectionStatus;
     /** @var string */
     public $created;
-    /** @var string */
+    /** @var string|null */
     public $datumDistributieriemVervangen;
+    /** @var string|null */
+    public $datumRoetfilterVervangen;
     /** @var string */
     public $datumVerwacht;
-    /** @var boolean */
+    /** @var boolean|null */
     public $distributieriemVervangen;
     /** @var \stdClass */
     public $dmsData;
@@ -54,43 +64,53 @@ class VehicleVariables
     public $headerberekening;
     /** @var TradeData */
     public $inruilenOpVoertuig;
-    /** @var boolean */
+    /** @var boolean|null */
     public $instructieboekjesAanwezig;
-    /** @var string */
+    /** @var string|null */
     public $interieurBekleding;
-    /** @var string */
-    public $interieurkleur;
-    /** @var boolean */
+    /** @var string|null */
+    public $interieurKleur;
+    /** @var integer|null */
+    public $inruilBod;
+    /** @var boolean|null */
     public $isAdvertisable;
     /** @var boolean */
     public $isBtwVoertuigBlocked;
     /** @var string */
     public $kleur;
-    /** @var integer */
+    /** @var integer|null */
     public $kmstandDistributieriemVervangen;
     /** @var string */
     public $laksoort;
+    /** @var string|null */
+    public $landVanHerkomst;
     /** @var \stdClass */
     public $loadAddress;
-    /** @var boolean */
+    /** @var boolean|null */
     public $motorManagementLampjeAan;
+    /** @var boolean|null */
+    public $myPurchasePriceRequired;
     /** @var string */
     public $onderhoudsboekjes;
     /** @var string */
     public $opmerking;
+    /** @var string|null */
+    public $opmerkingen;
     /** @var Options */
     public $opties;
 	/** @var Owner */
     public $owner;
     /** @var Packets */
 	public $pakketten;
-    /** @var integer */
+    /** @var integer|null */
     public $physicalOrOnline;
 	/** @var ReportUrl */
     public $reportURLs;
     /** @var Requester */
     public $requester;
-    /** @var boolean */
+    /** @var boolean|null */
+    public $roetfilterVervangen;
+/** @var boolean */
     public $rookvrij;
     /** @var DamageData */
     public $schadeGegevens;
@@ -98,18 +118,26 @@ class VehicleVariables
     public $staatMotor;
     /** @var Options */
 	public $standaardOpties;
-    /** @var boolean */
+    /** @var boolean|null */
     public $storingsmeldingVrij;
     /** @var integer */
     public $tellerstandVerwacht;
-    /** @var boolean */
+    /** @var boolean|null */
     public $testDriven;
+    /** @var string|null */
+    public $tweedeKleur;
+    /** @var integer|null */
+    public $typeOfPurchase;
+    /** @var boolean|null */
+    public $tradeInPriceApproved;
     /** @var boolean */
     public $trekhaakAanwezig;
-    /** @var boolean */
+    /** @var boolean|null */
     public $urgentAppraisal;
     /** @var string */
     public $vehicleChargingCable;
+    /** @var boolean|null */
+    public $verhuisgoed;
     /** @var string */
     public $winterbanden;
     /** @var boolean */

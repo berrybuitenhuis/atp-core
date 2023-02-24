@@ -22,7 +22,7 @@ class NAPData
     public $_callViaRdc;
     /** @var string|null */
     public $_created;
-    /** @var string */
+    /** @var string|null */
     public $_errorMessage;
     /** @var string|null */
     public $_errorMessageBetrouwbaarheid;

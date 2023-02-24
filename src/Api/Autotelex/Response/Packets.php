@@ -4,6 +4,6 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class Packets
 {
-    /** @var Packet[] */
+    /** @var Packet[]|null */
     public $packets;
 }

@@ -8,7 +8,7 @@ class UserData
     public $city;
     /** @var string */
     public $companyCity;
-    /** @var string */
+    /** @var string|null */
     public $companyEmail;
     /** @var string */
     public $companyInstanceToken;
@@ -36,6 +36,6 @@ class UserData
     public $streetNameAndNumber;
     /** @var string */
     public $telephone;
-    /** @var string */
+    /** @var string|null */
     public $title;
 }

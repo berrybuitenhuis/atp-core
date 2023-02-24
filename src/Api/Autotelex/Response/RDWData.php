@@ -4,23 +4,25 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class RDWData
 {
-    /** @var string */
+    /** @var string|null */
     public $afschrijvingspercentage;
-    /** @var string */
+    /** @var string|null */
     public $approvalDate;
     /** @var string */
     public $approvalNumber;
+    /** @var string|null */
+    public $basisPercentage;
     /** @var integer */
     public $bpm;
-    /** @var integer */
+    /** @var integer|null */
     public $berekendeOptieBedrag;
     /** @var string */
     public $bijtellingHelpText;
     /** @var integer */
     public $bijtellingHelpTextId;
-    /** @var string */
+    /** @var string|null */
     public $bijtellingspercentage;
-    /** @var string */
+    /** @var string|null */
     public $bijtellingspercentageGeldigTot;
     /** @var boolean */
     public $dubbeleCabine;
@@ -32,23 +34,27 @@ class RDWData
     public $kentekenStatus;
     /** @var string */
     public $kleur;
-    /** @var integer */
+    /** @var integer|null */
+    public $maximumMassaAutonoomGeremd;
+    /** @var integer|null */
     public $maximumMassaMiddenasGeremd;
-    /** @var string */
+    /** @var string|null */
     public $motorCode;
-    /** @var integer */
+    /** @var integer|null */
     public $nieuwprijs;
+    /** @var integer|null */
+    public $nieuwprijsGrenswaarde;
     /** @var string */
     public $rdwBrandstofverbruikBuitenweg;
     /** @var string */
     public $rdwBrandstofverbruikGecombineerd;
     /** @var string */
     public $rdwBrandstofverbruikStad;
-    /** @var integer */
+    /** @var integer|null */
     public $rdwBreedteVoertuigMax;
     /** @var string */
     public $rdwCo2emissie;
-    /** @var string */
+    /** @var string|null */
     public $rdwDatumAansprakelijkheid;
     /** @var string */
     public $rdwDatumEersteToelatingInternationaal;
@@ -64,15 +70,19 @@ class RDWData
     public $rdwEuroklasse;
     /** @var boolean */
     public $rdwExportIndicator;
+    /** @var boolean|null */
+    public $rdwG3Installatie;
     /** @var string */
     public $rdwHandelsbenaming;
-    /** @var integer */
+    /** @var integer|null */
     public $rdwHoogteVoertuigMax;
     /** @var string */
     public $rdwInrichtingscode;
     /** @var string */
     public $rdwKleur2;
-    /** @var integer */
+    /** @var string|null */
+    public $rdwLaadvermogen;
+    /** @var integer|null */
     public $rdwLengteVoertuigMax;
     /** @var string */
     public $rdwMassaLedigVoertuig;
@@ -82,9 +92,9 @@ class RDWData
     public $rdwMaximaleConstructieSnelheid;
     /** @var string */
     public $rdwMaximumMassa;
-    /** @var string */
+    /** @var string|null */
     public $rdwMaximumMassaGeremd;
-    /** @var string */
+    /** @var string|null */
     public $rdwMaximumMassaOngeremd;
     /** @var string */
     public $rdwMerk;
@@ -104,10 +114,12 @@ class RDWData
     public $rdwWokStatusIndicator;
     /** @var integer */
     public $rdwZitplaatsen;
-    /** @var integer */
+    /** @var integer|null */
     public $restBpm;
     /** @var Status */
     public $status;
+    /** @var boolean|null */
+    public $taxiVerleden;
     /** @var string */
     public $wijzeVanInvoer;
     /** @var integer */

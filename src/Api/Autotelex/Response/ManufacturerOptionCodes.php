@@ -4,6 +4,6 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class ManufacturerOptionCodes
 {
-    /** @var ManufacturerOption[] */
+    /** @var ManufacturerOption[]|null */
     public $manufacturerOption;
 }

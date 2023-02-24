@@ -6,28 +6,28 @@ class VehicleType
 {
     /** @var string */
     public $brand;
-    /** @var string */
+    /** @var string|null */
     public $fotoURLFront;
-    /** @var string */
+    /** @var string|null */
     public $fotoURLInterior;
-    /** @var string */
+    /** @var string|null */
     public $fotoURLRear;
-    /** @var integer */
+    /** @var integer|null */
     public $geleverdTotJaar;
-    /** @var integer */
+    /** @var integer|null */
     public $geleverdVanJaar;
     /** @var integer */
     public $id;
-    /** @var integer */
+    /** @var integer|null */
     public $licenseplateLinkProbability;
     /** @var string */
     public $model;
-    /** @var string */
+    /** @var string|null */
     public $nieuwPrijs;
     /** @var string */
     public $type;
-    /** @var integer */
+    /** @var integer|null */
     public $vermogen;
-    /** @var string */
+    /** @var string|null */
     public $versnelling;
 }

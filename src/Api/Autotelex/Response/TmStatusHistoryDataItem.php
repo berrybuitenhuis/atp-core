@@ -14,7 +14,7 @@ class TmStatusHistoryDataItem
     public $datumStatusWijziging;
     /** @var string */
     public $gebruikersnaam;
-    /** @var string|null */
+    /** @var boolean|null */
     public $inclExclBtw;
     /** @var string */
     public $internBod;

@@ -12,9 +12,9 @@ class TiresDataItem
     public $lichtmetaalVelgen;
     /** @var integer */
     public $positieId;
-    /** @var integer|null */
+    /** @var double|null */
     public $profielDiepte;
-    /** @var integer|null */
+    /** @var double|null */
     public $rimDiameter;
     /** @var integer */
     public $setNumber;

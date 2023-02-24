@@ -4,6 +4,6 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class Damages
 {
-    /** @var Damage */
+    /** @var Damage[]|null */
     public $schadeOmschrijving;
 }

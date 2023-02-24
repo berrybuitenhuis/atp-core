@@ -6,6 +6,11 @@ use JsonMapper;
 
 class JsonMapperExtension extends JsonMapper {
 
+    public function __construct()
+    {
+        $this->resetErrors();
+    }
+
     public $bCastToExpectedType = false;
     protected $errorData = null;
     protected $messages = [];
@@ -80,7 +85,7 @@ class JsonMapperExtension extends JsonMapper {
     public function isValid($data, $expectedType)
     {
         list($namespace, $name) = $this->getClassDetails($data);
-        return $this->validateData($name, $namespace, $expectedType, $data);
+        return $this->validateData($name, $namespace, $expectedType, false, $data);
     }
 
     // WARNING: we overrule method of library because "settype()" is always executed (instead of optional)
@@ -120,7 +125,7 @@ class JsonMapperExtension extends JsonMapper {
             if (!$hasProperty) {
                 if ($this->bExceptionOnUndefinedProperty) {
                     throw new \JsonMapper_Exception(
-                        'JSON property "' . $key . '" does not exist'
+                        'JSON property "' . $key . '" (type: ' . gettype($jvalue) . ') does not exist'
                         . ' in object of type ' . $strClassName
                     );
                 } else if ($this->undefinedPropertyHandler !== null) {
@@ -330,10 +335,40 @@ class JsonMapperExtension extends JsonMapper {
      * @param mixed $data
      * @return array
      */
-    private function getClassDetails($data) {
+    private function getClassDetails($data)
+    {
         $className = get_class($data);
         $reflectionClass = new \ReflectionClass($className);
         return [$reflectionClass->getNamespaceName(), $reflectionClass->getShortName()];
+    }
+
+    private function getPropertyDetails($className, $propertyName)
+    {
+        $reflectionClass = new \ReflectionClass($className);
+        $property = $this->inspectProperty($reflectionClass, $propertyName);
+        $this->arInspectedClasses[$className][$propertyName] = $property;
+        return $property;
+    }
+
+    private function getScheme($objectName, $propertyName)
+    {
+        if (!empty($this->arInspectedClasses[$objectName])) {
+            $objectProperties = array_change_key_case($this->arInspectedClasses[$objectName], CASE_LOWER);
+            if (array_key_exists(strtolower($propertyName), $objectProperties)) {
+                $scheme = $objectProperties[strtolower($propertyName)];
+            } else {
+                $scheme = $this->getPropertyDetails($objectName, $propertyName);
+            }
+        } else {
+            $scheme = $this->getPropertyDetails($objectName, $propertyName);
+        }
+        if (empty($scheme)) {
+            $this->addMessage("No scheme found for $propertyName");
+            return false;
+        }
+
+        // Return
+        return $scheme;
     }
 
     /**
@@ -368,22 +403,26 @@ class JsonMapperExtension extends JsonMapper {
      * @param string $name
      * @param string $namespace
      * @param string $expectedType
+     * @param boolean $nullable
      * @param mixed $data
      * @return boolean
      */
-    private function validateData($name, $namespace, $expectedType, $data)
+    private function validateData($name, $namespace, $expectedType, $nullable, $data)
     {
         switch(strtolower(gettype($data))) {
             case "array":
                 if (preg_match("/.+(\[\])$/m", $expectedType)) {
-                    $expectedPropertyType = "$namespace\\" . str_ireplace("[]", "", $expectedType);
+                    $expectedPropertyType = str_ireplace("[]", "", $expectedType);
+                    if (!$this->isSimpleType($expectedPropertyType)) {
+                        $expectedPropertyType = "$namespace\\$expectedPropertyType";
+                    }
                     foreach ($data AS $key => $value) {
                         if (!is_numeric($key)) {
                             $this->addMessage("No array of objects for $name");
                             $valid = false;
                             break;
                         }
-                        $valid = $this->validateData($name, $namespace, $expectedPropertyType, $value);
+                        $valid = $this->validateData($name, $namespace, $expectedPropertyType, $nullable, $value);
                         if ($valid === false) break;
                     }
                 } else {
@@ -394,10 +433,15 @@ class JsonMapperExtension extends JsonMapper {
             case "boolean":
             case "integer":
             case "string":
+            case "double":
                 $valid = $this->validate($name, $expectedType, $data);
                 break;
             case "null":
-                $valid = true;
+                $valid = $nullable;
+                if ($valid === false) {
+                    $dataType = gettype($data);
+                    $this->addMessage("Invalid data-type for $name (expected: $expectedType, actual: $dataType)");
+                }
                 break;
             case "object":
                 $valid = $this->validate($name, $expectedType, $data);
@@ -405,18 +449,14 @@ class JsonMapperExtension extends JsonMapper {
                 $objectName = get_class($data);
                 $properties = array_keys(get_class_vars($objectName));
                 foreach ($properties AS $propertyName) {
-                    $objectProperties = array_change_key_case($this->arInspectedClasses[$objectName], CASE_LOWER);
-                    if (array_key_exists(strtolower($propertyName), $objectProperties)) {
-                        $scheme = $objectProperties[strtolower($propertyName)];
-                    } else {
-                        $this->addMessage("No scheme found for $propertyName");
-                        break;
-                    }
+                    $scheme = $this->getScheme($objectName, $propertyName);
+                    if ($scheme === false) return false;
                     $propertyType = str_ireplace("|null", "", $scheme[2]);
-                    $expectedPropertyType = (array_key_exists("$namespace\\$propertyType", $this->arInspectedClasses)) ? "$namespace\\$propertyType" : $propertyType;
+                    $expectedPropertyType = (class_exists("$namespace\\$propertyType") || array_key_exists("$namespace\\$propertyType", $this->arInspectedClasses)) ? "$namespace\\$propertyType" : $propertyType;
+                    $nullable = $scheme[3];
 
                     // Validate properties
-                    $valid = $this->validateData("$name-$propertyName", $namespace, $expectedPropertyType, $data->$propertyName);
+                    $valid = $this->validateData("$name-$propertyName", $namespace, $expectedPropertyType, $nullable, $data->$propertyName);
                     if ($valid === false) break;
                 }
                 break;

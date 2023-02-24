@@ -16,7 +16,7 @@ class Damage
     public $schadeOnderdeelTekst;
     /** @var DamageImageUrl */
     public $schadefotoURLs;
-    /** @var string */
+    /** @var string|null */
     public $soortSchade;
     /** @var string */
     public $soortSchadeId;

@@ -4,6 +4,6 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class TiresData
 {
-    /** @var TiresDataItem[] */
+    /** @var TiresDataItem[]|null */
     public $bandenParameters;
 }

@@ -294,26 +294,8 @@ class Api extends BaseClass
      */
     private function mapVehicleResponse($response)
     {
-        // Fix inconsistent types (array/single object -> always array)
-        foreach ($response->VehicleInfo->Opties->Options AS $key => $option) {
-            if (isset($option->ManufacturerOptionCodes->ManufacturerOption->Code)) {
-                $response->VehicleInfo->Opties->Options[$key]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
-            }
-        }
-        foreach ($response->VehicleInfo->Pakketten->Packets AS $key => $packages) {
-            foreach ($packages->Opties->Options AS $k => $option) {
-                if (isset($option->ManufacturerOptionCodes->ManufacturerOption->Code)) {
-                    $response->VehicleInfo->Pakketten->Packets[$key]->Opties->Options[$k]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
-                }
-            }
-        }
-        foreach ($response->VehicleInfo->StandaardOpties->Options AS $key => $option) {
-            if (isset($option->ManufacturerOptionCodes->ManufacturerOption->Code)) {
-                $response->VehicleInfo->StandaardOpties->Options[$key]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
-            }
-        }
+        $response = $this->fixDataTypes($response);
 
-        // Map response to internal object
         try {
             // Setup JsonMapper
             $responseClass = new Vehicle();
@@ -323,6 +305,8 @@ class Api extends BaseClass
             $mapper->bExceptionOnMissingData = true;
             $mapper->bStrictNullTypes = true;
             $mapper->bCastToExpectedType = false;
+
+            // Map response to internal object
             $object = $mapper->map($response, $responseClass);
             $valid = $mapper->isValid($object, get_class($responseClass));
             if ($valid === false) {
@@ -336,6 +320,90 @@ class Api extends BaseClass
 
         // Return
         return $object;
+    }
+
+    private function fixDataTypes($response)
+    {
+        // Fix inconsistent types (array/single object -> always array)
+        if (isset($response->OptionalTypes->VehicleType->ID)) {
+            $response->OptionalTypes->VehicleType = [$response->OptionalTypes->VehicleType];
+        }
+        if (isset($response->VehicleInfo->Accessoires->Options->ID)) {
+            $response->VehicleInfo->Accessoires->Options = [$response->VehicleInfo->Accessoires->Options];
+        }
+        if (isset($response->VehicleInfo->Opties->Options)) {
+            if (isset($response->VehicleInfo->Opties->Options->ID)) {
+                $response->VehicleInfo->Opties->Options = [$response->VehicleInfo->Opties->Options];
+            }
+            foreach ($response->VehicleInfo->Opties->Options as $key => $option) {
+                if (isset($option->ManufacturerOptionCodes->ManufacturerOption->Code)) {
+                    $response->VehicleInfo->Opties->Options[$key]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
+                }
+            }
+        }
+        if (isset($response->VehicleInfo->Pakketten->Packets)) {
+            if (isset($response->VehicleInfo->Pakketten->Packets->ID)) {
+                $response->VehicleInfo->Pakketten->Packets = [$response->VehicleInfo->Pakketten->Packets];
+            }
+            foreach ($response->VehicleInfo->Pakketten->Packets as $key => $package) {
+                if (isset($package->Opties->Options->ID)) {
+                    $response->VehicleInfo->Pakketten->Packets[$key]->Opties->Options = [$package->Opties->Options];
+                }
+                foreach ($response->VehicleInfo->Pakketten->Packets[$key]->Opties->Options as $k => $option) {
+                    if (isset($option->ManufacturerOptionCodes->ManufacturerOption->Code)) {
+                        $response->VehicleInfo->Pakketten->Packets[$key]->Opties->Options[$k]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
+                    }
+                }
+            }
+        }
+        if (isset($response->VehicleInfo->StandaardOpties->Options)) {
+            if (isset($response->VehicleInfo->StandaardOpties->Options->ID)) {
+                $response->VehicleInfo->StandaardOpties->Options = [$response->VehicleInfo->StandaardOpties->Options];
+            }
+            foreach ($response->VehicleInfo->StandaardOpties->Options as $key => $option) {
+                if (isset($option->ManufacturerOptionCodes->ManufacturerOption->Code)) {
+                    $response->VehicleInfo->StandaardOpties->Options[$key]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
+                }
+            }
+        }
+        if (isset($response->VehicleInfo2->VoertuigVariabelen->Accessoires->Options->ID)) {
+            $response->VehicleInfo2->VoertuigVariabelen->Accessoires->Options = [$response->VehicleInfo2->VoertuigVariabelen->Accessoires->Options];
+        }
+        if (isset($response->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData->TMStatusHistorieLijst->TMStatusHistorie->BidOfferType)) {
+            $response->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData->TMStatusHistorieLijst->TMStatusHistorie = [$response->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData->TMStatusHistorieLijst->TMStatusHistorie];
+        }
+        if (isset($response->VehicleInfo2->VoertuigVariabelen->ChargingCableTypes->ChargingCableModel->Id)) {
+            $response->VehicleInfo2->VoertuigVariabelen->ChargingCableTypes->ChargingCableModel = [$response->VehicleInfo2->VoertuigVariabelen->ChargingCableTypes->ChargingCableModel];
+        }
+        if (isset($response->VehicleInfo2->VoertuigVariabelen->Opties->Options->ID)) {
+            $response->VehicleInfo2->VoertuigVariabelen->Opties->Options = [$response->VehicleInfo2->VoertuigVariabelen->Opties->Options];
+        }
+        if (isset($response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets)) {
+            if (isset($response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets->ID)) {
+                $response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets = [$response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets];
+            }
+            foreach ($response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets as $key => $package) {
+                if (isset($package->Opties->Options->ID)) {
+                    $response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets[$key]->Opties->Options = [$package->Opties->Options];
+                }
+            }
+        }
+        if (isset($response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving->SchadeOnderdeelTekst)) {
+            $response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving = [$response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving];
+        }
+        if (!empty($response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving)) {
+            foreach ($response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving AS $key => $damage) {
+                if (is_int($damage->SchadeFotoIds->int)) {
+                    $response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving[$key]->SchadeFotoIds->int = [$damage->SchadeFotoIds->int];
+                }
+                if (is_string($damage->SchadefotoURLs->string)) {
+                    $response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving[$key]->SchadefotoURLs->string = [$damage->SchadefotoURLs->string];
+                }
+            }
+        }
+
+        // Return
+        return $response;
     }
 
     /**

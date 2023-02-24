@@ -16,11 +16,13 @@ class BidDataItem
     public $biedingId;
     /** @var string */
     public $datum;
+    /** @var string|null */
+    public $geldigTot;
     /** @var integer */
     public $hbh_id;
     /** @var boolean */
     public $hertaxatie;
-    /** @var string|null */
+    /** @var boolean|null */
     public $inclExclBtw;
     /** @var boolean */
     public $isRenewable;

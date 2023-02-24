@@ -4,6 +4,6 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class DamageImageId
 {
-    /** @var integer */
+    /** @var integer[]|null */
     public $int;
 }

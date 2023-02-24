@@ -4,6 +4,6 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class Options
 {
-    /** @var Option[] */
+    /** @var Option[]|null */
     public $options;
 }

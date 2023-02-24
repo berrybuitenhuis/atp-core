@@ -4,6 +4,6 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class DamageImageUrl
 {
-    /** @var string */
+    /** @var string[]|null */
     public $string;
 }

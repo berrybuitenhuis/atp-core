@@ -4,9 +4,7 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class VehicleInfo
 {
-    /** @var string */
-    public $apkVervaldatum;
-    /** @var string */
+    /** @var string|null */
     public $aandrijving;
     /** @var integer */
     public $aantalDeuren;
@@ -14,12 +12,16 @@ class VehicleInfo
     public $aantalZitplaatsen;
     /** @var string */
     public $acceleratie;
-    /** @var integer */
-    public $accucapaciteit;
-    /** @var integer */
+    /** @var Options|null */
+    public $accessoires;
+    /** @var integer|null */
+    public $accuCapaciteit;
+    /** @var integer|null */
     public $actieradius;
-    /** @var integer */
+    /** @var integer|null */
     public $afleverkosten;
+    /** @var string */
+    public $apkVervaldatum;
     /** @var integer */
     public $autotelexKMStand;
     /** @var string */
@@ -36,11 +38,11 @@ class VehicleInfo
     public $eersteAfgifteNL;
     /** @var string */
     public $eersteToelating;
-    /** @var integer */
+    /** @var integer|null */
     public $electricEngine1Power;
-    /** @var integer */
+    /** @var integer|null */
     public $electricEngine2Power;
-    /** @var string */
+    /** @var string|null */
     public $energielabel;
     /** @var string */
     public $euroklasse;
@@ -50,16 +52,26 @@ class VehicleInfo
     public $fijnstof;
     /** @var integer */
     public $gvw;
-    /** @var string */
+    /** @var string|null */
     public $geleverdTot;
-    /** @var string */
+    /** @var string|null */
     public $geleverdVan;
-    /** @var integer */
+    /** @var integer|null */
     public $geschiktVoorExportMeldingID;
     /** @var integer */
     public $gewicht;
     /** @var string */
     public $handelswaarde;
+    /** @var string|null */
+    public $importDate;
+    /** @var string|null */
+    public $importPurchaseValueDeviation;
+    /** @var boolean|null */
+    public $importPurchaseValueDeviationShowAlert;
+    /** @var integer|null */
+    public $importPurchaseValueLicensePlate;
+    /** @var integer|null */
+    public $importPurchaseValueTaxRecord;
     /** @var string */
     public $internetwaarde;
     /** @var boolean */
@@ -76,6 +88,10 @@ class VehicleInfo
     public $koetswerk;
     /** @var integer */
     public $koppel;
+    /** @var integer|null */
+    public $laadruimteHoogte;
+    /** @var integer|null */
+    public $laadruimteLengte;
     /** @var integer */
     public $laadvermogen;
     /** @var string */
@@ -84,13 +100,29 @@ class VehicleInfo
     public $mmt;
     /** @var integer */
     public $margeOfBtw;
-    /** @var string */
+    /** @var string|null */
     public $maxChargingSpeedAC;
-    /** @var string */
+    /** @var string|null */
     public $maxChargingSpeedDC;
-    /** @var string */
+    /** @var integer|null */
+    public $minChargingTimeFromAC;
+    /** @var integer|null */
+    public $minChargingTimeFromDC;
+    /** @var integer|null */
+    public $minChargingTimeHoursAC;
+    /** @var integer|null */
+    public $minChargingTimeHoursDC;
+    /** @var integer|null */
+    public $minChargingTimeMinutesAC;
+    /** @var integer|null */
+    public $minChargingTimeMinutesDC;
+    /** @var integer|null */
+    public $minChargingTimeToAC;
+    /** @var integer|null */
+    public $minChargingTimeToDC;
+    /** @var string|null */
     public $modelVariantGeleverdTot;
-    /** @var string */
+    /** @var string|null */
     public $modelVariantGeleverdVan;
     /** @var string */
     public $nieuwPrijs;
@@ -98,13 +130,15 @@ class VehicleInfo
     public $nieuwPrijsInclOpties;
     /** @var string */
     public $nieuwPrijsMelding;
-    /** @var integer */
+    /** @var integer|null */
+    public $nieuwPrijsMeldingID;
+    /** @var integer|null */
     public $numberOfGears;
     /** @var string */
     public $opmerkingen;
     /** @var Options */
     public $opties;
-    /** @var Packets */
+    /** @var Packets|null */
     public $pakketten;
     /** @var boolean */
     public $rdwData;
@@ -114,11 +148,11 @@ class VehicleInfo
     public $rechargePossibility;
     /** @var boolean */
     public $roetfilter;
-    /** @var string */
+    /** @var string|null */
     public $segmentCode;
-    /** @var string */
+    /** @var string|null */
     public $segmentDescription;
-    /** @var Options */
+    /** @var Options|null */
     public $standaardOpties;
     /** @var boolean */
     public $stateIsFrozen;
@@ -132,11 +166,11 @@ class VehicleInfo
     public $statusNietIngekocht;
     /** @var boolean */
     public $statusNieuw;
-    /** @var integer */
+    /** @var integer|null */
     public $systemOutput;
     /** @var string|null */
     public $takt;
-    /** @var integer */
+    /** @var integer|null */
     public $tankInhoud;
     /** @var boolean */
     public $taxatieData;
@@ -150,15 +184,19 @@ class VehicleInfo
     public $trekGewichtOngeremd;
     /** @var boolean */
     public $turbo;
-    /** @var integer */
+    /** @var integer|null */
     public $uitvoeringID;
     /** @var boolean */
     public $unlinkedLicenseplate;
-    /** @var string */
+    /** @var string|null */
     public $vehicleExteriorColor;
-    /** @var string */
+    /** @var string|null */
+    public $vehicleExteriorColorCode;
+    /** @var string|null */
     public $vehicleInteriorColor;
-    /** @var string */
+    /** @var string|null */
+    public $vehicleInteriorColorCode;
+    /** @var string|null */
     public $vehicleRoofColor;
     /** @var string */
     public $verbruik;
@@ -166,7 +204,7 @@ class VehicleInfo
     public $verbruikBinnen;
     /** @var string */
     public $verbruikBuiten;
-    /** @var string */
+    /** @var string|null */
     public $verbruikKwh;
     /** @var string */
     public $verkoopwaarde;
