@@ -20,11 +20,11 @@ class VehicleInfo
     public $actieradius;
     /** @var integer|null */
     public $afleverkosten;
-    /** @var string */
+    /** @var string|null */
     public $apkVervaldatum;
     /** @var integer */
     public $autotelexKMStand;
-    /** @var string */
+    /** @var string|null */
     public $brandstof;
     /** @var integer */
     public $co2;
@@ -34,9 +34,9 @@ class VehicleInfo
     public $cylinders;
     /** @var integer */
     public $destinationTypeId;
-    /** @var string */
+    /** @var string|null */
     public $eersteAfgifteNL;
-    /** @var string */
+    /** @var string|null */
     public $eersteToelating;
     /** @var integer|null */
     public $electricEngine1Power;
@@ -44,7 +44,7 @@ class VehicleInfo
     public $electricEngine2Power;
     /** @var string|null */
     public $energielabel;
-    /** @var string */
+    /** @var string|null */
     public $euroklasse;
     /** @var integer */
     public $externalID;
@@ -82,9 +82,9 @@ class VehicleInfo
     public $kmStand;
     /** @var string */
     public $kenteken;
-    /** @var string */
+    /** @var string|null */
     public $kleur;
-    /** @var string */
+    /** @var string|null */
     public $koetswerk;
     /** @var integer */
     public $koppel;
@@ -94,7 +94,7 @@ class VehicleInfo
     public $laadruimteLengte;
     /** @var integer */
     public $laadvermogen;
-    /** @var string */
+    /** @var string|null */
     public $laatsteTenaamstelling;
     /** @var MMT */
     public $mmt;
@@ -142,7 +142,7 @@ class VehicleInfo
     public $pakketten;
     /** @var boolean */
     public $rdwData;
-    /** @var RDWVehicleData */
+    /** @var RDWVehicleData|null */
     public $rdwVoertuigData;
     /** @var boolean */
     public $rechargePossibility;

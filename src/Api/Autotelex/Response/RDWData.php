@@ -60,7 +60,7 @@ class RDWData
     public $rdwDatumEersteToelatingInternationaal;
     /** @var string */
     public $rdwDatumEersteToelatingNationaal;
-    /** @var string */
+    /** @var string|null */
     public $rdwDatumVervalApk;
     /** @var string */
     public $rdwEmissiecode;
@@ -76,7 +76,7 @@ class RDWData
     public $rdwHandelsbenaming;
     /** @var integer|null */
     public $rdwHoogteVoertuigMax;
-    /** @var string */
+    /** @var string|null */
     public $rdwInrichtingscode;
     /** @var string */
     public $rdwKleur2;
@@ -90,7 +90,7 @@ class RDWData
     public $rdwMassaRijklaar;
     /** @var string */
     public $rdwMaximaleConstructieSnelheid;
-    /** @var string */
+    /** @var string|null */
     public $rdwMaximumMassa;
     /** @var string|null */
     public $rdwMaximumMassaGeremd;

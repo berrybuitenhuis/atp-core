@@ -18,7 +18,7 @@ class Requester
     public $companyPostalCode;
     /** @var string */
     public $companyStreetNameAndNumber;
-    /** @var string */
+    /** @var string|null */
     public $companyTelephone;
     /** @var string */
     public $email;
@@ -34,7 +34,7 @@ class Requester
     public $remark;
     /** @var string */
     public $streetNameAndNumber;
-    /** @var string */
+    /** @var string|null */
     public $telephone;
     /** @var string|null */
     public $title;

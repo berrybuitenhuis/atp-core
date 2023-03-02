@@ -12,7 +12,7 @@ class Packet
     public $manufacturerName;
     /** @var string */
     public $name;
-    /** @var Options */
+    /** @var Options|null */
     public $opties;
     /** @var integer */
     public $price;

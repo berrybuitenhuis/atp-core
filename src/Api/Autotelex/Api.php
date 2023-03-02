@@ -383,73 +383,75 @@ class Api extends BaseClass
     private function fixDataTypes($response)
     {
         // Fix inconsistent types (array/single object -> always array)
-        if (isset($response->OptionalTypes->VehicleType->ID)) {
+        if (is_object($response->OptionalTypes->VehicleType)) {
             $response->OptionalTypes->VehicleType = [$response->OptionalTypes->VehicleType];
         }
-        if (isset($response->VehicleInfo->Accessoires->Options->ID)) {
+        if (is_object($response->VehicleInfo->Accessoires->Options)) {
             $response->VehicleInfo->Accessoires->Options = [$response->VehicleInfo->Accessoires->Options];
         }
-        if (isset($response->VehicleInfo->Opties->Options)) {
-            if (isset($response->VehicleInfo->Opties->Options->ID)) {
+        if (!empty($response->VehicleInfo->Opties->Options)) {
+            if (is_object($response->VehicleInfo->Opties->Options)) {
                 $response->VehicleInfo->Opties->Options = [$response->VehicleInfo->Opties->Options];
             }
             foreach ($response->VehicleInfo->Opties->Options as $key => $option) {
-                if (isset($option->ManufacturerOptionCodes->ManufacturerOption->Code)) {
+                if (is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
                     $response->VehicleInfo->Opties->Options[$key]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
                 }
             }
         }
-        if (isset($response->VehicleInfo->Pakketten->Packets)) {
-            if (isset($response->VehicleInfo->Pakketten->Packets->ID)) {
+        if (!empty($response->VehicleInfo->Pakketten->Packets)) {
+            if (is_object($response->VehicleInfo->Pakketten->Packets)) {
                 $response->VehicleInfo->Pakketten->Packets = [$response->VehicleInfo->Pakketten->Packets];
             }
             foreach ($response->VehicleInfo->Pakketten->Packets as $key => $package) {
-                if (isset($package->Opties->Options->ID)) {
+                if (is_object($package->Opties->Options)) {
                     $response->VehicleInfo->Pakketten->Packets[$key]->Opties->Options = [$package->Opties->Options];
                 }
-                foreach ($response->VehicleInfo->Pakketten->Packets[$key]->Opties->Options as $k => $option) {
-                    if (isset($option->ManufacturerOptionCodes->ManufacturerOption->Code)) {
-                        $response->VehicleInfo->Pakketten->Packets[$key]->Opties->Options[$k]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
+                if (!empty($response->VehicleInfo->Pakketten->Packets[$key]->Opties)) {
+                    foreach ($response->VehicleInfo->Pakketten->Packets[$key]->Opties->Options as $k => $option) {
+                        if (is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
+                            $response->VehicleInfo->Pakketten->Packets[$key]->Opties->Options[$k]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
+                        }
                     }
                 }
             }
         }
-        if (isset($response->VehicleInfo->StandaardOpties->Options)) {
-            if (isset($response->VehicleInfo->StandaardOpties->Options->ID)) {
+        if (!empty($response->VehicleInfo->StandaardOpties->Options)) {
+            if (is_object($response->VehicleInfo->StandaardOpties->Options)) {
                 $response->VehicleInfo->StandaardOpties->Options = [$response->VehicleInfo->StandaardOpties->Options];
             }
             foreach ($response->VehicleInfo->StandaardOpties->Options as $key => $option) {
-                if (isset($option->ManufacturerOptionCodes->ManufacturerOption->Code)) {
+                if (is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
                     $response->VehicleInfo->StandaardOpties->Options[$key]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
                 }
             }
         }
-        if (isset($response->VehicleInfo2->VoertuigVariabelen->Accessoires->Options->ID)) {
+        if (is_object($response->VehicleInfo2->VoertuigVariabelen->Accessoires->Options)) {
             $response->VehicleInfo2->VoertuigVariabelen->Accessoires->Options = [$response->VehicleInfo2->VoertuigVariabelen->Accessoires->Options];
         }
-        if (isset($response->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData->TMStatusHistorieLijst->TMStatusHistorie->BidOfferType)) {
+        if (is_object($response->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData->TMStatusHistorieLijst->TMStatusHistorie)) {
             $response->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData->TMStatusHistorieLijst->TMStatusHistorie = [$response->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData->TMStatusHistorieLijst->TMStatusHistorie];
         }
-        if (isset($response->VehicleInfo2->VoertuigVariabelen->ChargingCableTypes->ChargingCableModel->Id)) {
+        if (is_object($response->VehicleInfo2->VoertuigVariabelen->ChargingCableTypes->ChargingCableModel)) {
             $response->VehicleInfo2->VoertuigVariabelen->ChargingCableTypes->ChargingCableModel = [$response->VehicleInfo2->VoertuigVariabelen->ChargingCableTypes->ChargingCableModel];
         }
-        if (isset($response->VehicleInfo2->VoertuigVariabelen->Opties->Options->ID)) {
+        if (is_object($response->VehicleInfo2->VoertuigVariabelen->Opties->Options)) {
             $response->VehicleInfo2->VoertuigVariabelen->Opties->Options = [$response->VehicleInfo2->VoertuigVariabelen->Opties->Options];
         }
-        if (isset($response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets)) {
-            if (isset($response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets->ID)) {
+        if (!empty($response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets)) {
+            if (is_object($response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets)) {
                 $response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets = [$response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets];
             }
             foreach ($response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets as $key => $package) {
-                if (isset($package->Opties->Options->ID)) {
+                if (is_object($package->Opties->Options)) {
                     $response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets[$key]->Opties->Options = [$package->Opties->Options];
                 }
             }
         }
-        if (isset($response->VehicleInfo2->VoertuigVariabelen->ReportURLs->ExternalURL->URL)) {
+        if (is_object($response->VehicleInfo2->VoertuigVariabelen->ReportURLs->ExternalURL)) {
             $response->VehicleInfo2->VoertuigVariabelen->ReportURLs->ExternalURL = [$response->VehicleInfo2->VoertuigVariabelen->ReportURLs->ExternalURL];
         }
-        if (isset($response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving->SchadeOnderdeelTekst)) {
+        if (is_object($response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving)) {
             $response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving = [$response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving];
         }
         if (!empty($response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving)) {

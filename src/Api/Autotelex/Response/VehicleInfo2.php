@@ -14,7 +14,7 @@ class VehicleInfo2
     public $gebruikerGegevens;
     /** @var NAPData */
     public $napGegevens;
-    /** @var RDWData */
+    /** @var RDWData|null */
     public $rdwGegevens;
     /** @var integer|null */
     public $restWaardenMeldingId;

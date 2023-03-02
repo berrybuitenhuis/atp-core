@@ -8,7 +8,7 @@ class DamageData
     public $schaderapportDatum;
     /** @var string|null */
     public $schaderapportOpmerking;
-    /** @var Damages */
+    /** @var Damages|null */
     public $schades;
     /** @var boolean */
     public $schadevrij;
