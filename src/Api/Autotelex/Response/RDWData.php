@@ -112,7 +112,7 @@ class RDWData
     public $rdwWamVerzekerd;
     /** @var boolean */
     public $rdwWokStatusIndicator;
-    /** @var integer */
+    /** @var integer|null */
     public $rdwZitplaatsen;
     /** @var integer|null */
     public $restBpm;

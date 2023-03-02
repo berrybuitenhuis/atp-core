@@ -12,7 +12,7 @@ class ResidualValue
     public $id;
     /** @var string */
     public $naam;
-    /** @var double */
+    /** @var double|null */
     public $percentage;
     /** @var integer */
     public $waarde;

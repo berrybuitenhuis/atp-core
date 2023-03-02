@@ -4,6 +4,6 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class ReportUrl
 {
-    /** @var ExternalUrl */
+    /** @var ExternalUrl[] */
     public $externalURL;
 }

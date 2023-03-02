@@ -24,7 +24,7 @@ class VehicleType
     public $model;
     /** @var string|null */
     public $nieuwPrijs;
-    /** @var string */
+    /** @var string|null */
     public $type;
     /** @var integer|null */
     public $vermogen;

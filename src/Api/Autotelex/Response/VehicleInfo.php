@@ -176,7 +176,7 @@ class VehicleInfo
     public $taxatieData;
     /** @var integer */
     public $topsnelheid;
-    /** @var string */
+    /** @var string|null */
     public $transmissie;
     /** @var integer */
     public $trekGewichtGeremd;

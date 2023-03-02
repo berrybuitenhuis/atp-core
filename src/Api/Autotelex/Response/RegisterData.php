@@ -10,11 +10,11 @@ class RegisterData
     public $automaticAanmeldenEnabled;
     /** @var boolean */
     public $automaticB2BRoLEnabled;
-    /** @var integer */
+    /** @var integer|null */
     public $rolMileage;
-    /** @var boolean */
+    /** @var boolean|null */
     public $rolMileageNotationInKm;
-    /** @var boolean */
+    /** @var boolean|null */
     public $rollableForTransport;
     /** @var string|null */
     public $temporaryDocumentNumber;

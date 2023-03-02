@@ -50,7 +50,7 @@ class VehicleVariables
     public $distributieriemVervangen;
     /** @var \stdClass */
     public $dmsData;
-    /** @var boolean */
+    /** @var boolean|null */
     public $driveable;
     /** @var integer */
     public $duplicaatcode;
@@ -80,7 +80,7 @@ class VehicleVariables
     public $kleur;
     /** @var integer|null */
     public $kmstandDistributieriemVervangen;
-    /** @var string */
+    /** @var string|null */
     public $laksoort;
     /** @var string|null */
     public $landVanHerkomst;
@@ -110,11 +110,11 @@ class VehicleVariables
     public $requester;
     /** @var boolean|null */
     public $roetfilterVervangen;
-/** @var boolean */
+    /** @var boolean|null */
     public $rookvrij;
     /** @var DamageData */
     public $schadeGegevens;
-    /** @var string */
+    /** @var string|null */
     public $staatMotor;
     /** @var Options */
 	public $standaardOpties;

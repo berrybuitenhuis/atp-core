@@ -55,32 +55,38 @@ class Api extends BaseClass
      */
     public function getBid($externalId)
     {
-        // Set token
-        $this->setToken();
+        // Get token
+        $token = $this->getToken();
+        if ($token === false) return false;
 
-        // Get vehicle-data
-        $params = ["vendorToken"=>$this->token, "tp"=>["ExternalID"=>$externalId]];
-        if ($this->debug) $this->log("request", "GetVehicle", json_encode($params));
-        $result = $this->client->GetVehicle($params);
-        $this->setOriginalResponse($result);
-        if ($this->debug) $this->log("response", "GetVehicle", json_encode($result));
-        $status = $result->GetVehicleResult->Status;
+        try {
+            // Get vehicle-data
+            $params = ["vendorToken"=>$token, "tp"=>["ExternalID"=>$externalId]];
+            if ($this->debug) $this->log("request", "GetVehicle", json_encode($params));
+            $result = $this->client->GetVehicle($params);
+            $this->setOriginalResponse($result);
+            if ($this->debug) $this->log("response", "GetVehicle", json_encode($result));
+            $status = $result->GetVehicleResult->Status;
 
-        if ($status->Code == 0) {
-            if (isset($result->GetVehicleResult->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData->BiedingId)) {
-                $tmp = $result->GetVehicleResult->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData;
-                if ($tmp->Soort == 16) return $tmp->Waarde;
-            } else {
-                $tmp = $result->GetVehicleResult->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData;
-                if (is_array($tmp) && count($tmp) > 0) {
-                    foreach ($tmp AS $v) {
-                        if ($v->Status == 2) continue;
-                        if ($v->Soort == 16) return $v->Waarde;
+            if ($status->Code == 0) {
+                if (isset($result->GetVehicleResult->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData->BiedingId)) {
+                    $tmp = $result->GetVehicleResult->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData;
+                    if ($tmp->Soort == 16) return $tmp->Waarde;
+                } else {
+                    $tmp = $result->GetVehicleResult->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData;
+                    if (is_array($tmp) && count($tmp) > 0) {
+                        foreach ($tmp as $v) {
+                            if ($v->Status == 2) continue;
+                            if ($v->Soort == 16) return $v->Waarde;
+                        }
                     }
                 }
+                return false;
+            } else {
+                return false;
             }
-            return false;
-        } else {
+        } catch (\Exception $e) {
+            $this->setMessages($e->getMessage());
             return false;
         }
     }
@@ -95,30 +101,36 @@ class Api extends BaseClass
      */
     public function getData($registration, $atlCode = null, $mileage = null)
     {
-        // Set token
-        $this->setToken();
+        // Get token
+        $token = $this->getToken();
+        if ($token === false) return false;
 
-        // Set parameters
-        $vehicleParams = ["kenteken" => $registration];
-        if (!empty($atlCode)) $vehicleParams["AutotelexUitvoeringID"] = $atlCode;
-        if (!empty($mileage)) $vehicleParams["kilometerstand"] = $mileage;
-        $params = ["token"=>$this->token, "vehicle"=>$vehicleParams];
+        try {
+            // Set parameters
+            $vehicleParams = ["kenteken" => $registration];
+            if (!empty($atlCode)) $vehicleParams["AutotelexUitvoeringID"] = $atlCode;
+            if (!empty($mileage)) $vehicleParams["kilometerstand"] = $mileage;
+            $params = ["token"=>$token, "vehicle"=>$vehicleParams];
 
-        if ($this->debug) $this->log("request", "GetVehicleDataPRO", json_encode($params));
-        $result = $this->client->GetVehicleDataPRO($params);
-        $this->setOriginalResponse($result);
-        if ($this->debug) $this->log("response", "GetVehicleDataPRO", json_encode($result));
-        $status = $result->GetVehicleDataPROResult->Status;
+            if ($this->debug) $this->log("request", "GetVehicleDataPRO", json_encode($params));
+            $result = $this->client->GetVehicleDataPRO($params);
+            $this->setOriginalResponse($result);
+            if ($this->debug) $this->log("response", "GetVehicleDataPRO", json_encode($result));
+            $status = $result->GetVehicleDataPROResult->Status;
 
-        // Check for valid status-code
-        // Status-code: 0, OK
-        // Status-code: 1, OK, with addition info (choose type-commercial)
-        // Status-code: 2, General error
-        // Status-code: 3, Customer-token invalid
-        // Status-code: 4, Vendor-token invalid
-        if (in_array($status->GenericCode, [0, 1]) || ($status->GenericCode == 2 && stristr($status->Message, "Ongeldig of onbekend kenteken"))) {
-            return $result->GetVehicleDataPROResult;
-        } else {
+            // Check for valid status-code
+            // Status-code: 0, OK
+            // Status-code: 1, OK, with addition info (choose type-commercial)
+            // Status-code: 2, General error
+            // Status-code: 3, Customer-token invalid
+            // Status-code: 4, Vendor-token invalid
+            if (in_array($status->GenericCode, [0, 1]) || ($status->GenericCode == 2 && stristr($status->Message, "Ongeldig of onbekend kenteken"))) {
+                return $result->GetVehicleDataPROResult;
+            } else {
+                return false;
+            }
+        } catch (\Exception $e) {
+            $this->setMessages($e->getMessage());
             return false;
         }
     }
@@ -131,25 +143,31 @@ class Api extends BaseClass
      */
     public function getVehicle($externalId, $output = null)
     {
-        // Set token
-        $this->setToken();
+        // Get token
+        $token = $this->getToken();
+        if ($token === false) return false;
 
-        // Get vehicle-data
-        $params = ["vendorToken"=>$this->token, "tp"=>["ExternalID"=>$externalId]];
-        if ($this->debug) $this->log("request", "GetVehicle", json_encode($params));
-        $result = $this->client->GetVehicle($params);
-        $this->setOriginalResponse($result);
-        if ($this->debug) $this->log("response", "GetVehicle", json_encode($result));
-        $status = $result->GetVehicleResult->Status;
-        if ($status->Code == 0) {
-            if ($output == "object") {
-                return $this->mapVehicleResponse($result->GetVehicleResult);
+        try {
+            // Get vehicle-data
+            $params = ["vendorToken"=>$token, "tp"=>["ExternalID"=>$externalId]];
+            if ($this->debug) $this->log("request", "GetVehicle", json_encode($params));
+            $result = $this->client->GetVehicle($params);
+            $this->setOriginalResponse($result);
+            if ($this->debug) $this->log("response", "GetVehicle", json_encode($result));
+            $status = $result->GetVehicleResult->Status;
+            if ($status->Code == 0) {
+                if ($output == "object") {
+                    return $this->mapVehicleResponse($result->GetVehicleResult);
+                } else {
+                    return $result->GetVehicleResult;
+                }
             } else {
-                return $result->GetVehicleResult;
+                $this->setErrorData($status);
+                $this->setMessages($status->Message);
+                return false;
             }
-        } else {
-            $this->setErrorData($status);
-            $this->setMessages($status->Message);
+        } catch (\Exception $e) {
+            $this->setMessages($e->getMessage());
             return false;
         }
     }
@@ -175,40 +193,46 @@ class Api extends BaseClass
         if ($bid > 0) {
             $btw = (strtolower($vatMarginType) == "btw") ? true : false;
 
-            // Set token
-            $this->setToken();
+            // Get token
+            $token = $this->getToken();
+            if ($token === false) return false;
 
-            // Compose message/parameters
-            $params = [
-                "vendorToken" => $this->token,
-                "ibp" => [
-                    "ExternalID" => $externalId,
-                    "SoortBod" => 16,
-                    "Bod" => $bid,
-                    "isBTWVoertuig" => $btw,
-                    "Status" => 3,
-                    "InclExclBTW" => "Incl. BTW",
-                    "GeldigTot" => $expirationDate->format('c'),
-                    "Naam" => "Autotaxatie (Autotaxatie)",
-                    "Opmerking" => $comment
-                ],
-            ];
-            if (!empty($rdwIdentificationNumber)) {
-                $params["ibp"]["Buyer"] = [
-                    "RdwNumber" => $rdwIdentificationNumber
+            try {
+                // Compose message/parameters
+                $params = [
+                    "vendorToken" => $token,
+                    "ibp" => [
+                        "ExternalID" => $externalId,
+                        "SoortBod" => 16,
+                        "Bod" => $bid,
+                        "isBTWVoertuig" => $btw,
+                        "Status" => 3,
+                        "InclExclBTW" => "Incl. BTW",
+                        "GeldigTot" => $expirationDate->format('c'),
+                        "Naam" => "Autotaxatie (Autotaxatie)",
+                        "Opmerking" => $comment
+                    ],
                 ];
-            }
+                if (!empty($rdwIdentificationNumber)) {
+                    $params["ibp"]["Buyer"] = [
+                        "RdwNumber" => $rdwIdentificationNumber
+                    ];
+                }
 
-            // Send bid
-            if ($this->debug) $this->log("request", "InsertBod", json_encode($params));
-            $result = $this->client->InsertBod($params);
-            $this->setOriginalResponse($result);
-            if ($this->debug) $this->log("response", "InsertBod", json_encode($result));
-            $status = $result->InsertBodResult;
-            if ($status->Code == 0) {
-                return true;
-            } else {
-                return $status;
+                // Send bid
+                if ($this->debug) $this->log("request", "InsertBod", json_encode($params));
+                $result = $this->client->InsertBod($params);
+                $this->setOriginalResponse($result);
+                if ($this->debug) $this->log("response", "InsertBod", json_encode($result));
+                $status = $result->InsertBodResult;
+                if ($status->Code == 0) {
+                    return true;
+                } else {
+                    return $status;
+                }
+            } catch (\Exception $e) {
+                $this->setMessages($e->getMessage());
+                return false;
             }
         } else {
             return false;
@@ -224,24 +248,30 @@ class Api extends BaseClass
      */
     public function sendNoInterest($externalId, $comment = null)
     {
-        // Set token
-        $this->setToken();
+        // Get token
+        $token = $this->getToken();
+        if ($token === false) return false;
 
-        // Send no-interest
-        $params = [
-            "vendorToken" => $this->token,
-            "vehicleId" => $externalId,
-            "comment" => $comment
-        ];
-        if ($this->debug) $this->log("request", "NoInterest", json_encode($params));
-        $result = $this->client->NoInterest($params);
-        $this->setOriginalResponse($result);
-        if ($this->debug) $this->log("response", "NoInterest", json_encode($result));
-        $status = $result->NoInterestResult;
-        if ($status->Code == 0) {
-            return true;
-        } else {
-            return $status;
+        try {
+            // Send no-interest
+            $params = [
+                "vendorToken" => $token,
+                "vehicleId" => $externalId,
+                "comment" => $comment
+            ];
+            if ($this->debug) $this->log("request", "NoInterest", json_encode($params));
+            $result = $this->client->NoInterest($params);
+            $this->setOriginalResponse($result);
+            if ($this->debug) $this->log("response", "NoInterest", json_encode($result));
+            $status = $result->NoInterestResult;
+            if ($status->Code == 0) {
+                return true;
+            } else {
+                return $status;
+            }
+        } catch (\Exception $e) {
+            $this->setMessages($e->getMessage());
+            return false;
         }
     }
 
@@ -271,6 +301,34 @@ class Api extends BaseClass
             $this->logger($message);
         } else {
             print("$message\n");
+        }
+    }
+
+    /**
+     * Get token
+     *
+     * @return string|false
+     */
+    private function getToken()
+    {
+        // Check if token already set
+        if (!empty($this->token)) return $this->token;
+
+        try {
+            $params = ["username"=>$this->username, "password"=>$this->password];
+            $result = $this->client->GetVendorToken($params);
+            $status = $result->GetVendorTokenResult->Status;
+            if ($status->Code == 0) {
+                $this->token = $result->GetVendorTokenResult->Token;
+                return $this->token;
+            } else {
+                $this->token = null;
+                $this->setMessages($status->Message);
+                return false;
+            }
+        } catch (\Exception $e) {
+            $this->setMessages($e->getMessage());
+            return false;
         }
     }
 
@@ -388,6 +446,9 @@ class Api extends BaseClass
                 }
             }
         }
+        if (isset($response->VehicleInfo2->VoertuigVariabelen->ReportURLs->ExternalURL->URL)) {
+            $response->VehicleInfo2->VoertuigVariabelen->ReportURLs->ExternalURL = [$response->VehicleInfo2->VoertuigVariabelen->ReportURLs->ExternalURL];
+        }
         if (isset($response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving->SchadeOnderdeelTekst)) {
             $response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving = [$response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving];
         }
@@ -414,25 +475,5 @@ class Api extends BaseClass
     private function setOriginalResponse($originalResponse)
     {
         $this->originalResponse = $originalResponse;
-    }
-
-    /**
-     * Set token
-     *
-     * @return void
-     */
-    private function setToken()
-    {
-        // Check if token already set
-        if (!empty($this->token)) return;
-
-        $params = ["username"=>$this->username, "password"=>$this->password];
-        $result = $this->client->GetVendorToken($params);
-        $status = $result->GetVendorTokenResult->Status;
-        if ($status->Code == 0) {
-            $this->token = $result->GetVendorTokenResult->Token;
-        } else {
-            $this->token = null;
-        }
     }
 }

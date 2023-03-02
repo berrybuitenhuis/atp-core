@@ -24,7 +24,7 @@ class Requester
     public $email;
     /** @var integer */
     public $id;
-    /** @var string */
+    /** @var string|null */
     public $mobile;
     /** @var string */
     public $name;

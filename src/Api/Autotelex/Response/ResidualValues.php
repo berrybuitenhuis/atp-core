@@ -4,6 +4,6 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class ResidualValues
 {
-    /** @var ResidualValue[] */
+    /** @var ResidualValue[]|null */
     public $restwaarden;
 }

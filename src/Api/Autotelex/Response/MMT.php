@@ -16,6 +16,6 @@ class MMT
     public $id;
     /** @var string */
     public $model;
-    /** @var string */
+    /** @var string|null */
     public $type;
 }
