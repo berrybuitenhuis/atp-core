@@ -18,6 +18,8 @@ class VehicleInfo
     public $accuCapaciteit;
     /** @var integer|null */
     public $actieradius;
+    /** @var string|null */
+    public $advertisementUrl;
     /** @var integer|null */
     public $afleverkosten;
     /** @var string|null */

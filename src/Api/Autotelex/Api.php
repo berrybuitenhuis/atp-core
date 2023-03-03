@@ -416,6 +416,9 @@ class Api extends BaseClass
                 }
             }
         }
+        if (is_object($response->VehicleInfo->RDWVoertuigData->VoertuigData)) {
+            $response->VehicleInfo->RDWVoertuigData->VoertuigData = [$response->VehicleInfo->RDWVoertuigData->VoertuigData];
+        }
         if (!empty($response->VehicleInfo->StandaardOpties->Options)) {
             if (is_object($response->VehicleInfo->StandaardOpties->Options)) {
                 $response->VehicleInfo->StandaardOpties->Options = [$response->VehicleInfo->StandaardOpties->Options];
@@ -426,8 +429,14 @@ class Api extends BaseClass
                 }
             }
         }
+        if (is_object($response->VehicleInfo2->Restwaarden->RestWaarden)) {
+            $response->VehicleInfo2->Restwaarden->RestWaarden = [$response->VehicleInfo2->Restwaarden->RestWaarden];
+        }
         if (is_object($response->VehicleInfo2->VoertuigVariabelen->Accessoires->Options)) {
             $response->VehicleInfo2->VoertuigVariabelen->Accessoires->Options = [$response->VehicleInfo2->VoertuigVariabelen->Accessoires->Options];
+        }
+        if (is_object($response->VehicleInfo2->VoertuigVariabelen->BandenGegevens->BandenParameters)) {
+            $response->VehicleInfo2->VoertuigVariabelen->BandenGegevens->BandenParameters = [$response->VehicleInfo2->VoertuigVariabelen->BandenGegevens->BandenParameters];
         }
         if (is_object($response->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData->TMStatusHistorieLijst->TMStatusHistorie)) {
             $response->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData->TMStatusHistorieLijst->TMStatusHistorie = [$response->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData->TMStatusHistorieLijst->TMStatusHistorie];
@@ -435,8 +444,15 @@ class Api extends BaseClass
         if (is_object($response->VehicleInfo2->VoertuigVariabelen->ChargingCableTypes->ChargingCableModel)) {
             $response->VehicleInfo2->VoertuigVariabelen->ChargingCableTypes->ChargingCableModel = [$response->VehicleInfo2->VoertuigVariabelen->ChargingCableTypes->ChargingCableModel];
         }
-        if (is_object($response->VehicleInfo2->VoertuigVariabelen->Opties->Options)) {
-            $response->VehicleInfo2->VoertuigVariabelen->Opties->Options = [$response->VehicleInfo2->VoertuigVariabelen->Opties->Options];
+        if (!empty($response->VehicleInfo2->VoertuigVariabelen->Opties->Options)) {
+            if (is_object($response->VehicleInfo2->VoertuigVariabelen->Opties->Options)) {
+                $response->VehicleInfo2->VoertuigVariabelen->Opties->Options = [$response->VehicleInfo2->VoertuigVariabelen->Opties->Options];
+            }
+            foreach ($response->VehicleInfo2->VoertuigVariabelen->Opties->Options as $key => $option) {
+                if (is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
+                    $response->VehicleInfo2->VoertuigVariabelen->Opties->Options[$key]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
+                }
+            }
         }
         if (!empty($response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets)) {
             if (is_object($response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets)) {
@@ -445,6 +461,13 @@ class Api extends BaseClass
             foreach ($response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets as $key => $package) {
                 if (is_object($package->Opties->Options)) {
                     $response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets[$key]->Opties->Options = [$package->Opties->Options];
+                }
+                if (!empty($response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets[$key]->Opties)) {
+                    foreach ($response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets[$key]->Opties->Options as $k => $option) {
+                        if (is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
+                            $response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets[$key]->Opties->Options[$k]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
+                        }
+                    }
                 }
             }
         }
@@ -461,6 +484,16 @@ class Api extends BaseClass
                 }
                 if (is_string($damage->SchadefotoURLs->string)) {
                     $response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving[$key]->SchadefotoURLs->string = [$damage->SchadefotoURLs->string];
+                }
+            }
+        }
+        if (!empty($response->VehicleInfo2->VoertuigVariabelen->StandaardOpties->Options)) {
+            if (is_object($response->VehicleInfo2->VoertuigVariabelen->StandaardOpties->Options)) {
+                $response->VehicleInfo2->VoertuigVariabelen->StandaardOpties->Options = [$response->VehicleInfo2->VoertuigVariabelen->StandaardOpties->Options];
+            }
+            foreach ($response->VehicleInfo2->VoertuigVariabelen->StandaardOpties->Options as $key => $option) {
+                if (is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
+                    $response->VehicleInfo2->VoertuigVariabelen->StandaardOpties->Options[$key]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
                 }
             }
         }

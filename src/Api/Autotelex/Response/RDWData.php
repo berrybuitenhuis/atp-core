@@ -56,9 +56,9 @@ class RDWData
     public $rdwCo2emissie;
     /** @var string|null */
     public $rdwDatumAansprakelijkheid;
-    /** @var string */
+    /** @var string|null */
     public $rdwDatumEersteToelatingInternationaal;
-    /** @var string */
+    /** @var string|null */
     public $rdwDatumEersteToelatingNationaal;
     /** @var string|null */
     public $rdwDatumVervalApk;
@@ -72,6 +72,8 @@ class RDWData
     public $rdwExportIndicator;
     /** @var boolean|null */
     public $rdwG3Installatie;
+    /** @var boolean|null */
+    public $rdwGestolenIndicator;
     /** @var string */
     public $rdwHandelsbenaming;
     /** @var integer|null */

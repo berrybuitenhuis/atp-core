@@ -76,7 +76,7 @@ class VehicleVariables
     public $isAdvertisable;
     /** @var boolean */
     public $isBtwVoertuigBlocked;
-    /** @var string */
+    /** @var string|null */
     public $kleur;
     /** @var integer|null */
     public $kmstandDistributieriemVervangen;
