@@ -289,7 +289,10 @@ class Mail extends BaseClass
                             case "long_term_disposable": // The mailbox has been identified as a long term disposable address. Long term disposable addresses can be quickly and easily deactivated by users, but they will not expire without user intervention.
                             case "mailbox_is_role_address": // The mailbox is a role based address (ex. support@…, marketing@…).
                             case "subdomain_mailer": // The recipient domain is identified to be a subdomain and is not on our exception list. Subdomains are considered to be high risk as many spammers and malicious actors utilize them.
+                                break;
                             case "smtp_timeout":
+                            case "smtp_error":
+                                $valid = null;
                                 break;
                             default:
                                 $this->addMessage("Invalid emailaddress ($reason)");
