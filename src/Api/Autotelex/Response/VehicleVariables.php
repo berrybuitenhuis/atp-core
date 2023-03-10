@@ -56,7 +56,7 @@ class VehicleVariables
     public $duplicaatcode;
     /** @var integer */
     public $externalId;
-    /** @var Files */
+    /** @var Files|null */
     public $files;
     /** @var string */
     public $gebruiktAls;

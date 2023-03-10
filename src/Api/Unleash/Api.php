@@ -42,8 +42,23 @@ class Api extends BaseClass
                 ->withCacheHandler(
                     new FilesystemCachePool(
                         new Filesystem(
-                            new Local(sys_get_temp_dir()),
-                        ),
+                            new Local(
+                                sys_get_temp_dir(),
+                                LOCK_EX,
+                                Local::DISALLOW_LINKS,
+                                [
+                                    'file' => [
+                                        'public' => 0666,
+                                        'private' => 0600,
+                                    ],
+                                    'dir' => [
+                                        'public' => 0777,
+                                        'private' => 0700,
+                                    ],
+                                ]
+                            ),
+                            ["visibility"=>"public"]
+                        )
                     )
                 )
                 ->withCacheTimeToLive($cacheTTL)
