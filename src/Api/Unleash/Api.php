@@ -26,53 +26,33 @@ class Api extends BaseClass
      * @param string $appUrl
      * @param string $instanceId
      * @param string $environment
-     * @param boolean $useCache
+     * @param string $cacheFolder
      * @param boolean $cacheTTL
      * @param boolean $debug
      */
-    public function __construct($appUrl, $instanceId, $environment, $useCache = true, $cacheTTL = 600, $debug = false)
+    public function __construct($appUrl, $instanceId, $environment, $cacheFolder = null, $cacheTTL = 600, $debug = false)
     {
         // Reset error-messages
         $this->resetErrors();
 
         // Set client
         try {
-            if ($useCache === false) {
-                $client = UnleashBuilder::createForGitlab()
-                    ->withInstanceId($instanceId)
-                    ->withAppUrl($appUrl)
-                    ->withGitlabEnvironment($environment);
-            } else {
-                $client = UnleashBuilder::createForGitlab()
-                    ->withInstanceId($instanceId)
-                    ->withAppUrl($appUrl)
-                    ->withGitlabEnvironment($environment)
-                    ->withCacheHandler(
-                        new FilesystemCachePool(
-                            new Filesystem(
-                                new Local(
-                                    sys_get_temp_dir(),
-                                    LOCK_EX,
-                                    Local::DISALLOW_LINKS,
-                                    [
-                                        'file' => [
-                                            'public' => 0666,
-                                            'private' => 0600,
-                                        ],
-                                        'dir' => [
-                                            'public' => 0777,
-                                            'private' => 0700,
-                                        ],
-                                    ]
-                                ),
-                                ["visibility" => "public"]
-                            )
+            if (empty($cacheFolder)) $cacheFolder = sys_get_temp_dir();
+
+            $this->client = UnleashBuilder::createForGitlab()
+                ->withInstanceId($instanceId)
+                ->withAppUrl($appUrl)
+                ->withGitlabEnvironment($environment)
+                ->withCacheHandler(
+                    new FilesystemCachePool(
+                        new Filesystem(
+                            new Local($cacheFolder)
                         )
                     )
-                    ->withCacheTimeToLive($cacheTTL);
-            }
+                )
+                ->withCacheTimeToLive($cacheTTL)
+                ->build();
 
-            $this->client = $client->build();
             $this->clientInitialized = true;
         } catch (\Exception $e) {
             $this->setErrorData($e->getTrace());
