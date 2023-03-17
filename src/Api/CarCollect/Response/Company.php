@@ -14,4 +14,6 @@ class Company
     public $logo_url;
     /** @var string */
     public $name;
+    /** @var string */
+    public $postal_code;
 }

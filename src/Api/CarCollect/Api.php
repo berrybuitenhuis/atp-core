@@ -70,7 +70,7 @@ class Api extends BaseClass
                         'license_plate','mileage','mileage_exact','mileage_expected','model','nap_check','number_of_keys','power','rdw_euro_class','rdw_max_mass',
                         'rdw_max_mass_restrained','rdw_max_mass_unrestrained','rdw_payload','registration_country','sales_type','sorting_date','status','steering_wheel_side',
                         'supply_countries','tagline','trade_value_average','transmission','transport_scheduled_at','vat_vehicle','vehicle_type','version','vin_number',
-                        (new Query('company'))->setSelectionSet(['address','city','id','logo_url','name']),
+                        (new Query('company'))->setSelectionSet(['address','city','id','logo_url','name','postal_code']),
                         (new Query('damages'))->setSelectionSet(['createdAt','description','id','location','recovery_costs','solution','type','visible_for_trader',
                             (new Query('images'))->setSelectionSet(['createdAt','id','label','position','type','url_big','url_small'])
                         ]),
