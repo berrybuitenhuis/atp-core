@@ -17,6 +17,7 @@
         "cache/filesystem-adapter": "^1.1",
         "dompdf/dompdf": "^v2.0",
         "elasticsearch/elasticsearch": "^7.0",
+        "gmostafa/php-graphql-client": "^v1.13",
         "gumlet/php-image-resize": "^2.0",
         "guzzlehttp/guzzle": "^7.4",
         "guzzlehttp/psr7": "^2.1",
