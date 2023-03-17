@@ -2,16 +2,16 @@
 
 namespace AtpCore\Api\CarCollect\Response;
 
-class Document
+class Company
 {
+    /** @var string */
+    public $address;
+    /** @var string */
+    public $city;
     /** @var string */
     public $id;
     /** @var string */
-    public $label;
+    public $logo_url;
     /** @var string */
     public $name;
-    /** @var string */
-    public $type;
-    /** @var string */
-    public $url;
 }

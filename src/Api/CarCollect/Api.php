@@ -58,7 +58,6 @@ class Api extends BaseClass
     {
         // Get token
         $token = $this->getToken();
-        var_dump($token);
         if ($token === false) return false;
 
         try {
@@ -66,21 +65,23 @@ class Api extends BaseClass
             $query = (new Query('getTradeDossier'))
                 ->setArguments(['id'=>$externalId])
                 ->setSelectionSet(
-                    ['id','brand','model','version','license_plate','award_amount','award_type','book_value','build_year','destination',
-                        'fuel','mileage_exact','mileage_expected','mileage','nap_check','power','sorting_date','status','tagline','trade_value_average',
-                        'transmission','vat_vehicle','vehicle_type','vin_number','supply_countries','demand_countries','addition_rate_valid_until','addition_rate',
-                        'co2_emission','energy_label','intake_date','intake_date_expected','number_of_keys','rdw_euro_class','rdw_max_mass_restrained',
-                        'rdw_max_mass_unrestrained','rdw_max_mass','rdw_payload','steering_wheel_side',
-                        (new Query('exterior'))->setSelectionSet(['alloy_wheels','exterior_damage_free','exterior_notes','metallic_paint','panoramic_roof','parking_sensor','rear_view_camera','sliding_roof','towbar','xenon']),
-                        (new Query('interior'))->setSelectionSet(['adaptive_cruise_control','airco','charging_cable_present','climate_control','cruise_control','interior_damage_free','interior_notes','jack_present','leather_furnishing','navigation','rear_shelf_present','spare_wheel_present','tire_repair_kit_present']),
-                        (new Query('other'))->setSelectionSet(['apk_valid_until','body_work','color','cylinders','doors','drive','empty_weight','engine_capacity','external_notes','factory_options','first_registration','import_other_continent','import_vehicle','instruction_manual_present','internal_notes','main_key_present','maintenance_book_present','new_price','refund_on_export','spare_key_present','tax_gross','tax_rest','taxi','trade_value_average_retail']),
+                    ['addition_rate','addition_rate_valid_until','award_amount','award_type','bid_indication','book_value','brand','build_year','buy_now_price',
+                        'co2_emission','createdAt','currency','demand_countries','destination','energy_label','expiration_date','fuel','id','intake_date','intake_date_expected',
+                        'license_plate','mileage','mileage_exact','mileage_expected','model','nap_check','number_of_keys','power','rdw_euro_class','rdw_max_mass',
+                        'rdw_max_mass_restrained','rdw_max_mass_unrestrained','rdw_payload','registration_country','sales_type','sorting_date','status','steering_wheel_side',
+                        'supply_countries','tagline','trade_value_average','transmission','transport_scheduled_at','vat_vehicle','vehicle_type','version','vin_number',
+                        (new Query('company'))->setSelectionSet(['address','city','id','logo_url','name']),
+                        (new Query('damages'))->setSelectionSet(['createdAt','description','id','location','recovery_costs','solution','type','visible_for_trader',
+                            (new Query('images'))->setSelectionSet(['createdAt','id','label','position','type','url_big','url_small'])
+                        ]),
+                        (new Query('documents'))->setSelectionSet(['id','label','name','type','url']),
+                        (new Query('exterior'))->setSelectionSet(['air_suspension','alloy_wheels','exterior_damage_free','exterior_extra_options','exterior_notes','led_lighting','metallic_paint','panoramic_roof','parking_sensor','rear_view_camera','sliding_roof','towbar','xenon']),
+                        (new Query('images'))->setSelectionSet(['createdAt','id','label','position','type','url_big','url_small']),
+                        (new Query('interior'))->setSelectionSet(['adaptive_cruise_control','airco','apple_carplay_android_auto','charging_cable_present','climate_control','cruise_control','head_up_display','interior_damage_free','interior_extra_options','interior_notes','jack_present','leather_furnishing','navigation','rear_shelf_present','seat_heating','spare_wheel_present','tire_repair_kit_present','windscreen']),
+                        (new Query('other'))->setSelectionSet(['apk_valid_until','body_work','color','cylinders','date_part_one','doors','drive','empty_weight','engine_capacity','external_notes','factory_options','first_registration','inspection_report_url','instruction_manual_present','internal_notes','import_other_continent','import_vehicle','instruction_manual_present','internal_notes','international_admission','main_key_present','maintenance_book_present','new_price','refund_on_export','spare_key_present','tax_gross','tax_rest','taxi','trade_value_average_retail']),
+                        (new Query('rdw_history'))->setSelectionSet(['date','information','owner']),
                         (new Query('technical'))->setSelectionSet(['maintenance_last','technical_damage_free','technical_notes','timing_belt_replaced']),
                         (new Query('wheels'))->setSelectionSet(['profile_depth_left_front','profile_depth_left_rear','profile_depth_right_front','profile_depth_right_rear','rim_inches','tire_brand','tire_height','tire_type','tire_width','wheels_damage_free','wheels_notes']),
-                        (new Query('damages'))->setSelectionSet(['id','description','location','recovery_costs','solution','type','visible_for_trader',
-                            (new Query('images'))->setSelectionSet(['id','position','url_small','url_big','type','label'])
-                        ]),
-                        (new Query('documents'))->setSelectionSet(['id','label','url','type','name']),
-                        (new Query('images'))->setSelectionSet(['id','position','url_small','url_big','type','label'])
                     ]
                 );
 

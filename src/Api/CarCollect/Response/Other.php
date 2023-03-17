@@ -12,6 +12,8 @@ class Other
     public $color;
     /** @var integer */
     public $cylinders;
+    /** @var string */
+    public $date_part_one;
     /** @var integer */
     public $doors;
     /** @var string */
@@ -30,10 +32,14 @@ class Other
     public $import_other_continent;
     /** @var boolean */
     public $import_vehicle;
+    /** @var string|null */
+    public $inspection_report_url;
     /** @var boolean */
     public $instruction_manual_present;
     /** @var string|null */
     public $internal_notes;
+    /** @var string|null */
+    public $international_admission;
     /** @var boolean */
     public $main_key_present;
     /** @var boolean */

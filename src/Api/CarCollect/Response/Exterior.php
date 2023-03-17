@@ -4,12 +4,18 @@ namespace AtpCore\Api\CarCollect\Response;
 
 class Exterior
 {
+    /** @var boolean */
+    public $air_suspension;
     /** @var boolean|null */
     public $alloy_wheels;
     /** @var boolean */
     public $exterior_damage_free;
+    /** @var string[] */
+    public $exterior_extra_options;
     /** @var string|null */
     public $exterior_notes;
+    /** @var boolean */
+    public $led_lighting;
     /** @var boolean */
     public $metallic_paint;
     /** @var boolean */

@@ -5,15 +5,17 @@ namespace AtpCore\Api\CarCollect\Response;
 class Image
 {
     /** @var string */
+    public $createdAt;
+    /** @var string */
     public $id;
+    /** @var string|null */
+    public $label;
     /** @var string|null */
     public $position;
     /** @var string */
-    public $url_small;
+    public $type;
     /** @var string */
     public $url_big;
     /** @var string */
-    public $type;
-    /** @var string|null */
-    public $label;
+    public $url_small;
 }

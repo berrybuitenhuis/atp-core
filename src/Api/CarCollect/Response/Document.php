@@ -9,9 +9,9 @@ class Document
     /** @var string */
     public $label;
     /** @var string */
-    public $url;
+    public $name;
     /** @var string */
     public $type;
     /** @var string */
-    public $name;
+    public $url;
 }

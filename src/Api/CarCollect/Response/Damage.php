@@ -5,9 +5,11 @@ namespace AtpCore\Api\CarCollect\Response;
 class Damage
 {
     /** @var string */
-    public $id;
+    public $createdAt;
     /** @var string|null */
     public $description;
+    /** @var string */
+    public $id;
     /** @var string */
     public $location;
     /** @var integer|null */
