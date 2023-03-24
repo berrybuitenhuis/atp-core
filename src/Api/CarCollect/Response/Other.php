@@ -14,10 +14,14 @@ class Other
     public $cylinders;
     /** @var string */
     public $date_part_one;
+    /** @var boolean|null */
+    public $digital_instruction_manual_present;
     /** @var integer */
     public $doors;
     /** @var string */
     public $drive;
+    /** @var boolean */
+    public $driveable;
     /** @var integer */
     public $empty_weight;
     /** @var integer */
@@ -28,13 +32,15 @@ class Other
     public $factory_options;
     /** @var string */
     public $first_registration;
+    /** @var integer */
+    public $gears;
     /** @var boolean */
     public $import_other_continent;
     /** @var boolean */
     public $import_vehicle;
     /** @var string|null */
     public $inspection_report_url;
-    /** @var boolean */
+    /** @var boolean|null */
     public $instruction_manual_present;
     /** @var string|null */
     public $internal_notes;
@@ -42,12 +48,16 @@ class Other
     public $international_admission;
     /** @var boolean */
     public $main_key_present;
-    /** @var boolean */
+    /** @var boolean|null */
     public $maintenance_book_present;
     /** @var integer */
     public $new_price;
     /** @var boolean */
     public $refund_on_export;
+    /** @var boolean */
+    public $rollable;
+    /** @var integer|null */
+    public $seats;
     /** @var boolean */
     public $spare_key_present;
     /** @var integer */

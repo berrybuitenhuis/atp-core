@@ -10,7 +10,7 @@ class Company
     public $city;
     /** @var string */
     public $id;
-    /** @var string */
+    /** @var string|null */
     public $logo_url;
     /** @var string */
     public $name;

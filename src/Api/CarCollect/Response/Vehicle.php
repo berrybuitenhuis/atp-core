@@ -42,7 +42,7 @@ class Vehicle
     public $energy_label;
     /** @var Exterior */
     public $exterior;
-    /** @var string */
+    /** @var string|null */
     public $expiration_date;
     /** @var string */
     public $fuel;
@@ -50,7 +50,7 @@ class Vehicle
     public $id;
     /** @var Image[] */
     public $images;
-    /** @var string */
+    /** @var string|null */
     public $intake_date;
     /** @var string|null */
     public $intake_date_expected;
@@ -60,7 +60,7 @@ class Vehicle
     public $license_plate;
     /** @var integer */
     public $mileage;
-    /** @var integer */
+    /** @var integer|null */
     public $mileage_exact;
     /** @var integer|null */
     public $mileage_expected;
@@ -80,9 +80,9 @@ class Vehicle
     public $rdw_history;
     /** @var integer */
     public $rdw_max_mass;
-    /** @var integer */
+    /** @var integer|null */
     public $rdw_max_mass_restrained;
-    /** @var integer */
+    /** @var integer|null */
     public $rdw_max_mass_unrestrained;
     /** @var integer|null */
     public $rdw_payload;
@@ -98,12 +98,14 @@ class Vehicle
     public $steering_wheel_side;
     /** @var string[]|null */
     public $supply_countries;
-    /** @var string */
+    /** @var string|null */
     public $tagline;
     /** @var Technical */
     public $technical;
     /** @var integer|null */
     public $trade_value_average;
+    /** @var string */
+    public $trading_expiration_date;
     /** @var string */
     public $transmission;
     /** @var string|null */

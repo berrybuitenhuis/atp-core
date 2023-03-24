@@ -8,6 +8,8 @@ class Exterior
     public $air_suspension;
     /** @var boolean|null */
     public $alloy_wheels;
+    /** @var string|null */
+    public $exterior_condition;
     /** @var boolean */
     public $exterior_damage_free;
     /** @var string[] */
@@ -24,9 +26,9 @@ class Exterior
     public $parking_sensor;
     /** @var boolean */
     public $rear_view_camera;
-    /** @var boolean */
+    /** @var boolean|null */
     public $sliding_roof;
-    /** @var boolean */
+    /** @var boolean|null */
     public $towbar;
     /** @var boolean */
     public $xenon;
