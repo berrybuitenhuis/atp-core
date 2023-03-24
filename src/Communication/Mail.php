@@ -243,21 +243,23 @@ class Mail extends BaseClass
      * Validate email-address
      *
      * @param string $emailAddress
-     * @return bool|null
+     * @param string $output
+     * @return bool|null|\AtpCore\Communication\MailVerification
      */
-    public function validateEmailAddress($emailAddress)
+    public function validateEmailAddress($emailAddress, $output = 'boolean')
     {
         // Check format email-address
         if (filter_var($emailAddress, FILTER_VALIDATE_EMAIL) === false) {
             $this->addMessage("Invalid emailaddress");
-            return false;
+            return ($output == 'object') ? new MailVerification(false, "undeliverable") : false;
         }
 
         // Validate email address (Mailgun)
         $valid = true;
         try {
-            $result = $this->mailgunEU->emailValidationV4()->validate($emailAddress, true);
-            switch ($result->getResult()) {
+            $res = $this->mailgunEU->emailValidationV4()->validate($emailAddress, true);
+            $result = $res->getResult();
+            switch ($result) {
                 case "catch_all": // The validity of the recipient address cannot be determined as the provider accepts any and all email regardless of whether or not the recipient’s mailbox exists.
                 case "deliverable": // The recipient address is considered to be valid and should accept email.
                     break;
@@ -270,7 +272,8 @@ class Mail extends BaseClass
                     $valid = false;
                     break;
                 case "unknown": // The validity of the recipient address cannot be determined for a variety of potential reasons. Please refer to the associated ‘reason’ array returned in the response.
-                    foreach ($result->getReason() AS $reason) {
+                    $result .= " (" . implode(", ", $reason) . ")";
+                    foreach ($res->getReason() AS $reason) {
                         switch ($reason) {
                             case "failed custom grammar check": // The mailbox failed our custom ESP local-part grammar check.
                             case "high_risk_domain": // Information obtained about the domain indicates it is high risk to send email to.
@@ -303,13 +306,13 @@ class Mail extends BaseClass
                     break;
             }
         } catch (\Exception $exception) {
-            $this->setMessages("{$exception->getCode()}: {$exception->getMessage()}");
-            $this->setMessages($exception->getMessage());
+            $result = "{$exception->getCode()}: {$exception->getMessage()}";
+            $this->setMessages($result);
             $valid = null;
         }
 
         // Return
-        return $valid;
+        return ($output == 'object') ? new MailVerification($valid, $result) : $valid;
     }
 
     /**
