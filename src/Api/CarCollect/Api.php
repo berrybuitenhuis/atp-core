@@ -61,30 +61,14 @@ class Api extends BaseClass
         if ($token === false) return false;
 
         try {
-            // Get vehicle-data
+            // Set query
+            $queryFields = $this->getQueryFields();
+            if ($queryFields === false) return false;
             $query = (new Query('getTradeDossier'))
                 ->setArguments(['id'=>$externalId])
-                ->setSelectionSet(
-                    ['addition_rate','addition_rate_valid_until','award_amount','award_type','bid_indication','book_value','brand','build_year','buy_now_price',
-                        'co2_emission','createdAt','currency','demand_countries','destination','energy_label','expiration_date','fuel','id','intake_date','intake_date_expected',
-                        'license_plate','mileage','mileage_exact','mileage_expected','model','nap_check','number_of_keys','power','rdw_euro_class','rdw_max_mass',
-                        'rdw_max_mass_restrained','rdw_max_mass_unrestrained','rdw_payload','registration_country','sales_type','sorting_date','status','steering_wheel_side',
-                        'supply_countries','tagline','trade_value_average','trading_expiration_date','transmission','transport_scheduled_at','vat_vehicle','vehicle_type','version','vin_number',
-                        (new Query('company'))->setSelectionSet(['address','city','id','logo_url','name','postal_code']),
-                        (new Query('damages'))->setSelectionSet(['createdAt','description','id','location','recovery_costs','solution','type','visible_for_trader',
-                            (new Query('images'))->setSelectionSet(['createdAt','id','label','position','type','url_big','url_small'])
-                        ]),
-                        (new Query('documents'))->setSelectionSet(['id','label','name','type','url']),
-                        (new Query('exterior'))->setSelectionSet(['air_suspension','alloy_wheels','exterior_condition','exterior_damage_free','exterior_extra_options','exterior_notes','led_lighting','metallic_paint','panoramic_roof','parking_sensor','rear_view_camera','sliding_roof','towbar','xenon']),
-                        (new Query('images'))->setSelectionSet(['createdAt','id','label','position','type','url_big','url_small']),
-                        (new Query('interior'))->setSelectionSet(['adaptive_cruise_control','airco','apple_carplay_android_auto','charging_cable_present','climate_control','cruise_control','head_up_display','interior_condition','interior_damage_free','interior_extra_options','interior_notes','jack_present','leather_furnishing','navigation','rear_shelf_present','seat_heating','spare_wheel_present','tire_repair_kit_present','windscreen']),
-                        (new Query('other'))->setSelectionSet(['apk_valid_until','body_work','color','cylinders','date_part_one','digital_instruction_manual_present','doors','drive','driveable','empty_weight','engine_capacity','external_notes','factory_options','first_registration','gears','inspection_report_url','instruction_manual_present','internal_notes','import_other_continent','import_vehicle','instruction_manual_present','internal_notes','international_admission','main_key_present','maintenance_book_present','new_price','refund_on_export','rollable','seats','spare_key_present','tax_gross','tax_rest','taxi','trade_value_average_retail']),
-                        (new Query('rdw_history'))->setSelectionSet(['date','information','owner']),
-                        (new Query('technical'))->setSelectionSet(['maintenance_last','technical_condition','technical_damage_free','technical_notes','timing_belt_replaced']),
-                        (new Query('wheels'))->setSelectionSet(['profile_depth_left_front','profile_depth_left_rear','profile_depth_right_front','profile_depth_right_rear','rim_inches','secondary_profile_depth_left_front','secondary_profile_depth_left_rear','secondary_profile_depth_right_front','secondary_profile_depth_right_rear','secondary_rim_inches','secondary_tire_brand','secondary_tire_height','secondary_tire_type','secondary_tire_width','tire_brand','tire_height','tire_type','tire_width','wheels_damage_free','wheels_notes']),
-                    ]
-                );
+                ->setSelectionSet($queryFields);
 
+            // Get vehicle-data
             if ($this->debug) $this->log("request", "GetVehicle", json_encode($query));
             $response = $this->getClient($token)->runQuery($query);
             $this->setOriginalResponse($response->getData());
@@ -104,6 +88,67 @@ class Api extends BaseClass
     public function getOriginalResponse()
     {
         return $this->originalResponse;
+    }
+
+    /**
+     * Get query-fields based on object
+     *
+     * @param string $objectName
+     * @return array|false
+     */
+    private function getQueryFields($objectName = __NAMESPACE__ . "\Response\Vehicle")
+    {
+        // Get class-properties
+        $reflection = new \ReflectionClass($objectName);
+        $properties = $reflection->getProperties();
+
+        // Iterate class-properties
+        foreach ($properties AS $property) {
+            // Check if property is primitive or class
+            if ($this->isPrimitive($property)) {
+                $fields[] = $property->getName();
+            } else {
+                // Extract class out of doc-comment
+                $docComment = $property->getDocComment();
+                $className = str_ireplace("@var", "", $docComment);
+                $className = str_ireplace("|null", "", $className);
+                $className = str_ireplace("[]", "", $className);
+                $className = preg_replace("/[^A-Za-z0-9]/", "", $className);
+                $className = __NAMESPACE__ . "\Response\\$className";
+                if (!class_exists($className)) {
+                    $this->setMessages("Unknown class $className for docComment $docComment");
+                    return false;
+                }
+
+                // Get fields of class
+                $subfields = $this->getQueryFields($className);
+                if ($subfields === false) return false;
+                $fields[] = (new Query($property->getName()))->setSelectionSet($subfields);
+            }
+        }
+
+        // Return
+        return $fields;
+    }
+
+    /**
+     * Check if property is a primitive type (like string, integer boolean)
+     *
+     * @param \ReflectionProperty $property
+     * @return bool
+     */
+    private function isPrimitive($property)
+    {
+        $primitiveTypes = [\string::class, \int::class, \integer::class, bool::class, \boolean::class];
+        $docComment = $property->getDocComment();
+        foreach ($primitiveTypes as $primitiveType) {
+            if (strpos($docComment, "@var $primitiveType") !== false) {
+                return true;
+            }
+        }
+
+        // Return
+        return false;
     }
 
     /**
