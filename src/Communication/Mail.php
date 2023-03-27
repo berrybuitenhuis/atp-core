@@ -272,7 +272,7 @@ class Mail extends BaseClass
                     $valid = false;
                     break;
                 case "unknown": // The validity of the recipient address cannot be determined for a variety of potential reasons. Please refer to the associated ‘reason’ array returned in the response.
-                    $result .= " (" . implode(", ", $reason) . ")";
+                    $result .= " (" . implode(", ", $res->getReason()) . ")";
                     foreach ($res->getReason() AS $reason) {
                         switch ($reason) {
                             case "failed custom grammar check": // The mailbox failed our custom ESP local-part grammar check.
