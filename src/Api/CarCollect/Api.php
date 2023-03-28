@@ -11,10 +11,12 @@ use AtpCore\Extension\JsonMapperExtension;
 use GraphQL\Client;
 use GraphQL\Mutation;
 use GraphQL\Query;
+use GraphQL\RawObject;
 
 class Api extends BaseClass
 {
 
+    private $branches;
     private $debug;
     private $host;
     private $logger;
@@ -88,6 +90,39 @@ class Api extends BaseClass
     public function getOriginalResponse()
     {
         return $this->originalResponse;
+    }
+
+    /**
+     * Send bid to CarCollect
+     *
+     * @param string $tradeDossierId
+     * @param int $amount
+     * @return array|false
+     */
+    public function sendBid($tradeDossierId, $amount)
+    {
+        // Get branch and token
+        $token = $this->getToken();
+        if ($token === false) return false;
+        if (count($this->branches) == 0 || count($this->branches) > 1) {
+            if (count($this->branches) == 0) $this->setMessages("No bid-branch found");
+            else $this->setMessages("Multiple bid-branches found (count: " . count($this->branches) . ") ");
+            return false;
+        }
+        $branch = current($this->branches)->id;
+
+        try {
+            $amount = (int) $amount;
+            $mutation = (new Mutation('createBidApi'))
+                ->setArguments(['tradeDossierId' => $tradeDossierId, 'bid' => new RawObject("{amount: $amount, branch: \"$branch\"}")])
+                ->setSelectionSet(['id', 'amount']);
+
+            $response = $this->getClient()->runQuery($mutation);
+            return $response->getData();
+        } catch (\Exception $e) {
+            $this->setMessages($e->getMessage());
+            return false;
+        }
     }
 
     /**
@@ -202,12 +237,16 @@ class Api extends BaseClass
             // Get token
             $mutation = (new Mutation('loginApi'))
                 ->setArguments(['email'=>$this->username, 'password'=>$this->password])
-                ->setSelectionSet(['id', 'email', 'access_token']);
+                ->setSelectionSet([
+                    'id', 'email', 'access_token',
+                    (new Query('branches'))->setSelectionSet(['id', 'name'])
+                ]);
 
             $response = $this->getClient()->runQuery($mutation);
             $result = $response->getData();
 
-            // Set token
+            // Set branches and token
+            $this->branches = $result->loginApi->branches;
             $this->token = $result->loginApi->access_token;
 
             // Return
