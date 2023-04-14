@@ -444,6 +444,9 @@ class Api extends BaseClass
         if (is_object($response->VehicleInfo2->VoertuigVariabelen->ChargingCableTypes->ChargingCableModel)) {
             $response->VehicleInfo2->VoertuigVariabelen->ChargingCableTypes->ChargingCableModel = [$response->VehicleInfo2->VoertuigVariabelen->ChargingCableTypes->ChargingCableModel];
         }
+        if (is_object($response->VehicleInfo2->VoertuigVariabelen->Files->UploadFileParameters)) {
+            $response->VehicleInfo2->VoertuigVariabelen->Files->UploadFileParameters = [$response->VehicleInfo2->VoertuigVariabelen->Files->UploadFileParameters];
+        }
         if (!empty($response->VehicleInfo2->VoertuigVariabelen->Opties->Options)) {
             if (is_object($response->VehicleInfo2->VoertuigVariabelen->Opties->Options)) {
                 $response->VehicleInfo2->VoertuigVariabelen->Opties->Options = [$response->VehicleInfo2->VoertuigVariabelen->Opties->Options];
