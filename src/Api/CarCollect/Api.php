@@ -100,7 +100,7 @@ class Api extends BaseClass
      * @param string $tradeDossierId
      * @param int $amount
      * @param string|null $amount
-     * @return array|false
+     * @return \stdClass|false
      */
     public function sendBid($tradeDossierId, $amount, $comment = null)
     {
@@ -125,7 +125,8 @@ class Api extends BaseClass
                 ->setSelectionSet(['id','amount','comment']);
 
             $response = $this->getClient($token)->runQuery($mutation, false, ['tradeDossierId'=>$tradeDossierId]);
-            return $response->getData();
+
+            return $response->getData()->createBidApi;
         } catch (QueryError $e) {
             $this->setMessages($e->getMessage());
             return false;
