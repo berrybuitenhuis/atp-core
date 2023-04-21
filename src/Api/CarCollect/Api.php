@@ -9,9 +9,11 @@ use AtpCore\Api\CarCollect\Response\Vehicle;
 use AtpCore\BaseClass;
 use AtpCore\Extension\JsonMapperExtension;
 use GraphQL\Client;
+use GraphQL\Exception\QueryError;
 use GraphQL\Mutation;
 use GraphQL\Query;
 use GraphQL\RawObject;
+use GraphQL\Variable;
 
 class Api extends BaseClass
 {
@@ -97,9 +99,10 @@ class Api extends BaseClass
      *
      * @param string $tradeDossierId
      * @param int $amount
+     * @param string|null $amount
      * @return array|false
      */
-    public function sendBid($tradeDossierId, $amount)
+    public function sendBid($tradeDossierId, $amount, $comment = null)
     {
         // Get branch and token
         $token = $this->getToken();
@@ -114,12 +117,16 @@ class Api extends BaseClass
         try {
             $amount = (int) $amount;
             $mutation = (new Mutation('createBidApi'))
-                ->setArguments(['tradeDossierId' => $tradeDossierId, 'bid' => new RawObject("{amount: $amount, branch: \"$branch\"}")])
-                ->setSelectionSet(['id', 'amount']);
+                ->setOperationName('createBidApi')
+                ->setVariables([
+                    new Variable('tradeDossierId', 'ID', true),
+                ])
+                ->setArguments(['tradeDossierId'=>'$tradeDossierId', 'bid'=>new RawObject("{amount: $amount, branch: \"$branch\", comment: \"$comment\"}")])
+                ->setSelectionSet(['id','amount','comment']);
 
-            $response = $this->getClient()->runQuery($mutation);
+            $response = $this->getClient($token)->runQuery($mutation, false, ['tradeDossierId'=>$tradeDossierId]);
             return $response->getData();
-        } catch (\Exception $e) {
+        } catch (QueryError $e) {
             $this->setMessages($e->getMessage());
             return false;
         }
