@@ -4,9 +4,9 @@ namespace AtpCore\Api\CarCollect\Response;
 
 class Vehicle
 {
-    /** @var integer */
+    /** @var integer|null */
     public $addition_rate;
-    /** @var string */
+    /** @var string|null */
     public $addition_rate_valid_until;
     /** @var integer|null */
     public $award_amount;
