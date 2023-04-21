@@ -4,7 +4,7 @@ namespace AtpCore\Api\CarCollect\Response;
 
 class Exterior
 {
-    /** @var boolean */
+    /** @var boolean|null */
     public $air_suspension;
     /** @var boolean|null */
     public $alloy_wheels;
@@ -16,20 +16,20 @@ class Exterior
     public $exterior_extra_options;
     /** @var string|null */
     public $exterior_notes;
-    /** @var boolean */
+    /** @var boolean|null */
     public $led_lighting;
-    /** @var boolean */
+    /** @var boolean|null */
     public $metallic_paint;
-    /** @var boolean */
+    /** @var boolean|null */
     public $panoramic_roof;
-    /** @var boolean */
+    /** @var boolean|null */
     public $parking_sensor;
-    /** @var boolean */
+    /** @var boolean|null */
     public $rear_view_camera;
     /** @var boolean|null */
     public $sliding_roof;
     /** @var boolean|null */
     public $towbar;
-    /** @var boolean */
+    /** @var boolean|null */
     public $xenon;
 }

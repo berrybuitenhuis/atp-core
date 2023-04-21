@@ -4,19 +4,19 @@ namespace AtpCore\Api\CarCollect\Response;
 
 class Interior
 {
-    /** @var boolean */
+    /** @var boolean|null */
     public $adaptive_cruise_control;
-    /** @var boolean */
+    /** @var boolean|null */
     public $airco;
     /** @var boolean|null */
     public $apple_carplay_android_auto;
     /** @var boolean|null */
     public $charging_cable_present;
-    /** @var boolean */
+    /** @var boolean|null */
     public $climate_control;
     /** @var boolean|null */
     public $cruise_control;
-    /** @var boolean */
+    /** @var boolean|null */
     public $head_up_display;
     /** @var string|null */
     public $interior_condition;
@@ -28,7 +28,7 @@ class Interior
     public $interior_notes;
     /** @var boolean|null */
     public $jack_present;
-    /** @var boolean */
+    /** @var boolean|null */
     public $leather_furnishing;
     /** @var boolean|null */
     public $navigation;
