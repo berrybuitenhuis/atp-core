@@ -32,7 +32,7 @@ class Other
     public $factory_options;
     /** @var string */
     public $first_registration;
-    /** @var integer */
+    /** @var integer|null */
     public $gears;
     /** @var boolean */
     public $import_other_continent;
@@ -50,7 +50,7 @@ class Other
     public $main_key_present;
     /** @var boolean|null */
     public $maintenance_book_present;
-    /** @var integer */
+    /** @var integer|null */
     public $new_price;
     /** @var boolean */
     public $refund_on_export;
@@ -62,7 +62,7 @@ class Other
     public $spare_key_present;
     /** @var integer */
     public $tax_gross;
-    /** @var integer */
+    /** @var integer|null */
     public $tax_rest;
     /** @var boolean */
     public $taxi;

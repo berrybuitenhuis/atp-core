@@ -22,7 +22,7 @@ class Vehicle
     public $build_year;
     /** @var integer|null */
     public $buy_now_price;
-    /** @var integer */
+    /** @var integer|null */
     public $co2_emission;
     /** @var Company */
     public $company;
@@ -38,7 +38,7 @@ class Vehicle
     public $destination;
     /** @var Document[]|null */
     public $documents;
-    /** @var string */
+    /** @var string|null */
     public $energy_label;
     /** @var Exterior */
     public $exterior;
@@ -66,7 +66,7 @@ class Vehicle
     public $mileage_expected;
     /** @var string */
     public $model;
-    /** @var integer */
+    /** @var integer|null */
     public $nap_check;
     /** @var integer|null */
     public $number_of_keys;
@@ -116,7 +116,7 @@ class Vehicle
     public $vehicle_type;
     /** @var string */
     public $version;
-    /** @var string */
+    /** @var string|null */
     public $vin_number;
     /** @var Wheels */
     public $wheels;
