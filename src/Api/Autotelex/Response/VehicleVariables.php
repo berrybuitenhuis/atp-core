@@ -58,7 +58,7 @@ class VehicleVariables
     public $externalId;
     /** @var Files|null */
     public $files;
-    /** @var string */
+    /** @var string|null */
     public $gebruiktAls;
 	/** @var HeaderCalculation */
     public $headerberekening;
