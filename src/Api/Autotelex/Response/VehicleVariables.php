@@ -140,7 +140,7 @@ class VehicleVariables
     public $verhuisgoed;
     /** @var string */
     public $winterbanden;
-    /** @var boolean */
+    /** @var boolean|null */
     public $isBtwVoertuig;
     /** @var string */
     public $kenteken;
