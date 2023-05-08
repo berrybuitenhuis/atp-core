@@ -80,11 +80,32 @@ class Api extends BaseClass
             $response = $this->client->StandaardDataRequest($params);
             $this->setOriginalResponse($response);
             if ($this->debug) $this->log("response", "StandaardDataRequest", json_encode($response));
-            $result = \AtpCore\Input::convertJson(simplexml_load_string($response->standaardDataRequestResult));
+            $responseData = simplexml_load_string($response->standaardDataRequestResult);
+            $result = \AtpCore\Input::convertJson($responseData->resultaat);
 
             // Check for valid status-code
-            if ($result->resultaat->code == "00") {
-                return $result->rubrieken;
+            if ($result->code == "00") {
+                $data = new \stdClass();
+
+                if (isset($responseData->rubrieken->rdwInfoCheck)) $data->rdwInfoCheck = \AtpCore\Input::convertJson($responseData->rubrieken->rdwInfoCheck->children('http://www.xmlmode.nl/interdata/rdw'));
+                if (isset($responseData->rubrieken->rdwEigenaarCheck)) $data->rdwEigenaarCheck = \AtpCore\Input::convertJson($responseData->rubrieken->rdwEigenaarCheck->children('http://www.xmlmode.nl/interdata/rdw'));
+                if (isset($responseData->rubrieken->rdwInfoBasic)) $data->rdwInfoBasic = \AtpCore\Input::convertJson($responseData->rubrieken->rdwInfoBasic->children('http://www.xmlmode.nl/interdata/rdw'));
+                if (isset($responseData->rubrieken->rdwInfoAdvanced)) $data->rdwInfoAdvanced = \AtpCore\Input::convertJson($responseData->rubrieken->rdwInfoAdvanced->children('http://www.xmlmode.nl/interdata/rdw'));
+                if (isset($responseData->rubrieken->milieuInfoBasic)) $data->milieuInfoBasic = \AtpCore\Input::convertJson($responseData->rubrieken->milieuInfoBasic->children('http://www.xmlmode.nl/interdata/milieu'));
+                if (isset($responseData->rubrieken->rdwHistInfoAdvanced)) $data->rdwHistInfoAdvanced = \AtpCore\Input::convertJson($responseData->rubrieken->rdwHistInfoAdvanced->children('http://www.xmlmode.nl/interdata/rdw'));
+                if (isset($responseData->rubrieken->rdwStatusHistorie)) $data->rdwStatusHistorie = \AtpCore\Input::convertJson($responseData->rubrieken->rdwStatusHistorie->children('http://www.xmlmode.nl/interdata/rdw'));
+                if (isset($responseData->rubrieken->rdwInfoEtg)) $data->rdwInfoEtg = \AtpCore\Input::convertJson($responseData->rubrieken->rdwInfoEtg->children('http://www.xmlmode.nl/interdata/rdw'));
+                if (isset($responseData->rubrieken->atlTechInfoAdvanced)) $data->atlTechInfoAdvanced = \AtpCore\Input::convertJson($responseData->rubrieken->atlTechInfoAdvanced->children('http://www.xmlmode.nl/interdata/atl'));
+                if (isset($responseData->rubrieken->atlPriceInfoBasic)) $data->atlPriceInfoBasic = \AtpCore\Input::convertJson($responseData->rubrieken->atlPriceInfoBasic->children('http://www.xmlmode.nl/interdata/atl'));
+                if (isset($responseData->rubrieken->atlTransmissie)) $data->atlTransmissie = \AtpCore\Input::convertJson($responseData->rubrieken->atlTransmissie->children('http://www.xmlmode.nl/interdata/atl'));
+                if (isset($responseData->rubrieken->atlFoto)) $data->atlFoto = \AtpCore\Input::convertJson($responseData->rubrieken->atlFoto->children('http://www.xmlmode.nl/interdata/atl'));
+                if (isset($responseData->rubrieken->atlOptieStandaard)) $data->atlOptieStandaard = \AtpCore\Input::convertJson($responseData->rubrieken->atlOptieStandaard->children('http://www.xmlmode.nl/interdata/atl'));
+                if (isset($responseData->rubrieken->atlOptieFabriek)) $data->atlOptieFabriek = \AtpCore\Input::convertJson($responseData->rubrieken->atlOptieFabriek->children('http://www.xmlmode.nl/interdata/atl'));
+                if (isset($responseData->rubrieken->atlOptiePakket)) $data->atlOptiePakket = \AtpCore\Input::convertJson($responseData->rubrieken->atlOptiePakket->children('http://www.xmlmode.nl/interdata/atl'));
+                if (isset($responseData->rubrieken->atlMmtInfo)) $data->atlMmtInfo = \AtpCore\Input::convertJson($responseData->rubrieken->atlMmtInfo->children('http://www.xmlmode.nl/interdata/atl'));
+                if (isset($responseData->rubrieken->rdwOkrCheck)) $data->rdwOkrCheck = \AtpCore\Input::convertJson($responseData->rubrieken->rdwOkrCheck->children('http://www.xmlmode.nl/interdata/rdw'));
+
+                return $data;
             } else {
                 $this->setMessages("{$result->resultaat->code}: {$result->resultaat->omschrijving}");
                 return false;
@@ -93,6 +114,16 @@ class Api extends BaseClass
             $this->setMessages($e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * Get original-response
+     *
+     * @return object
+     */
+    public function getOriginalResponse()
+    {
+        return $this->originalResponse;
     }
 
     /**
