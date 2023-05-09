@@ -104,6 +104,8 @@ class VehicleVariables
 	public $pakketten;
     /** @var integer|null */
     public $physicalOrOnline;
+    /** @var string|null */
+    public $registeredInCountry;
 	/** @var ReportUrl */
     public $reportURLs;
     /** @var Requester */
