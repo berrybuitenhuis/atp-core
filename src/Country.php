@@ -12,6 +12,7 @@ class Country
      */
     public static function getCountryByIso2($code)
     {
+        if (array_key_exists($code, self::$countryNames) === false) return null;
         return self::$countryNames[$code];
     }
 
@@ -23,8 +24,9 @@ class Country
      */
     public static function getCountryByIso3($code)
     {
+        if (array_key_exists($code, self::$mapIso3ToIso2) === false) return null;
         $iso2code = self::$mapIso3ToIso2[$code];
-        return self::$countryNames[$iso2code];
+        return self::getCountryByIso2($iso2code);
     }
 
     private static $countryNames = [
