@@ -4,7 +4,7 @@ namespace AtpCore\Api\CarCollect\Response;
 
 class Technical
 {
-    /** @var string|null */
+    /** @var integer|null */
     public $maintenance_last;
     /** @var string|null */
     public $technical_condition;
