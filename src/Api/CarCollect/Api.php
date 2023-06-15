@@ -14,6 +14,7 @@ use GraphQL\Mutation;
 use GraphQL\Query;
 use GraphQL\RawObject;
 use GraphQL\Variable;
+use GuzzleHttp\Exception\ClientException;
 
 class Api extends BaseClass
 {
@@ -259,7 +260,7 @@ class Api extends BaseClass
 
             // Return
             return $this->token;
-        } catch (\Exception $e) {
+        } catch (ClientException $e) {
             $this->setMessages($e->getMessage());
             return false;
         }

@@ -24,7 +24,7 @@ class Other
     public $driveable;
     /** @var integer */
     public $empty_weight;
-    /** @var integer */
+    /** @var integer|null */
     public $engine_capacity;
     /** @var string|null */
     public $external_notes;
@@ -60,7 +60,7 @@ class Other
     public $seats;
     /** @var boolean */
     public $spare_key_present;
-    /** @var integer */
+    /** @var integer|null */
     public $tax_gross;
     /** @var integer|null */
     public $tax_rest;
