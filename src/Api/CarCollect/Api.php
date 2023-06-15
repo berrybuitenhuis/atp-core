@@ -117,6 +117,7 @@ class Api extends BaseClass
 
         try {
             $amount = (int) $amount;
+            $comment = trim($comment);
             $mutation = (new Mutation('createBidApi'))
                 ->setOperationName('createBidApi')
                 ->setVariables([
