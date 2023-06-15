@@ -14,7 +14,7 @@ class Damage
     public $location;
     /** @var integer|null */
     public $recovery_costs;
-    /** @var string */
+    /** @var string|null */
     public $solution;
     /** @var string */
     public $type;
