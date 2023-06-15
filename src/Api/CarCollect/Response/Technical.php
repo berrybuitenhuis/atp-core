@@ -12,6 +12,6 @@ class Technical
     public $technical_damage_free;
     /** @var string|null */
     public $technical_notes;
-    /** @var boolean|null */
+    /** @var integer|null */
     public $timing_belt_replaced;
 }
