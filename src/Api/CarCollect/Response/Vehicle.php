@@ -74,11 +74,11 @@ class Vehicle
     public $other;
     /** @var integer */
     public $power;
-    /** @var string */
+    /** @var string|null */
     public $rdw_euro_class;
     /** @var RdwHistory[] */
     public $rdw_history;
-    /** @var integer */
+    /** @var integer|null */
     public $rdw_max_mass;
     /** @var integer|null */
     public $rdw_max_mass_restrained;
