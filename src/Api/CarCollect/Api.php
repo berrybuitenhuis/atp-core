@@ -100,7 +100,7 @@ class Api extends BaseClass
      *
      * @param string $tradeDossierId
      * @param int $amount
-     * @param string|null $amount
+     * @param string|null $comment
      * @return \stdClass|false
      */
     public function sendBid($tradeDossierId, $amount, $comment = null)
@@ -117,6 +117,8 @@ class Api extends BaseClass
 
         try {
             $amount = (int) $amount;
+            // Override bid, not possible to have 0 for bid, otherwise receive error-message "Unprocessable Entity")
+            if ($amount === 0) $amount = 1;
             $comment = trim($comment);
             $mutation = (new Mutation('createBidApi'))
                 ->setOperationName('createBidApi')
