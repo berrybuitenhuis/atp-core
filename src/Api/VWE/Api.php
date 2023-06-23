@@ -68,6 +68,9 @@ class Api extends BaseClass
             $xml->endElement();
             $xml->startElement("parameters");
             $xml->writeElement("kenteken", $licensePlate);
+            if (!empty($atlCode)) $xml->writeElement("uitvoeringId", $atlCode);
+            if (!empty($mileage)) $xml->writeElement("tellerstand", $mileage);
+            if (!empty($mileageType)) $xml->writeElement("eenheid", $mileageType);
             $xml->endElement();
             $xml->endElement();
             $request = $xml->outputMemory(true);
