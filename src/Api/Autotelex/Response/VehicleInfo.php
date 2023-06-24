@@ -60,7 +60,7 @@ class VehicleInfo
     public $geleverdVan;
     /** @var integer|null */
     public $geschiktVoorExportMeldingID;
-    /** @var integer */
+    /** @var integer|null */
     public $gewicht;
     /** @var string */
     public $handelswaarde;
