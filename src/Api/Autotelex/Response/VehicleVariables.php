@@ -127,6 +127,8 @@ class VehicleVariables
     /** @var boolean|null */
     public $testDriven;
     /** @var string|null */
+    public $tmcVehicleStatus;
+    /** @var string|null */
     public $tweedeKleur;
     /** @var integer|null */
     public $typeOfPurchase;
