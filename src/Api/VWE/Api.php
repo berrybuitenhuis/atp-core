@@ -173,6 +173,8 @@ class Api extends BaseClass
             elseif (is_string($value) && strtolower($value) === "false") $data->$key = false;
             // Replace string true into boolean
             elseif (is_string($value) && strtolower($value) === "true") $data->$key = true;
+            // Replace empty string into null
+            elseif (is_string($value) && empty($value)) $data->$key = null;
         }
 
         // Return
