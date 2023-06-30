@@ -348,9 +348,10 @@ class Api extends BaseClass
      * Map response to (internal) Vehicle-object
      *
      * @param object $response
+     * @param bool $failOnUndefinedProperty
      * @return Vehicle|false
      */
-    private function mapVehicleResponse($response)
+    private function mapVehicleResponse($response, $failOnUndefinedProperty = true)
     {
         $response = $this->fixDataTypes($response);
 
@@ -358,7 +359,7 @@ class Api extends BaseClass
             // Setup JsonMapper
             $responseClass = new Vehicle();
             $mapper = new JsonMapperExtension();
-            $mapper->bExceptionOnUndefinedProperty = true;
+            $mapper->bExceptionOnUndefinedProperty = $failOnUndefinedProperty;
             $mapper->bStrictObjectTypeChecking = true;
             $mapper->bExceptionOnMissingData = true;
             $mapper->bStrictNullTypes = true;
@@ -373,6 +374,9 @@ class Api extends BaseClass
             }
         } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
+            if (stristr($e->getMessage(), "JSON property") && stristr($e->getMessage(), "does not exist in object of type AtpCore\Api\Autotelex\Response")) {
+                return $this->mapVehicleResponse($response, false);
+            }
             return false;
         }
 

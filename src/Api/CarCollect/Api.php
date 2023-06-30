@@ -265,6 +265,7 @@ class Api extends BaseClass
             return $this->token;
         } catch (ClientException $e) {
             $this->setMessages($e->getMessage());
+            $this->setErrorData($e->getResponse()->getBody()->getContents());
             return false;
         }
     }
