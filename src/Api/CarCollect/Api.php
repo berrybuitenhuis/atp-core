@@ -57,9 +57,10 @@ class Api extends BaseClass
      * Get vehicle-data
      *
      * @param int $externalId
+     * @param boolean $maptoObject
      * @return Vehicle|object|bool
      */
-    public function getVehicle($externalId)
+    public function getVehicle($externalId, $maptoObject = true)
     {
         // Get token
         $token = $this->getToken();
@@ -78,7 +79,8 @@ class Api extends BaseClass
             $response = $this->getClient($token)->runQuery($query);
             $this->setOriginalResponse($response->getData());
             if ($this->debug) $this->log("response", "GetVehicle", json_encode($response->getData()));
-            return $this->mapVehicleResponse($response->getData()->getTradeDossier);
+            if ($maptoObject === false) return $response->getData()->getTradeDossier;
+            else return $this->mapVehicleResponse($response->getData()->getTradeDossier);
         } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
             return false;
