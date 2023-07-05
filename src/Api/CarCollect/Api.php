@@ -121,7 +121,7 @@ class Api extends BaseClass
             $amount = (int) $amount;
             // Override bid, not possible to have 0 for bid, otherwise receive error-message "Unprocessable Entity")
             if ($amount === 0) $amount = 1;
-            $comment = trim($comment);
+            $comment = preg_replace('/\s+/', ' ', trim($comment));
             $mutation = (new Mutation('createBidApi'))
                 ->setOperationName('createBidApi')
                 ->setVariables([
