@@ -148,6 +148,6 @@ class VehicleVariables
     public $isBtwVoertuig;
     /** @var string */
     public $kenteken;
-    /** @var integer|null */
+    /** @var integer */
 	public $kilometerstand;
 }
