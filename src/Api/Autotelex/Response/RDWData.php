@@ -88,7 +88,7 @@ class RDWData
     public $rdwLengteVoertuigMax;
     /** @var string|null */
     public $rdwMassaLedigVoertuig;
-    /** @var string */
+    /** @var string|null */
     public $rdwMassaRijklaar;
     /** @var string */
     public $rdwMaximaleConstructieSnelheid;
