@@ -28,6 +28,8 @@ class VehicleInfo
     public $autotelexKMStand;
     /** @var string|null */
     public $brandstof;
+    /** @var integer|null */
+    public $cargoVolume;
     /** @var integer */
     public $co2;
     /** @var integer */

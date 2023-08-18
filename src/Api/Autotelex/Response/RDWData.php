@@ -61,6 +61,8 @@ class RDWData
     /** @var string|null */
     public $rdwDatumEersteToelatingNationaal;
     /** @var string|null */
+    public $rdwDatumRegistratieGoedkeuring;
+    /** @var string|null */
     public $rdwDatumVervalApk;
     /** @var string */
     public $rdwEmissiecode;
@@ -104,6 +106,8 @@ class RDWData
     public $rdwNieuwPrijsBekend;
     /** @var boolean */
     public $rdwParallelImport;
+    /** @var boolean|null */
+    public $rdwTenaamstellenMogelijk;
     /** @var string */
     public $rdwUitvoeringscode;
     /** @var string */

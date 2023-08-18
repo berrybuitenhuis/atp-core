@@ -18,7 +18,7 @@ class Other
     public $digital_instruction_manual_present;
     /** @var integer */
     public $doors;
-    /** @var string|string */
+    /** @var string|null */
     public $drive;
     /** @var boolean */
     public $driveable;
