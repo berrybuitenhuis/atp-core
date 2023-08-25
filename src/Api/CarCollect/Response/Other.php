@@ -22,7 +22,7 @@ class Other
     public $drive;
     /** @var boolean */
     public $driveable;
-    /** @var integer */
+    /** @var integer|null */
     public $empty_weight;
     /** @var integer|null */
     public $engine_capacity;
