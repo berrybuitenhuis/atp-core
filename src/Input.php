@@ -113,9 +113,10 @@ class Input
      *
      * @param string $dataString example: test=1&test2=3&data=1+2
      * @param array|null $paramKeys parameter-keys
+     * @param boolean $addIfNotExists parameter-keys
      * @return array|object
      */
-    public static function formDecode($dataString, $paramKeys = null)
+    public static function formDecode($dataString, $paramKeys = null, $addIfNotExists = true)
     {
         if (empty($dataString)) {
             // Set empty parameter-list
@@ -130,7 +131,7 @@ class Input
 
         // Check if default parameter-keys available (set undefined keys to null)
         if (!empty($paramKeys)) {
-            $params = self::setInputParams($params, $paramKeys);
+            $params = self::setInputParams($params, $paramKeys, $addIfNotExists);
         }
 
         // Return
@@ -282,14 +283,20 @@ class Input
     /**
      * Set parameters by input
      *
-     * @param $params
+     * @param array $params
+     * @param array $params
+     * @param boolean $addIfNotExists
      * @return \stdClass
      */
-    public static function setInputParams($params, $paramKeys) {
-        // Parse variables into params (set undefined indexes to null)
+    public static function setInputParams($params, $paramKeys, $addIfNotExists) {
+        // Parse variables into params (set undefined indexes to null if $addIfNotExists is provided)
         $output = new \stdClass;
         foreach ($paramKeys AS $paramKey) {
-            $output->{$paramKey} = $params[$paramKey] ?? null;
+            if ($addIfNotExists === true) {
+                $output->{$paramKey} = $params[$paramKey] ?? null;
+            } elseif (array_key_exists($paramKey, $params)) {
+                $output->{$paramKey} = $params[$paramKey];
+            }
         }
 
         // Return
