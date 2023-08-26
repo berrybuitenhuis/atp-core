@@ -17,6 +17,7 @@ class TradeApi extends BaseClass
     private $debug;
     private $logger;
     private $originalResponse;
+    private $sessionId;
     private $token;
 
     /**
@@ -33,6 +34,8 @@ class TradeApi extends BaseClass
         // Set client
         $this->client = new Client(['base_uri'=>$hostname, 'http_errors'=>false, 'debug'=>$debug]);
         $this->debug = $debug;
+        $this->logger = $logger;
+        $this->sessionId = session_id();
 
         // Reset error-messages
         $this->resetErrors();
@@ -277,6 +280,18 @@ class TradeApi extends BaseClass
         } else {
             print("$message\n");
         }
+    }
+
+    /**
+     * Log message via custom log-function
+     *
+     * @param string $message
+     * @return void
+     */
+    private function logger($message)
+    {
+        $logger = $this->logger;
+        return $logger($message);
     }
 
     /**
