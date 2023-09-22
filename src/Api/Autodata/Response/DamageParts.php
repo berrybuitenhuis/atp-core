@@ -10,6 +10,6 @@ class DamageParts
     public $totalDamage;
     /** @var string */
     public $vatMargin;
-    /** @var string */
+    /** @var string|null */
     public $damageComments;
 }

@@ -68,6 +68,77 @@ class Date extends BaseClass
     }
 
     /**
+     * Convert month-name into numeric representation of a month
+     *
+     * @param string $monthName
+     * @return string
+     */
+    public static function convertMonthName($monthName)
+    {
+        switch (strtolower($monthName)) {
+            case "jan":
+            case "januari":
+            case "january":
+                $month = "01";
+                break;
+            case "feb":
+            case "februari":
+            case "february":
+                $month = "02";
+                break;
+            case "maart":
+            case "mar":
+            case "march":
+                $month = "03";
+                break;
+            case "apr":
+            case "april":
+                $month = "04";
+                break;
+            case "may":
+            case "mei":
+                $month = "05";
+                break;
+            case "jun":
+            case "juni":
+            case "june":
+                $month = "06";
+                break;
+            case "jul":
+            case "juli":
+            case "july":
+                $month = "07";
+                break;
+            case "aug":
+            case "augustus":
+            case "august":
+                $month = "08";
+                break;
+            case "sep":
+            case "september":
+                $month = "09";
+                break;
+            case "oct":
+            case "october":
+            case "okt":
+            case "oktober":
+                $month = "10";
+                break;
+            case "nov":
+            case "november":
+                $month = "11";
+                break;
+            case "dec":
+            case "december":
+                $month = "12";
+                break;
+        }
+
+        // Return
+        return $month;
+    }
+
+    /**
      * Calculate difference between dates (in specific unit)
      *
      * @param \DateTime $dateFuture

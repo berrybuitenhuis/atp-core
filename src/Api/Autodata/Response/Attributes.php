@@ -82,15 +82,13 @@ class Attributes
     public $transmission;
     /** @var string */
     public $trimPackage;
-
-
     /** @var string */
     public $averageConsumption;
     /** @var string */
     public $enginePowerKW;
     /** @var string */
     public $enginePowerHP;
-    /** @var string */
+    /** @var string|null */
     public $expectedIntakeDate;
     /** @var string */
     public $expectedMileage;

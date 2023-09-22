@@ -16,6 +16,6 @@ class AutoVin
     public $paintDescription;
     /** @var string */
     public $paintRendering;
-    /** @var string[] */
+    /** @var AutoVinOptions */
     public $options;
 }
