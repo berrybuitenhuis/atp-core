@@ -12,6 +12,6 @@ class DamageItem
     public $part;
     /** @var string */
     public $price;
-    /** @var string[] */
+    /** @var string[]|null */
     public $damagePhotos;
 }

@@ -4,7 +4,7 @@ namespace AtpCore\Api\Autodata\Response;
 
 class DamageParts
 {
-    /** @var DamageItem[] */
+    /** @var DamageItem[]|null */
     public $items;
     /** @var integer */
     public $totalDamage;

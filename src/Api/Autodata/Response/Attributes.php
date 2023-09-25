@@ -8,7 +8,7 @@ class Attributes
     public $make;
     /** @var DamageParts */
     public $damageParts;
-    /** @var string[] */
+    /** @var string[]|null */
     public $wokHistory;
     /** @var string */
     public $amountOfCilinders;
@@ -192,20 +192,20 @@ class Attributes
     public $emission;
     /** @var OwnerHistory[] */
     public $ownerHistory;
-    /** @var string */
+    /** @var string|null */
     public $atlCode;
     /** @var BcaState */
     public $bcaState;
     /** @var Inspection */
     public $inspection;
-    /** @var Option[] */
+    /** @var Option[]|null */
     public $options;
-    /** @var string[] */
+    /** @var Packet[]|null */
     public $packets;
-    /** @var string[] */
+    /** @var Accessory[]|null */
     public $accessories;
     /** @var Photo[] */
     public $photos;
-    /** @var string[] */
+    /** @var Photo[]|null */
     public $damagePhotos;
 }

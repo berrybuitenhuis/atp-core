@@ -112,6 +112,11 @@ class JsonMapperExtension extends JsonMapper {
             $key = $this->getSafeName($key);
             $providedProperties[$key] = true;
 
+            // Overwrite empty array into null
+            if (is_array($jvalue) && empty($jvalue)) {
+                $jvalue = null;
+            }
+
             // Store the property inspection results so we don't have to do it
             // again for subsequent objects of the same type
             if (!isset($this->arInspectedClasses[$strClassName][$key])) {

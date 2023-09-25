@@ -6,6 +6,6 @@ class AutoVinOptions
 {
     /** @var AutoVinOption[] */
     public $full;
-    /** @var AutoVinOption[] */
+    /** @var AutoVinOption[]|null */
     public $minimal;
 }
