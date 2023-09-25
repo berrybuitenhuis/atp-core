@@ -51,7 +51,8 @@ class Api extends BaseClass
 
             // Return
             if ($result->getStatusCode() === 200) {
-                return json_decode((string) $result->getBody());
+                $data = json_decode((string) $result->getBody());
+                return current($data);
             } else {
                 $this->setErrorData((string) $result->getBody());
                 $this->setMessages($result->getReasonPhrase());
