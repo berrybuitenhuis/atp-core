@@ -10,7 +10,7 @@ use GuzzleHttp\Client;
 class Api extends BaseClass
 {
 
-    private $host;
+    private $hostname;
     private $debug;
     private $password;
     private $sessionId;
@@ -19,14 +19,14 @@ class Api extends BaseClass
     /**
      * Constructor
      *
-     * @param string $host
+     * @param string $hostname
      * @param string $username
      * @param string $password
      * @param boolean $debug
      */
-    public function __construct($host, $username = null, $password = null, $debug = false)
+    public function __construct($hostname, $username = null, $password = null, $debug = false)
     {
-        $this->host = $host;
+        $this->hostname = $hostname;
         $this->sessionId = session_id();
         $this->username = $username;
         $this->password = $password;
