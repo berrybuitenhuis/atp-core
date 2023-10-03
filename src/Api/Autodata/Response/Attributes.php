@@ -190,7 +190,7 @@ class Attributes
     public $co2EmissionsAverage;
     /** @var string */
     public $emission;
-    /** @var OwnerHistory[] */
+    /** @var OwnerHistory[]|null */
     public $ownerHistory;
     /** @var string|null */
     public $atlCode;

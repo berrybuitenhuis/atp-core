@@ -10,7 +10,7 @@ class DamageItem
     public $repair;
     /** @var string */
     public $part;
-    /** @var string */
+    /** @var string|null */
     public $price;
     /** @var string[]|null */
     public $damagePhotos;
