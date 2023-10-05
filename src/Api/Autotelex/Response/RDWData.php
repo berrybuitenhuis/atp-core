@@ -121,6 +121,8 @@ class RDWData
     /** @var integer|null */
     public $rdwZitplaatsen;
     /** @var integer|null */
+    public $residualBpmAmountOnArrivalDate;
+    /** @var integer|null */
     public $restBpm;
     /** @var Status */
     public $status;
