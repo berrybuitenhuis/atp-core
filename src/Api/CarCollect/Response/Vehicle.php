@@ -30,7 +30,7 @@ class Vehicle
     public $createdAt;
     /** @var string */
     public $currency;
-    /** @var Damage[] */
+    /** @var Damage[]|null */
     public $damages;
     /** @var string[]|null */
     public $demand_countries;
@@ -76,7 +76,7 @@ class Vehicle
     public $power;
     /** @var string|null */
     public $rdw_euro_class;
-    /** @var RdwHistory[] */
+    /** @var RdwHistory[]|null */
     public $rdw_history;
     /** @var integer|null */
     public $rdw_max_mass;

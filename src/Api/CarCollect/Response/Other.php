@@ -28,15 +28,15 @@ class Other
     public $engine_capacity;
     /** @var string|null */
     public $external_notes;
-    /** @var string[] */
+    /** @var string[]|null */
     public $factory_options;
     /** @var string */
     public $first_registration;
     /** @var integer|null */
     public $gears;
-    /** @var boolean */
+    /** @var boolean|null */
     public $import_other_continent;
-    /** @var boolean */
+    /** @var boolean|null */
     public $import_vehicle;
     /** @var string|null */
     public $inspection_report_url;
@@ -64,7 +64,7 @@ class Other
     public $tax_gross;
     /** @var integer|null */
     public $tax_rest;
-    /** @var boolean */
+    /** @var boolean|null */
     public $taxi;
     /** @var integer|null */
     public $trade_value_average_retail;

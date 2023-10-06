@@ -22,7 +22,7 @@ class Interior
     public $interior_condition;
     /** @var boolean */
     public $interior_damage_free;
-    /** @var string[] */
+    /** @var string[]|null */
     public $interior_extra_options;
     /** @var string|null */
     public $interior_notes;

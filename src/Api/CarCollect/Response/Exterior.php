@@ -12,7 +12,7 @@ class Exterior
     public $exterior_condition;
     /** @var boolean */
     public $exterior_damage_free;
-    /** @var string[] */
+    /** @var string[]|null */
     public $exterior_extra_options;
     /** @var string|null */
     public $exterior_notes;
