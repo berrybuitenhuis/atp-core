@@ -32,9 +32,9 @@ class Attributes
     public $engineCapacity;
     /** @var string */
     public $consumerPrice;
-    /** @var string */
+    /** @var string|null */
     public $datePart1a;
-    /** @var string */
+    /** @var string|null */
     public $datePart1b;
     /** @var string */
     public $firstAdmission;
