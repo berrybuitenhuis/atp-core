@@ -204,7 +204,7 @@ class Attributes
     public $packets;
     /** @var Accessory[]|null */
     public $accessories;
-    /** @var Photo[] */
+    /** @var Photo[]|null */
     public $photos;
     /** @var Photo[]|null */
     public $damagePhotos;
