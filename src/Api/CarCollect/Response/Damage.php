@@ -20,6 +20,6 @@ class Damage
     public $type;
     /** @var boolean */
     public $visible_for_trader;
-    /** @var Image[] */
+    /** @var Image[]|null */
     public $images;
 }
