@@ -24,7 +24,7 @@ class SFTP
             // Add file to list
             $list[] = [
                 "file" =>$file,
-                "created" => sprintf("%19s", $this->client->filemtime($directory ."/" . $file)),
+                "created" => new \DateTime($this->client->filemtime($directory ."/" . $file)),
                 "size" => sprintf("%.2f", $this->client->filesize($directory ."/" . $file)),
             ];
         }
