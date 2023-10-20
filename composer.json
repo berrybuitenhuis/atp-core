@@ -26,6 +26,7 @@
         "messagebird/php-rest-api": "^v2.1",
         "netresearch/jsonmapper": "^4.1",
         "php-http/curl-client": "^2.2",
+        "phpseclib/phpseclib": "^3.0",
         "spatie/image-optimizer": "^1.5",
         "twig/twig": "^v3.3",
         "unleash/client": "v1.7.073"
