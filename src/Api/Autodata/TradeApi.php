@@ -52,6 +52,36 @@ class TradeApi extends BaseClass
     }
 
     /**
+     * Check if vehicle allowed in ASPRO-request
+     *
+     * @param int $externalId
+     * @return bool
+     */
+    public function isAllowed($externalId) {
+        try {
+            // Get vehicle
+            $requestHeader = $this->clientHeaders;
+            $result = $this->client->get('bid/' . $externalId . "/vehicle", ['headers' => $requestHeader]);
+            $response = json_decode((string)$result->getBody());
+            if ($this->debug) $this->log("response", "GetVehicle", json_encode($response));
+            $this->setOriginalResponse($response);
+
+            // Return
+            if (!isset($response->errors) || empty($response->errors)) {
+                return true;
+            } else {
+                if ($response->error === "You are not authorized to use the given resource with the given credentials.") {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        } catch (\Exception $e) {
+            return true;
+        }
+    }
+
+    /**
      * Get (current) bid from ASPRO-request
      *
      * @param int $externalId
