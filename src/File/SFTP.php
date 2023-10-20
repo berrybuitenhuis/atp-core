@@ -22,11 +22,10 @@ class SFTP
             if ($this->client->is_dir($file) == "dir") continue;
 
             // Add file to list
-            $modTime = '';
             $list[] = [
                 "file" =>$file,
-                "created" => $modTime,
-                "filesize" => sprintf("%.2f", $this->client->size($file)),
+                "created" => sprintf("%19s", $this->client->filemtime($directory ."/" . $file)),
+                "size" => sprintf("%.2f", $this->client->filesize($directory ."/" . $file)),
             ];
         }
 
