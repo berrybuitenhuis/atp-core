@@ -63,6 +63,31 @@ class Input
     }
 
     /**
+     * Convert XML-object (SimpleXMLElement) into object
+     *
+     * @param \SimpleXMLElement $data
+     * @return object
+     */
+    public static function convertXML($data)
+    {
+        // Iterate data
+        $data = self::convertXMLData($data);
+        foreach (get_object_vars($data) AS $key => $value) {
+            // Replace empty object into null
+            if ($value instanceOf \stdClass && empty((array) $value)) $data->$key = null;
+            // Replace string false into boolean
+            elseif (is_string($value) && strtolower($value) === "false") $data->$key = false;
+            // Replace string true into boolean
+            elseif (is_string($value) && strtolower($value) === "true") $data->$key = true;
+            // Replace empty string into null
+            elseif (is_string($value) && empty($value)) $data->$key = null;
+        }
+
+        // Return
+        return $data;
+    }
+
+    /**
      * Find (longest) match of strings
      *
      * @param string $string
@@ -365,5 +390,62 @@ class Input
 
         // Return stripslashed-value of $var
         return stripslashes($var);
+    }
+
+    /**
+     * Convert SimpleXMLElement-object into object
+     *
+     * @param \SimpleXMLElement|object|array $data
+     * @return object
+     */
+    private static function convertXMLData($data)
+    {
+        $output = new \stdClass();
+        $values = (is_object($data)) ? get_object_vars($data) : $data;
+        foreach ($values AS $key => $value) {
+            if (is_array($value)) $output->$key = self::convertXMLData($value);
+            elseif (is_object($value) && !empty($value)) $output->$key = self::convertXMLData($value);
+            else {
+                if (preg_match("/^[0-9]*$/i", $key) && $key == intval($key)) {
+                    if (is_object($output) && empty((array) $output)) $output = [];
+                    $output[] = self::convertXMLValue($value);
+                } else {
+                    $output->$key = self::convertXMLValue($value);
+                }
+            }
+
+            // Check for value-attributes (only for SimpleXMLElement-object)
+            if (gettype($data->$key) === 'object' && get_class($data->key) === 'SimpleXMLElement') {
+                $attributes = $data->$key->attributes();
+                if (!empty($attributes)) {
+                    foreach ($attributes as $k => $v) {
+                        $output->{$key . "_" . $k} = self::convertXMLValue($v);
+                    }
+                }
+            }
+        }
+
+        // Return
+        return $output;
+    }
+
+    /**
+     * Convert SimpleXMLElement-value into primitive
+     *
+     * @param \SimpleXMLElement $value
+     * @return int|string
+     */
+    private static function convertXMLValue($value)
+    {
+        // Check for null-value or empty object
+        if ($value === null) return $value;
+        elseif (is_object($value) && empty($value)) return null;
+
+        $stringValue = (string) $value;
+        $intValue = (int) $value;
+        if ($stringValue === (string) $intValue && strlen($stringValue) == strlen($intValue)) {
+            return $intValue;
+        }
+        return $stringValue;
     }
 }

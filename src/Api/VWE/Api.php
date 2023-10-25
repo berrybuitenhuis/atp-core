@@ -89,23 +89,23 @@ class Api extends BaseClass
             // Check for valid status-code
             if ($result->code == "00") {
                 $data = new \stdClass();
-                if (isset($responseData->rubrieken->rdwInfoCheck)) $data->rdwInfoCheck = $this->convertXMLObject($responseData->rubrieken->rdwInfoCheck->children('http://www.xmlmode.nl/interdata/rdw'));
-                if (isset($responseData->rubrieken->rdwEigenaarCheck)) $data->rdwEigenaarCheck = $this->convertXMLObject($responseData->rubrieken->rdwEigenaarCheck->children('http://www.xmlmode.nl/interdata/rdw'));
-                if (isset($responseData->rubrieken->rdwInfoBasic)) $data->rdwInfoBasic = $this->convertXMLObject($responseData->rubrieken->rdwInfoBasic->children('http://www.xmlmode.nl/interdata/rdw'));
-                if (isset($responseData->rubrieken->rdwInfoAdvanced)) $data->rdwInfoAdvanced = $this->convertXMLObject($responseData->rubrieken->rdwInfoAdvanced->children('http://www.xmlmode.nl/interdata/rdw'));
-                if (isset($responseData->rubrieken->milieuInfoBasic)) $data->milieuInfoBasic = $this->convertXMLObject($responseData->rubrieken->milieuInfoBasic->children('http://www.xmlmode.nl/interdata/milieu'));
-                if (isset($responseData->rubrieken->rdwHistInfoAdvanced)) $data->rdwHistInfoAdvanced = $this->convertXMLObject($responseData->rubrieken->rdwHistInfoAdvanced->children('http://www.xmlmode.nl/interdata/rdw'));
-                if (isset($responseData->rubrieken->rdwStatusHistorie)) $data->rdwStatusHistorie = $this->convertXMLObject($responseData->rubrieken->rdwStatusHistorie->children('http://www.xmlmode.nl/interdata/rdw'));
-                if (isset($responseData->rubrieken->rdwInfoEtg)) $data->rdwInfoEtg = $this->convertXMLObject($responseData->rubrieken->rdwInfoEtg->children('http://www.xmlmode.nl/interdata/rdw'));
-                if (isset($responseData->rubrieken->atlTechInfoAdvanced)) $data->atlTechInfoAdvanced = $this->convertXMLObject($responseData->rubrieken->atlTechInfoAdvanced->children('http://www.xmlmode.nl/interdata/atl'));
-                if (isset($responseData->rubrieken->atlPriceInfoBasic)) $data->atlPriceInfoBasic = $this->convertXMLObject($responseData->rubrieken->atlPriceInfoBasic->children('http://www.xmlmode.nl/interdata/atl'));
-                if (isset($responseData->rubrieken->atlTransmissie)) $data->atlTransmissie = $this->convertXMLObject($responseData->rubrieken->atlTransmissie->children('http://www.xmlmode.nl/interdata/atl'));
-                if (isset($responseData->rubrieken->atlFoto)) $data->atlFoto = $this->convertXMLObject($responseData->rubrieken->atlFoto->children('http://www.xmlmode.nl/interdata/atl'));
-                if (isset($responseData->rubrieken->atlOptieStandaard)) $data->atlOptieStandaard = $this->convertXMLObject($responseData->rubrieken->atlOptieStandaard->children('http://www.xmlmode.nl/interdata/atl'));
-                if (isset($responseData->rubrieken->atlOptieFabriek)) $data->atlOptieFabriek = $this->convertXMLObject($responseData->rubrieken->atlOptieFabriek->children('http://www.xmlmode.nl/interdata/atl'));
-                if (isset($responseData->rubrieken->atlOptiePakket)) $data->atlOptiePakket = $this->convertXMLObject($responseData->rubrieken->atlOptiePakket->children('http://www.xmlmode.nl/interdata/atl'));
-                if (isset($responseData->rubrieken->atlMmtInfo)) $data->atlMmtInfo = $this->convertXMLObject($responseData->rubrieken->atlMmtInfo->children('http://www.xmlmode.nl/interdata/atl'));
-                if (isset($responseData->rubrieken->rdwOkrCheck)) $data->rdwOkrCheck = $this->convertXMLObject($responseData->rubrieken->rdwOkrCheck->children('http://www.xmlmode.nl/interdata/rdw'));
+                if (isset($responseData->rubrieken->rdwInfoCheck)) $data->rdwInfoCheck = \AtpCore\Input::convertXML($responseData->rubrieken->rdwInfoCheck->children('http://www.xmlmode.nl/interdata/rdw'));
+                if (isset($responseData->rubrieken->rdwEigenaarCheck)) $data->rdwEigenaarCheck = \AtpCore\Input::convertXML($responseData->rubrieken->rdwEigenaarCheck->children('http://www.xmlmode.nl/interdata/rdw'));
+                if (isset($responseData->rubrieken->rdwInfoBasic)) $data->rdwInfoBasic = \AtpCore\Input::convertXML($responseData->rubrieken->rdwInfoBasic->children('http://www.xmlmode.nl/interdata/rdw'));
+                if (isset($responseData->rubrieken->rdwInfoAdvanced)) $data->rdwInfoAdvanced = \AtpCore\Input::convertXML($responseData->rubrieken->rdwInfoAdvanced->children('http://www.xmlmode.nl/interdata/rdw'));
+                if (isset($responseData->rubrieken->milieuInfoBasic)) $data->milieuInfoBasic = \AtpCore\Input::convertXML($responseData->rubrieken->milieuInfoBasic->children('http://www.xmlmode.nl/interdata/milieu'));
+                if (isset($responseData->rubrieken->rdwHistInfoAdvanced)) $data->rdwHistInfoAdvanced = \AtpCore\Input::convertXML($responseData->rubrieken->rdwHistInfoAdvanced->children('http://www.xmlmode.nl/interdata/rdw'));
+                if (isset($responseData->rubrieken->rdwStatusHistorie)) $data->rdwStatusHistorie = \AtpCore\Input::convertXML($responseData->rubrieken->rdwStatusHistorie->children('http://www.xmlmode.nl/interdata/rdw'));
+                if (isset($responseData->rubrieken->rdwInfoEtg)) $data->rdwInfoEtg = \AtpCore\Input::convertXML($responseData->rubrieken->rdwInfoEtg->children('http://www.xmlmode.nl/interdata/rdw'));
+                if (isset($responseData->rubrieken->atlTechInfoAdvanced)) $data->atlTechInfoAdvanced = \AtpCore\Input::convertXML($responseData->rubrieken->atlTechInfoAdvanced->children('http://www.xmlmode.nl/interdata/atl'));
+                if (isset($responseData->rubrieken->atlPriceInfoBasic)) $data->atlPriceInfoBasic = \AtpCore\Input::convertXML($responseData->rubrieken->atlPriceInfoBasic->children('http://www.xmlmode.nl/interdata/atl'));
+                if (isset($responseData->rubrieken->atlTransmissie)) $data->atlTransmissie = \AtpCore\Input::convertXML($responseData->rubrieken->atlTransmissie->children('http://www.xmlmode.nl/interdata/atl'));
+                if (isset($responseData->rubrieken->atlFoto)) $data->atlFoto = \AtpCore\Input::convertXML($responseData->rubrieken->atlFoto->children('http://www.xmlmode.nl/interdata/atl'));
+                if (isset($responseData->rubrieken->atlOptieStandaard)) $data->atlOptieStandaard = \AtpCore\Input::convertXML($responseData->rubrieken->atlOptieStandaard->children('http://www.xmlmode.nl/interdata/atl'));
+                if (isset($responseData->rubrieken->atlOptieFabriek)) $data->atlOptieFabriek = \AtpCore\Input::convertXML($responseData->rubrieken->atlOptieFabriek->children('http://www.xmlmode.nl/interdata/atl'));
+                if (isset($responseData->rubrieken->atlOptiePakket)) $data->atlOptiePakket = \AtpCore\Input::convertXML($responseData->rubrieken->atlOptiePakket->children('http://www.xmlmode.nl/interdata/atl'));
+                if (isset($responseData->rubrieken->atlMmtInfo)) $data->atlMmtInfo = \AtpCore\Input::convertXML($responseData->rubrieken->atlMmtInfo->children('http://www.xmlmode.nl/interdata/atl'));
+                if (isset($responseData->rubrieken->rdwOkrCheck)) $data->rdwOkrCheck = \AtpCore\Input::convertXML($responseData->rubrieken->rdwOkrCheck->children('http://www.xmlmode.nl/interdata/rdw'));
 
                 return $data;
             } else {
@@ -126,75 +126,6 @@ class Api extends BaseClass
     public function getOriginalResponse()
     {
         return $this->originalResponse;
-    }
-
-    /**
-     * Convert SimpleXMLElement-object into object
-     *
-     * @param \SimpleXMLElement|object|array $data
-     * @return object
-     */
-    private function convertData($data)
-    {
-        $output = new \stdClass();
-        $values = (is_object($data)) ? get_object_vars($data) : $data;
-        foreach ($values AS $key => $value) {
-            if (is_array($value)) $output->$key = self::convertData($value);
-            elseif (is_object($value)) $output->$key = self::convertData($value);
-            $output->$key = self::convertValue($value);
-
-            // Check for value-attributes
-            $attributes = $data->$key->attributes();
-            if (!empty($attributes)) {
-                foreach ($attributes AS $k => $v) {
-                    $output->{$key . "_" . $k} = self::convertValue($v);
-                }
-            }
-        }
-
-        // Return
-        return $output;
-    }
-
-    /**
-     * Convert received data into object
-     *
-     * @param \SimpleXMLElement $data
-     * @return object
-     */
-    private function convertXMLObject($data)
-    {
-        // Iterate data
-        $data = self::convertData($data);
-        foreach (get_object_vars($data) AS $key => $value) {
-            // Replace empty object into null
-            if ($value instanceOf \stdClass && empty((array) $value)) $data->$key = null;
-            // Replace string false into boolean
-            elseif (is_string($value) && strtolower($value) === "false") $data->$key = false;
-            // Replace string true into boolean
-            elseif (is_string($value) && strtolower($value) === "true") $data->$key = true;
-            // Replace empty string into null
-            elseif (is_string($value) && empty($value)) $data->$key = null;
-        }
-
-        // Return
-        return $data;
-    }
-
-    /**
-     * Convert SimpleXMLElement-value into primitive
-     *
-     * @param \SimpleXMLElement $value
-     * @return int|string
-     */
-    private function convertValue($value)
-    {
-        $stringValue = (string) $value;
-        $intValue = (int) $value;
-        if ($stringValue === (string) $intValue && strlen($stringValue) == strlen($intValue)) {
-            return $intValue;
-        }
-        return $stringValue;
     }
 
     /**
