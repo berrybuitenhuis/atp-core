@@ -8,15 +8,15 @@ class Additional
     public $airco;
     /** @var string */
     public $bandensoort;
-    /** @var bool|null */
+    /** @var integer|null */
     public $dierengeur;
-    /** @var bool|null */
+    /** @var integer|null */
     public $distributieriem;
     /** @var string */
     public $exterieur;
     /** @var string */
     public $extrabanden;
-    /** @var bool|null */
+    /** @var integer|null */
     public $instructieboekjes;
     /** @var string */
     public $interieur;
@@ -30,15 +30,15 @@ class Additional
     public $motorisch;
     /** @var string */
     public $onderhoud;
-    /** @var bool|null */
+    /** @var integer|null */
     public $storingsvrij;
-    /** @var bool|null */
+    /** @var integer|null */
     public $onderhoudboekjes;
     /** @var string */
     public $opmerkingen;
     /** @var integer */
     public $restbpm;
-    /** @var bool|null */
+    /** @var integer|null */
     public $rookgeur;
     /** @var string */
     public $staat;

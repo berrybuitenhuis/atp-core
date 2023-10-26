@@ -82,11 +82,11 @@ class Vehicle
     public $basiskleur;
     /** @var string|null */
     public $interieurkleur;
-    /** @var string */
+    /** @var string|null */
     public $interieur;
     /** @var string */
     public $btwmarge;
-    /** @var integer */
+    /** @var integer|null */
     public $showroomvraagprijs;
     /** @var integer */
     public $rijklaarmaakkosten;
@@ -142,15 +142,15 @@ class Vehicle
     public $energielabel;
     /** @var integer|null */
     public $co2_uitstoot;
-    /** @var integer|null */
-    public $roetdeeltjes;
     /** @var string|null */
+    public $roetdeeltjes;
+    /** @var integer|null */
     public $bijtellingspercentage;
     /** @var string */
     public $soort;
     /** @var Additional */
     public $additional;
-    /** @var string[]|null */
+    /** @var Images|null */
     public $fotos;
     /** @var Accessories|null */
     public $accessoires;
