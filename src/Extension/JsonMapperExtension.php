@@ -393,7 +393,7 @@ class JsonMapperExtension extends JsonMapper {
         }
 
         // Validate data-type
-        $valid = $expectedType == $dataType;
+        $valid = ($expectedType == $dataType || ($expectedType == "mixed" && in_array($dataType, ["integer","string"])));
         if ($valid === false) {
             $this->addMessage("Invalid data-type for $name (expected: $expectedType, actual: $dataType)");
         }

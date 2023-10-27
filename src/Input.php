@@ -396,19 +396,40 @@ class Input
      * Convert SimpleXMLElement-object into object
      *
      * @param \SimpleXMLElement|object|array $data
+     * @param bool $forceArray
      * @return object
      */
-    private static function convertXMLData($data)
+    private static function convertXMLData($data, $forceArray = false)
     {
         $output = new \stdClass();
         $values = (is_object($data)) ? get_object_vars($data) : $data;
         foreach ($values AS $key => $value) {
             if (is_array($value)) $output->$key = self::convertXMLData($value);
-            elseif (is_object($value) && !empty($value)) $output->$key = self::convertXMLData($value);
+            elseif (is_object($value) && !empty($value)) {
+                // If element has only 1 property and this is not an array -> force it
+                if (count((array) $value) == 1) {
+                    // Force property to be an array for only 1 value
+                    $properties = array_keys(get_object_vars($value));
+                    if (count((array) $value->{$properties[0]}) == 1) $forceArray = true;
+
+                    // Force element to be an array if converted value is an object
+                    $convertedValue = self::convertXMLData($value, $forceArray);
+                    $convertedValueProperty = $convertedValue->{$properties[0]};
+                    if (gettype($convertedValueProperty) == "object") {
+                        $convertedValue = new \stdClass();
+                        $convertedValue->{$properties[0]} = [$convertedValueProperty];
+                    }
+                    $output->$key = $convertedValue;
+                } else {
+                    $output->$key = self::convertXMLData($value);
+                }
+            }
             else {
                 if (preg_match("/^[0-9]*$/i", $key) && $key == intval($key)) {
                     if (is_object($output) && empty((array) $output)) $output = [];
                     $output[] = self::convertXMLValue($value);
+                } elseif ($forceArray === true) {
+                    $output->$key = [self::convertXMLValue($value)];
                 } else {
                     $output->$key = self::convertXMLValue($value);
                 }

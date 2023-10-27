@@ -8,7 +8,7 @@ class Vehicle
     public $actie;
     /** @var string */
     public $ucc_auto_id;
-    /** @var string */
+    /** @var mixed */
     public $source;
     /** @var integer */
     public $bedrijf_id;
@@ -34,7 +34,7 @@ class Vehicle
     public $merk;
     /** @var string */
     public $type;
-    /** @var string */
+    /** @var mixed */
     public $model;
     /** @var string */
     public $modelvan;
@@ -54,7 +54,7 @@ class Vehicle
     public $tellerstand;
     /** @var string */
     public $tellersoort;
-    /** @var integer|null */
+    /** @var string|null */
     public $afleesdatumtellerstand;
     /** @var string|null */
     public $vin;
@@ -76,7 +76,7 @@ class Vehicle
     public $wegenbelastingmax;
     /** @var string|null */
     public $kleur;
-    /** @var integer */
+    /** @var integer|null */
     public $metallic;
     /** @var string */
     public $basiskleur;
@@ -88,7 +88,7 @@ class Vehicle
     public $btwmarge;
     /** @var integer|null */
     public $showroomvraagprijs;
-    /** @var integer */
+    /** @var integer|null */
     public $rijklaarmaakkosten;
     /** @var integer */
     public $nieuwprijs;
@@ -106,7 +106,7 @@ class Vehicle
     public $teruggerekendebtwnieuwprijs;
     /** @var integer */
     public $teruggerekendenettocatalogusprijs;
-    /** @var integer */
+    /** @var integer|null */
     public $bpm_cat;
     /** @var string */
     public $invoerdatum;
@@ -132,11 +132,11 @@ class Vehicle
     public $verbruik_stad;
     /** @var string|null */
     public $verbruik_snelweg;
-    /** @var integer */
+    /** @var integer|null */
     public $trekgewicht_geremd;
-    /** @var integer */
+    /** @var integer|null */
     public $trekgewicht_ongeremd;
-    /** @var integer */
+    /** @var integer|null */
     public $sleutels;
     /** @var string|null */
     public $energielabel;
@@ -154,4 +154,6 @@ class Vehicle
     public $fotos;
     /** @var Accessories|null */
     public $accessoires;
+    /** @var Damages|null */
+    public $schades;
 }

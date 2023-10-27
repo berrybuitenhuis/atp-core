@@ -36,7 +36,7 @@ class Additional
     public $onderhoudboekjes;
     /** @var string */
     public $opmerkingen;
-    /** @var integer */
+    /** @var integer|null */
     public $restbpm;
     /** @var integer|null */
     public $rookgeur;
