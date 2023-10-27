@@ -106,6 +106,8 @@ class VehicleVariables
     public $physicalOrOnline;
     /** @var integer|null */
     public $registeredInCountry;
+    /** @var string|null */
+    public $registeredInCountryIso3166;
 	/** @var ReportUrl */
     public $reportURLs;
     /** @var Requester */
