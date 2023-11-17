@@ -14,11 +14,11 @@ class Vehicle
     public $bedrijf_id;
     /** @var string */
     public $bedrijfsnaam;
-    /** @var string */
+    /** @var string|null */
     public $contactpersoon;
     /** @var string */
     public $straat;
-    /** @var integer */
+    /** @var mixed */
     public $huisnr;
     /** @var string */
     public $postcode;
@@ -84,7 +84,7 @@ class Vehicle
     public $interieurkleur;
     /** @var string|null */
     public $interieur;
-    /** @var string */
+    /** @var string|null */
     public $btwmarge;
     /** @var integer|null */
     public $showroomvraagprijs;
@@ -92,7 +92,7 @@ class Vehicle
     public $rijklaarmaakkosten;
     /** @var integer */
     public $nieuwprijs;
-    /** @var integer */
+    /** @var integer|null */
     public $bpm;
     /** @var integer */
     public $consumentenprijs;
@@ -146,7 +146,7 @@ class Vehicle
     public $roetdeeltjes;
     /** @var integer|null */
     public $bijtellingspercentage;
-    /** @var string */
+    /** @var string|null */
     public $soort;
     /** @var Additional */
     public $additional;

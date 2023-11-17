@@ -6,7 +6,7 @@ class Damage
 {
     /** @var string */
     public $soort;
-    /** @var string */
+    /** @var string|null */
     public $locatie;
     /** @var integer */
     public $kosten;

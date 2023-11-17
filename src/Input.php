@@ -8,7 +8,7 @@ class Input
     /**
      * Check if array (values in array) start with capital
      * @param array $data
-     * @return array
+     * @return bool
      */
     public static function containsCapitalizedValue($data) {
         return !empty(array_filter($data, function($var) { return preg_match("/^[A-Z]{1}/", $var); }));
@@ -92,7 +92,7 @@ class Input
      *
      * @param string $string
      * @param string $otherString
-     * @param booolean $completeWords
+     * @param boolean $completeWords
      * @return string
      */
     public static function findMatch($string, $otherString, $completeWords = false)
@@ -179,7 +179,7 @@ class Input
      * @param array $array
      * @return boolean
      */
-    public function isAssocArray($array)
+    public static function isAssocArray($array)
     {
         if (empty($array)) return false;
         return (array_keys($array) !== range(0, count($array)-1));
@@ -361,6 +361,8 @@ class Input
      */
     public static function sortArrayByKey($array, $order)
     {
+        if (!is_array($array)) return $array;
+
         uksort($array, function($a, $b) use($order) {
             foreach($order as $value){
                 if ($a == $value) return 0;
@@ -404,8 +406,21 @@ class Input
         $output = new \stdClass();
         $values = (is_object($data)) ? get_object_vars($data) : $data;
         foreach ($values AS $key => $value) {
-            if (is_array($value)) $output->$key = self::convertXMLData($value);
-            elseif (is_object($value) && !empty($value)) {
+            if (is_array($value)) {
+                // If element is not associative array (but sequential) avoid numeric element-keys (but respect sequential array)
+                if (self::isAssocArray($value) === false) {
+                    $output->$key = [];
+                    foreach ($value AS $v) {
+                        if (is_object($v) || is_array($v)) {
+                            $output->$key[] = self::convertXMLData($v);
+                        } else {
+                            $output->$key[] = self::convertXMLValue($v);
+                        }
+                    }
+                } else {
+                    $output->$key = self::convertXMLData($value);
+                }
+            } elseif (is_object($value) && !empty($value)) {
                 // If element has only 1 property and this is not an array -> force it
                 if (count((array) $value) == 1) {
                     // Force property to be an array for only 1 value
