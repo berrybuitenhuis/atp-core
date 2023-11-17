@@ -6,7 +6,7 @@ class Vehicle
 {
     /** @var string */
     public $actie;
-    /** @var string */
+    /** @var mixed */
     public $ucc_auto_id;
     /** @var mixed */
     public $source;
