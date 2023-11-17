@@ -42,7 +42,7 @@ class Vehicle
     public $modeltot;
     /** @var string */
     public $inrichting;
-    /** @var integer */
+    /** @var integer|null */
     public $deuren;
     /** @var string */
     public $transmissie;
