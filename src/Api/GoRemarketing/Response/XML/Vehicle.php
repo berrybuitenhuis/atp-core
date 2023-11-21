@@ -64,22 +64,22 @@ class Vehicle
     public $vermogensoort;
     /** @var integer|null */
     public $versnellingen;
-    /** @var integer */
+    /** @var integer|null */
     public $cilinderinhoud;
-    /** @var integer */
-    public $aantalcylinders;
-    /** @var integer */
+    /** @var integer|null */
+    public $aantalCylinders;
+    /** @var integer|null */
     public $gewicht;
-    /** @var integer */
-    public $wegenbelastingmin;
-    /** @var integer */
-    public $wegenbelastingmax;
+    /** @var integer|null */
+    public $wegenbelastingMin;
+    /** @var integer|null */
+    public $wegenbelastingMax;
     /** @var string|null */
     public $kleur;
     /** @var integer|null */
     public $metallic;
-    /** @var string */
-    public $basiskleur;
+    /** @var string|null */
+    public $basisKleur;
     /** @var string|null */
     public $interieurkleur;
     /** @var string|null */
@@ -94,36 +94,36 @@ class Vehicle
     public $nieuwprijs;
     /** @var integer|null */
     public $bpm;
-    /** @var integer */
+    /** @var integer|null */
     public $consumentenprijs;
-    /** @var integer */
-    public $btwwaarde;
-    /** @var integer */
-    public $nettocatalogusprijs;
-    /** @var integer */
-    public $teruggerekendecatalogusprijs;
-    /** @var integer */
-    public $teruggerekendebtwnieuwprijs;
-    /** @var integer */
-    public $teruggerekendenettocatalogusprijs;
+    /** @var integer|null */
+    public $btwWaarde;
+    /** @var integer|null */
+    public $nettoCatalogusprijs;
+    /** @var integer|null */
+    public $teruggerekendeCatalogusprijs;
+    /** @var integer|null */
+    public $teruggerekendeBtwNieuwprijs;
+    /** @var integer|null */
+    public $teruggerekendeNettoCatalogusprijs;
     /** @var integer|null */
     public $bpm_cat;
     /** @var string */
-    public $invoerdatum;
-    /** @var string */
-    public $binnenkomstdatum;
-    /** @var string */
-    public $inkoopdatum;
+    public $invoerDatum;
+    /** @var string|null */
+    public $binnenkomstDatum;
+    /** @var string|null */
+    public $inkoopDatum;
     /** @var string */
     public $land;
     /** @var string */
     public $lokatie;
-    /** @var string */
-    public $eerste_toelating;
-    /** @var string */
-    public $datumdeel1;
     /** @var string|null */
-    public $datumdeel2;
+    public $eerste_toelating;
+    /** @var string|null */
+    public $datumDeel1;
+    /** @var string|null */
+    public $datumDeel2;
     /** @var string|null */
     public $emissieklasse;
     /** @var string|null */
