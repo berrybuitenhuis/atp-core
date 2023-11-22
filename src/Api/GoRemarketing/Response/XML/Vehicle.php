@@ -32,7 +32,7 @@ class Vehicle
     public $kenteken;
     /** @var string */
     public $merk;
-    /** @var string */
+    /** @var mixed */
     public $type;
     /** @var mixed */
     public $model;
@@ -40,7 +40,7 @@ class Vehicle
     public $modelvan;
     /** @var string */
     public $modeltot;
-    /** @var string */
+    /** @var string|null */
     public $inrichting;
     /** @var integer|null */
     public $deuren;
@@ -56,7 +56,7 @@ class Vehicle
     public $tellersoort;
     /** @var string|null */
     public $afleesdatumtellerstand;
-    /** @var string|null */
+    /** @var mixed|null */
     public $vin;
     /** @var integer|null */
     public $vermogen;
@@ -90,7 +90,7 @@ class Vehicle
     public $showroomvraagprijs;
     /** @var integer|null */
     public $rijklaarmaakkosten;
-    /** @var integer */
+    /** @var integer|null */
     public $nieuwprijs;
     /** @var integer|null */
     public $bpm;
@@ -124,7 +124,7 @@ class Vehicle
     public $datumDeel1;
     /** @var string|null */
     public $datumDeel2;
-    /** @var string|null */
+    /** @var mixed|null */
     public $emissieklasse;
     /** @var string|null */
     public $verbruik;

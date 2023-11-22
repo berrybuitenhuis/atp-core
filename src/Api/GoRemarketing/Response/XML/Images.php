@@ -4,6 +4,6 @@ namespace AtpCore\Api\GoRemarketing\Response\XML;
 
 class Images
 {
-    /** @var string[] */
+    /** @var string[]|null */
     public $foto;
 }

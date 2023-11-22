@@ -4,13 +4,13 @@ namespace AtpCore\Api\GoRemarketing\Response\XML;
 
 class Damage
 {
-    /** @var string */
+    /** @var string|null */
     public $soort;
     /** @var string|null */
     public $locatie;
     /** @var integer */
     public $kosten;
-    /** @var string */
+    /** @var mixed|null */
     public $omschrijving;
     /** @var Images */
     public $fotos;

@@ -34,7 +34,7 @@ class Additional
     public $storingsvrij;
     /** @var integer|null */
     public $onderhoudboekjes;
-    /** @var mixed */
+    /** @var mixed|null */
     public $opmerkingen;
     /** @var integer|null */
     public $restbpm;
