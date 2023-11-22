@@ -47,14 +47,17 @@ class SFTP extends BaseClass
      * Get list of files in remote directory
      *
      * @param string $directory
+     * @param string $orderBy
+     * @param string $orderDirection
      * @return array|false
      */
-    public function getFiles($directory) {
+    public function getFiles($directory, $orderBy = "mtime", $orderDirection = SORT_DESC) {
         // Setup connection
         $client = $this->connect();
         if ($client === false) return false;
 
         // Get files from directory
+        $client->setListOrder($orderBy, $orderDirection);
         $files = $client->nlist($directory);
 
         // Iterate files
