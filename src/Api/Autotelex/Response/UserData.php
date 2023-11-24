@@ -21,6 +21,8 @@ class UserData
     /** @var string|null */
     public $companyTelephone;
     /** @var string */
+    public $countryIso3166;
+    /** @var string */
     public $email;
     /** @var integer */
     public $id;

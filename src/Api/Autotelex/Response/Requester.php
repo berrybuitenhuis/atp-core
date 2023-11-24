@@ -30,7 +30,7 @@ class Requester
     public $name;
     /** @var string */
     public $postalCode;
-    /** @var string */
+    /** @var string|null */
     public $remark;
     /** @var string */
     public $streetNameAndNumber;
