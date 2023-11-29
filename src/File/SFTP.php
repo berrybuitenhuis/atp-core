@@ -82,6 +82,44 @@ class SFTP extends BaseClass
     }
 
     /**
+     * Move/rename file in/to remote directory
+     *
+     * @param string $currentFilePath
+     * @param string $newFilePath
+     * @return bool
+     */
+    public function moveFile($currentFilePath, $newFilePath)
+    {
+        // Setup connection
+        $client = $this->connect();
+        if ($client === false) return false;
+
+        // Check if current file-path exists
+        $exists = $client->file_exists($currentFilePath);
+        if ($exists === false) {
+            $this->setMessages("Current file-path does not exists ($currentFilePath)");
+            return false;
+        }
+
+        // Check if new file-path already exists
+        $exists = $client->file_exists($newFilePath);
+        if ($exists === true) {
+            $this->setMessages("New file-path already exists ($newFilePath)");
+            return false;
+        }
+
+        // Move/rename file
+        $result = $client->rename($currentFilePath, $newFilePath);
+
+        // Close connection
+        $this->disconnect($client);
+
+        // Return
+        return $result;
+
+    }
+
+    /**
      * Setup SFTP-connection
      *
      * @return \phpseclib3\Net\SFTP|false
