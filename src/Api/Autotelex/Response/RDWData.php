@@ -110,9 +110,9 @@ class RDWData
     public $rdwTenaamstellenMogelijk;
     /** @var string */
     public $rdwUitvoeringscode;
-    /** @var string */
+    /** @var string|null */
     public $rdwVoertuigClassificatie;
-    /** @var integer */
+    /** @var integer|null */
     public $rdwVoertuigClassificatieCode;
     /** @var boolean */
     public $rdwWamVerzekerd;
@@ -128,8 +128,8 @@ class RDWData
     public $status;
     /** @var boolean|null */
     public $taxiVerleden;
-    /** @var string */
+    /** @var string|null */
     public $wijzeVanInvoer;
-    /** @var integer */
+    /** @var integer|null */
     public $wijzeVanInvoerHelpTextId;
 }
