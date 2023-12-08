@@ -34,8 +34,19 @@ class Image extends BaseClass
      * @return string|false
      */
     public static function getMimeType($resource, $type = "string") {
+        // Set memory
+        $memory = ini_get('memory_limit');
+        if ($memory < "256M") ini_set('memory_limit', '256M');
+
+        // Get mime-type
         $finfo = new finfo(FILEINFO_MIME_TYPE);
-        return ($type =='string') ? $finfo->buffer($resource) : $finfo->file($resource);
+        $mimeType = ($type =='string') ? $finfo->buffer($resource) : $finfo->file($resource);
+
+        // Reset memory
+        ini_set('memory_limit', $memory);
+
+        // Return
+        return $mimeType;
     }
 
     /**
