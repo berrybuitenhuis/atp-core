@@ -45,6 +45,15 @@ class Service extends BaseClass
 
     /**
      * @param int $id
+     * @return bool
+     */
+    public function exists($id)
+    {
+        return $this->repository->exists($id);
+    }
+
+    /**
+     * @param int $id
      * @param string $output
      * @param bool $refresh
      * @param null $fields
