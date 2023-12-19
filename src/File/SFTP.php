@@ -19,13 +19,46 @@ class SFTP extends BaseClass
     }
 
     /**
+     * Create (remote) file with content
+     *
+     * @param string $directory
+     * @param string $remoteFileName
+     * @param string|resource $content
+     * @return boolean
+     */
+    public function createFile($directory, $remoteFileName, $content)
+    {
+        // Setup connection
+        $client = $this->connect();
+        if ($client === false) return false;
+
+        // Check if file-path already exists
+        $exists = $client->file_exists("$directory/$remoteFileName");
+        if ($exists === true) {
+            $this->setMessages("New file does already exists ($directory/$remoteFileName)");
+            return false;
+        }
+
+        // Create file
+        $result = $client->put("$directory/$remoteFileName", $content);
+        if ($result === false) $this->setMessages($client->getSFTPErrors());
+
+        // Close connection
+        $this->disconnect($client);
+
+        // Return
+        return $result;
+    }
+
+    /**
      * Get file-content of remote file
      *
      * @param string $directory
      * @param string $remoteFileName
      * @return string|false
      */
-    public function getFileContent($directory, $remoteFileName) {
+    public function getFileContent($directory, $remoteFileName)
+    {
         // Setup connection
         $client = $this->connect();
         if ($client === false) return false;
@@ -51,7 +84,8 @@ class SFTP extends BaseClass
      * @param string $orderDirection
      * @return array|false
      */
-    public function getFiles($directory, $orderBy = "mtime", $orderDirection = SORT_DESC) {
+    public function getFiles($directory, $orderBy = "mtime", $orderDirection = SORT_DESC)
+    {
         // Setup connection
         $client = $this->connect();
         if ($client === false) return false;
