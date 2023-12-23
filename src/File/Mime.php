@@ -12,9 +12,9 @@ class Mime
      * @param string $fileExtension
      * @return bool
      */
-    public function validateFileExtension($mimeType, $fileExtension)
+    public static function validateFileExtension($mimeType, $fileExtension)
     {
-        $extensions = $this->getFileExtensions($mimeType);
+        $extensions = self::getFileExtensions($mimeType);
         return in_array($fileExtension, $extensions);
     }
 
@@ -24,7 +24,7 @@ class Mime
      * @param string $mimeType
      * @return array
      */
-    private function getFileExtensions($mimeType)
+    private static function getFileExtensions($mimeType)
     {
         switch(strtolower($mimeType)) {
             case "application/json":
