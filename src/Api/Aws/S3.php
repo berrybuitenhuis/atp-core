@@ -175,6 +175,9 @@ class S3 extends BaseClass
                 $this->setMessages("Empty file ($filename)");
                 return false;
             }
+
+            // Return
+            return $object;
         } catch(Throwable $e) {
             $this->setMessages("Getting file failed");
             $this->setErrorData($e->getMessage());
