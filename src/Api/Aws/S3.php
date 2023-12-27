@@ -161,7 +161,20 @@ class S3 extends BaseClass
 
         // Get current file-tags
         try {
-            return $this->client->getObject(["Bucket" => $bucket, "Key" => $filename])->toArray();
+            $object = $this->client->getObject(["Bucket" => $bucket, "Key" => $filename])->toArray();
+            if (!is_array($object)) {
+                $this->setMessages("Document not found ($filename)");
+                return false;
+            } elseif (empty($object['Body'])) {
+                $this->setMessages("Content not found ($filename)");
+                return false;
+            } elseif (!($object['Body'] instanceof \GuzzleHttp\Psr7\Stream)) {
+                $this->setMessages("Unknown object-body (type: " . get_class($object['Body']) . ")");
+                return false;
+            } elseif (empty($object['Body']->getSize())) {
+                $this->setMessages("Empty file ($filename)");
+                return false;
+            }
         } catch(Throwable $e) {
             $this->setMessages("Getting file failed");
             $this->setErrorData($e->getMessage());
