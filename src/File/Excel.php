@@ -9,10 +9,9 @@ class Excel
      * Get (excel) data of S3-object
      *
      * @param array $s3Object
-     * @param string $sheetName
-     * @return string|boolean
+     * @return \PhpOffice\PhpSpreadsheet\SpreadSheet
      */
-    public static function getDataByS3Object($s3Object, $sheetName)
+    public static function getDataByS3Object($s3Object)
     {
         // Write to temporary file
         $tmpFileName = tempnam(sys_get_temp_dir(), "xlsx_S3");
@@ -24,14 +23,12 @@ class Excel
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
         $reader->setReadDataOnly(true);
         $spreadSheet = $reader->load($tmpFileName);
-        $sheet = $spreadSheet->getSheetByName($sheetName);
-        $data = $sheet->toArray();
 
         // Remove temporary file
         unlink($tmpFileName);
 
         // Return
-        return $data;
+        return $spreadSheet;
     }
 
 }
