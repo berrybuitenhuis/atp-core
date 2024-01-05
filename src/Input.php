@@ -222,6 +222,24 @@ class Input
         return !($empty === true);
     }
 
+    public static function isInteger($value)
+    {
+        // Initialize output
+        $output = false;
+
+        // Verify if value is "integer"
+        if (is_int($value)) $output = true;
+        elseif (is_array($value)) $output = false;
+        elseif (is_object($value)) $output = false;
+        elseif (is_bool($value)) $output = false;
+        elseif ($value === null) $output = true;
+        elseif (trim($value) == "") $output = true;
+        elseif (is_string($value) && preg_match("/^(0|([1-9])[0-9]*)$/", $value)) $output = true;
+
+        // Return
+        return $output;
+    }
+
     /**
      * Check if string is JSON-string
      *
