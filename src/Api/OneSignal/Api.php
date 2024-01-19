@@ -38,6 +38,31 @@ class Api extends BaseClass
     }
 
     /**
+     * Get subscriptions of user
+     *
+     * @param Notification $data
+     * @return array|null|false
+     * @throws Exception
+     */
+    public function getSubscriptions($appId, $aliasId, $aliasType = "external_id")
+    {
+        $requestHeader = $this->clientHeaders;
+        $result = $this->client->get("apps/$appId/users/by/$aliasType/$aliasId", ['headers'=>$requestHeader]);
+        $response = json_decode((string) $result->getBody());
+
+        // Return
+        if (!isset($response->errors) || empty($response->errors)) {
+            return $response->subscriptions;
+        } elseif (isset($response->errors[0]) && is_object($response->errors[0]) && property_exists($response->errors[0], "title") && strpos(strtolower($response->errors[0]->title), "doesn't match an existing user")) {
+            return null;
+        } else {
+            $this->setErrorData($response);
+            $this->setMessages($response->errors);
+            return false;
+        }
+    }
+
+    /**
      * Send notification
      *
      * @param Notification $data
@@ -62,5 +87,4 @@ class Api extends BaseClass
             return false;
         }
     }
-
 }
