@@ -32,10 +32,11 @@ abstract class Base implements BaseInterface
     /**
      * Returns a JSON encoded string with current Entity.
      * We have filtered out the readOnly elements
+     * @param bool $removeNullableValues
      * @return string
      * @throws Exception
      */
-    public function encode()
+    public function encode($removeNullableValues = false)
     {
         if (!isset(self::$exportProperties[get_called_class()])) {
             $reflectionObject = new ReflectionObject($this);
@@ -47,9 +48,9 @@ abstract class Base implements BaseInterface
             }
         }
 
-        return json_encode(
-            array_intersect_key($this->formatVars(get_object_vars($this)), array_flip(self::$exportProperties[get_called_class()]))
-        );
+        $data = array_intersect_key($this->formatVars(get_object_vars($this)), array_flip(self::$exportProperties[get_called_class()]));
+        if ($removeNullableValues) $data  = Input::removeNullableValues($data);
+        return json_encode($data);
     }
 
     /**

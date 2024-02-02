@@ -72,7 +72,7 @@ class Api extends BaseClass
     public function send(Notification $data)
     {
         // Convert input-data into body
-        $body = $data->encode();
+        $body = $data->encode(true);
 
         $requestHeader = $this->clientHeaders;
         $result = $this->client->post('notifications', ['headers'=>$requestHeader, 'body'=>$body]);

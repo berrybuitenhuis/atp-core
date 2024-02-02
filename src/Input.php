@@ -323,6 +323,11 @@ class Input
         return $output;
     }
 
+    public static function removeNullableValues(array $data)
+    {
+        return array_filter($data, fn($value) => !is_null($value));
+    }
+
     /**
      * Set parameters by input
      *
