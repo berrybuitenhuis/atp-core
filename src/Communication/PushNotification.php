@@ -27,7 +27,7 @@ class PushNotification extends BaseClass
     }
 
     /**
-     * Send push-notification to iOS/Android device
+     * Send push-notification to iOS/Android device(s)
      *
      * @param string $platform
      * @param string|array $tokens
@@ -103,7 +103,8 @@ class PushNotification extends BaseClass
                 'app_id' => $this->config['oneSignal']['appId'],
                 'include_aliases' => $aliases,
                 'data' => $options,
-                'contents' => ["en"=>$message, "nl"=>$message]
+                'contents' => ["en"=>$message, "nl"=>$message],
+                'target_channel' => "push"
             ];
             $notification = new Notification($notificationFields);
 

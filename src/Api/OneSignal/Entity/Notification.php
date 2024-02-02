@@ -9,10 +9,14 @@ class Notification extends Base
     /** @var string */
     public $app_id;
     /** @var array */
+    public $include_aliases;
+    /** @var array */
     public $include_player_ids;
     /** @var array */
     public $data;
     /** @var array */
     public $contents;
+    /** @var string */
+    public $target_channel;
 
 }
