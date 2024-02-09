@@ -97,7 +97,7 @@ class Sns extends BaseClass
             }
         }
 
-        // Pubish SNS-message
+        // Publish SNS-message
         try {
             $result = $this->client->publish($snsMessage);
             return true;
