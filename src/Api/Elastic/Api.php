@@ -7,7 +7,7 @@
 namespace AtpCore\Api\Elastic;
 
 use AtpCore\BaseClass;
-use Elasticsearch\ClientBuilder;
+use Elastic\Elasticsearch\ClientBuilder;
 use Throwable;
 
 class Api extends BaseClass
