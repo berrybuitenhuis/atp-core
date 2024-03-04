@@ -29,7 +29,7 @@
         "phpoffice/phpspreadsheet": "^2.0",
         "phpseclib/phpseclib": "^3.0",
         "spatie/image-optimizer": "^1.7",
-        "symfony/event-dispatcher": "^6.4",
+        "symfony/event-dispatcher": "^7.0",
         "twig/twig": "^v3.8",
         "unleash/client": "^v2.3"
     },
