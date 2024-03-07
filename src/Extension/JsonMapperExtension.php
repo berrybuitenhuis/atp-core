@@ -194,7 +194,7 @@ class JsonMapperExtension extends JsonMapper {
                         . ' cannot be converted to a string'
                     );
                 }
-                if ($bCastToExpectedType === true) {
+                if ($this->bCastToExpectedType === true) {
                     settype($jvalue, $type);
                 }
                 $this->setProperty($object, $accessor, $jvalue);
