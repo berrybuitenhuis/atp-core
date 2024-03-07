@@ -200,16 +200,19 @@ class Image extends BaseClass
      *
      * @param string|null $path
      * @param string|null $content
-     * @param int $maxHeight
-     * @param int $maxWidth
+     * @param int|null $maxHeight
+     * @param int|null $maxWidth
      * @param int|null $thumbMaxHeight
      * @param int|null $thumbMaxWidth
      * @return array|boolean|string
      */
-    private function resize($path = null, $content = null, $maxHeight, $maxWidth, $thumbMaxHeight = null, $thumbMaxWidth = null)
+    private function resize($path = null, $content = null, $maxHeight = null, $maxWidth = null, $thumbMaxHeight = null, $thumbMaxWidth = null)
     {
         if (empty($path) && empty($content)) {
             $this->setMessages("No image provided");
+            return false;
+        } elseif (empty($maxHeight) || empty($maxWidth)) {
+            $this->setMessages("No maximum height/width provided");
             return false;
         }
 
