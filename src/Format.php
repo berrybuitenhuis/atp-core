@@ -4,6 +4,20 @@ namespace AtpCore;
 
 class Format
 {
+    public static function lowercase($value)
+    {
+        // PHP 8 does not support strtolower on null-value
+        if (is_null($value)) return null;
+        return strtolower($value);
+    }
+
+    public static function numberFormat($value, $decimals = 0, $decimalSeparator = ",", $thousandsSeparator = ".")
+    {
+        // PHP 8 does not support number-format on null-value
+        if (is_null($value)) return null;
+        return number_format($value, $decimals, $decimalSeparator, $thousandsSeparator);
+    }
+
     /**
      * @param string $countryCode
      * @param string $nationalCode
@@ -43,4 +57,10 @@ class Format
         return $phoneNumber;
     }
 
+    public static function uppercase($value)
+    {
+        // PHP 8 does not support strtoupper on null-value
+        if (is_null($value)) return null;
+        return strtoupper($value);
+    }
 }
