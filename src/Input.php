@@ -387,10 +387,13 @@ class Input
         if (!is_array($array)) return $array;
 
         uksort($array, function($a, $b) use($order) {
-            foreach($order as $value){
-                if ($a == $value) return 0;
-                if ($b == $value) return 1;
-            }
+            $posA = array_search($a, $order);
+            $posB = array_search($b, $order);
+
+            if ($posA === false) return 1; // If $a not found in $order, move it to the end
+            if ($posB === false) return -1; // If $b not found in $order, move it to the beginning
+
+            return $posA <=> $posB; // Compare positions in $order array
         });
 
         return $array;
@@ -474,7 +477,7 @@ class Input
             }
 
             // Check for value-attributes (only for SimpleXMLElement-object)
-            if (gettype($data->$key) === 'object' && get_class($data->key) === 'SimpleXMLElement') {
+            if (is_object($data) && property_exists($data, $key) && gettype($data->$key) === 'object' && get_class($data->key) === 'SimpleXMLElement') {
                 $attributes = $data->$key->attributes();
                 if (!empty($attributes)) {
                     foreach ($attributes as $k => $v) {
