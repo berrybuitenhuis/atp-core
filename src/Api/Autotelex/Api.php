@@ -398,7 +398,7 @@ class Api extends BaseClass
                 $response->VehicleInfo->Opties->Options = [$response->VehicleInfo->Opties->Options];
             }
             foreach ($response->VehicleInfo->Opties->Options as $key => $option) {
-                if (property_exists($option->ManufacturerOptionCodes, "ManufacturerOption") && is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
+                if (is_object($option->ManufacturerOptionCodes) && property_exists($option->ManufacturerOptionCodes, "ManufacturerOption") && is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
                     $response->VehicleInfo->Opties->Options[$key]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
                 }
             }
@@ -413,7 +413,7 @@ class Api extends BaseClass
                 }
                 if (!empty($response->VehicleInfo->Pakketten->Packets[$key]->Opties)) {
                     foreach ($response->VehicleInfo->Pakketten->Packets[$key]->Opties->Options as $k => $option) {
-                        if (property_exists($option->ManufacturerOptionCodes, "ManufacturerOption") && is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
+                        if (is_object($option->ManufacturerOptionCodes) && property_exists($option->ManufacturerOptionCodes, "ManufacturerOption") && is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
                             $response->VehicleInfo->Pakketten->Packets[$key]->Opties->Options[$k]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
                         }
                     }
@@ -428,7 +428,7 @@ class Api extends BaseClass
                 $response->VehicleInfo->StandaardOpties->Options = [$response->VehicleInfo->StandaardOpties->Options];
             }
             foreach ($response->VehicleInfo->StandaardOpties->Options as $key => $option) {
-                if (property_exists($option->ManufacturerOptionCodes, "ManufacturerOption") && is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
+                if (is_object($option->ManufacturerOptionCodes) && property_exists($option->ManufacturerOptionCodes, "ManufacturerOption") && is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
                     $response->VehicleInfo->StandaardOpties->Options[$key]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
                 }
             }
@@ -456,7 +456,7 @@ class Api extends BaseClass
                 $response->VehicleInfo2->VoertuigVariabelen->Opties->Options = [$response->VehicleInfo2->VoertuigVariabelen->Opties->Options];
             }
             foreach ($response->VehicleInfo2->VoertuigVariabelen->Opties->Options as $key => $option) {
-                if (property_exists($option->ManufacturerOptionCodes, "ManufacturerOption") && is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
+                if (is_object($option->ManufacturerOptionCodes) && property_exists($option->ManufacturerOptionCodes, "ManufacturerOption") && is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
                     $response->VehicleInfo2->VoertuigVariabelen->Opties->Options[$key]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
                 }
             }
@@ -471,7 +471,7 @@ class Api extends BaseClass
                 }
                 if (!empty($response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets[$key]->Opties)) {
                     foreach ($response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets[$key]->Opties->Options as $k => $option) {
-                        if (property_exists($option->ManufacturerOptionCodes, "ManufacturerOption") && is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
+                        if (is_object($option->ManufacturerOptionCodes) && property_exists($option->ManufacturerOptionCodes, "ManufacturerOption") && is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
                             $response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets[$key]->Opties->Options[$k]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
                         }
                     }
@@ -499,7 +499,7 @@ class Api extends BaseClass
                 $response->VehicleInfo2->VoertuigVariabelen->StandaardOpties->Options = [$response->VehicleInfo2->VoertuigVariabelen->StandaardOpties->Options];
             }
             foreach ($response->VehicleInfo2->VoertuigVariabelen->StandaardOpties->Options as $key => $option) {
-                if (is_object($option->ManufacturerOptionCodes) && is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
+                if (is_object($option->ManufacturerOptionCodes) && property_exists($option->ManufacturerOptionCodes, "ManufacturerOption") && is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
                     $response->VehicleInfo2->VoertuigVariabelen->StandaardOpties->Options[$key]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
                 }
             }
