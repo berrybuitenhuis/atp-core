@@ -390,7 +390,7 @@ class Api extends BaseClass
         if (is_object($response->OptionalTypes->VehicleType)) {
             $response->OptionalTypes->VehicleType = [$response->OptionalTypes->VehicleType];
         }
-        if (is_object($response->VehicleInfo->Accessoires->Options)) {
+        if (is_object($response->VehicleInfo->Accessoires) && is_object($response->VehicleInfo->Accessoires->Options)) {
             $response->VehicleInfo->Accessoires->Options = [$response->VehicleInfo->Accessoires->Options];
         }
         if (!empty($response->VehicleInfo->Opties->Options)) {
@@ -398,7 +398,7 @@ class Api extends BaseClass
                 $response->VehicleInfo->Opties->Options = [$response->VehicleInfo->Opties->Options];
             }
             foreach ($response->VehicleInfo->Opties->Options as $key => $option) {
-                if (is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
+                if (property_exists($option->ManufacturerOptionCodes, "ManufacturerOption") && is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
                     $response->VehicleInfo->Opties->Options[$key]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
                 }
             }
@@ -413,7 +413,7 @@ class Api extends BaseClass
                 }
                 if (!empty($response->VehicleInfo->Pakketten->Packets[$key]->Opties)) {
                     foreach ($response->VehicleInfo->Pakketten->Packets[$key]->Opties->Options as $k => $option) {
-                        if (is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
+                        if (property_exists($option->ManufacturerOptionCodes, "ManufacturerOption") && is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
                             $response->VehicleInfo->Pakketten->Packets[$key]->Opties->Options[$k]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
                         }
                     }
@@ -428,7 +428,7 @@ class Api extends BaseClass
                 $response->VehicleInfo->StandaardOpties->Options = [$response->VehicleInfo->StandaardOpties->Options];
             }
             foreach ($response->VehicleInfo->StandaardOpties->Options as $key => $option) {
-                if (is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
+                if (property_exists($option->ManufacturerOptionCodes, "ManufacturerOption") && is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
                     $response->VehicleInfo->StandaardOpties->Options[$key]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
                 }
             }
@@ -436,19 +436,19 @@ class Api extends BaseClass
         if (is_object($response->VehicleInfo2->Restwaarden->RestWaarden)) {
             $response->VehicleInfo2->Restwaarden->RestWaarden = [$response->VehicleInfo2->Restwaarden->RestWaarden];
         }
-        if (is_object($response->VehicleInfo2->VoertuigVariabelen->Accessoires->Options)) {
+        if (property_exists($response->VehicleInfo2->VoertuigVariabelen->Accessoires, "Options") && is_object($response->VehicleInfo2->VoertuigVariabelen->Accessoires->Options)) {
             $response->VehicleInfo2->VoertuigVariabelen->Accessoires->Options = [$response->VehicleInfo2->VoertuigVariabelen->Accessoires->Options];
         }
-        if (is_object($response->VehicleInfo2->VoertuigVariabelen->BandenGegevens->BandenParameters)) {
+        if (property_exists($response->VehicleInfo2->VoertuigVariabelen->BandenGegevens, "BandenParameters") && is_object($response->VehicleInfo2->VoertuigVariabelen->BandenGegevens->BandenParameters)) {
             $response->VehicleInfo2->VoertuigVariabelen->BandenGegevens->BandenParameters = [$response->VehicleInfo2->VoertuigVariabelen->BandenGegevens->BandenParameters];
         }
         if (is_object($response->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData->TMStatusHistorieLijst->TMStatusHistorie)) {
             $response->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData->TMStatusHistorieLijst->TMStatusHistorie = [$response->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData->TMStatusHistorieLijst->TMStatusHistorie];
         }
-        if (is_object($response->VehicleInfo2->VoertuigVariabelen->ChargingCableTypes->ChargingCableModel)) {
+        if (property_exists($response->VehicleInfo2->VoertuigVariabelen, "ChargingCableTypes") && is_object($response->VehicleInfo2->VoertuigVariabelen->ChargingCableTypes->ChargingCableModel)) {
             $response->VehicleInfo2->VoertuigVariabelen->ChargingCableTypes->ChargingCableModel = [$response->VehicleInfo2->VoertuigVariabelen->ChargingCableTypes->ChargingCableModel];
         }
-        if (is_object($response->VehicleInfo2->VoertuigVariabelen->Files->UploadFileParameters)) {
+        if (property_exists($response->VehicleInfo2->VoertuigVariabelen, "Files") && is_object($response->VehicleInfo2->VoertuigVariabelen->Files->UploadFileParameters)) {
             $response->VehicleInfo2->VoertuigVariabelen->Files->UploadFileParameters = [$response->VehicleInfo2->VoertuigVariabelen->Files->UploadFileParameters];
         }
         if (!empty($response->VehicleInfo2->VoertuigVariabelen->Opties->Options)) {
@@ -481,7 +481,7 @@ class Api extends BaseClass
         if (is_object($response->VehicleInfo2->VoertuigVariabelen->ReportURLs->ExternalURL)) {
             $response->VehicleInfo2->VoertuigVariabelen->ReportURLs->ExternalURL = [$response->VehicleInfo2->VoertuigVariabelen->ReportURLs->ExternalURL];
         }
-        if (is_object($response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving)) {
+        if (property_exists($response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades, "SchadeOmschrijving") && is_object($response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving)) {
             $response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving = [$response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving];
         }
         if (!empty($response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving)) {
@@ -499,7 +499,7 @@ class Api extends BaseClass
                 $response->VehicleInfo2->VoertuigVariabelen->StandaardOpties->Options = [$response->VehicleInfo2->VoertuigVariabelen->StandaardOpties->Options];
             }
             foreach ($response->VehicleInfo2->VoertuigVariabelen->StandaardOpties->Options as $key => $option) {
-                if (is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
+                if (is_object($option->ManufacturerOptionCodes) && is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
                     $response->VehicleInfo2->VoertuigVariabelen->StandaardOpties->Options[$key]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
                 }
             }
