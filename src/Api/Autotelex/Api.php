@@ -390,7 +390,7 @@ class Api extends BaseClass
         if (is_object($response->OptionalTypes->VehicleType)) {
             $response->OptionalTypes->VehicleType = [$response->OptionalTypes->VehicleType];
         }
-        if (is_object($response->VehicleInfo->Accessoires) && is_object($response->VehicleInfo->Accessoires->Options)) {
+        if (property_exists($response->VehicleInfo, "Accessoires") && is_object($response->VehicleInfo->Accessoires->Options)) {
             $response->VehicleInfo->Accessoires->Options = [$response->VehicleInfo->Accessoires->Options];
         }
         if (!empty($response->VehicleInfo->Opties->Options)) {
@@ -456,7 +456,7 @@ class Api extends BaseClass
                 $response->VehicleInfo2->VoertuigVariabelen->Opties->Options = [$response->VehicleInfo2->VoertuigVariabelen->Opties->Options];
             }
             foreach ($response->VehicleInfo2->VoertuigVariabelen->Opties->Options as $key => $option) {
-                if (is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
+                if (property_exists($option->ManufacturerOptionCodes, "ManufacturerOption") && is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
                     $response->VehicleInfo2->VoertuigVariabelen->Opties->Options[$key]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
                 }
             }
@@ -471,7 +471,7 @@ class Api extends BaseClass
                 }
                 if (!empty($response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets[$key]->Opties)) {
                     foreach ($response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets[$key]->Opties->Options as $k => $option) {
-                        if (is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
+                        if (property_exists($option->ManufacturerOptionCodes, "ManufacturerOption") && is_object($option->ManufacturerOptionCodes->ManufacturerOption)) {
                             $response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets[$key]->Opties->Options[$k]->ManufacturerOptionCodes->ManufacturerOption = [$option->ManufacturerOptionCodes->ManufacturerOption];
                         }
                     }
