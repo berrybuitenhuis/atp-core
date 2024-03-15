@@ -69,7 +69,7 @@ class Api extends BaseClass
             if ($this->debug) $this->log("response", "GetVehicle", json_encode($result));
             $status = $result->GetVehicleResult->Status;
 
-            if ($status->Code == 0) {
+            if (property_exists($status, "Code") && $status->Code == 0) {
                 if (isset($result->GetVehicleResult->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData->BiedingId)) {
                     $tmp = $result->GetVehicleResult->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData;
                     if ($tmp->Soort == 16) return $tmp->Waarde;
@@ -265,7 +265,7 @@ class Api extends BaseClass
             $this->setOriginalResponse($result);
             if ($this->debug) $this->log("response", "NoInterest", json_encode($result));
             $status = $result->NoInterestResult->Status;
-            if ($status->Code == 0) {
+            if (property_exists($status, "Code") && $status->Code == 0) {
                 return true;
             } else {
                 return $status;
