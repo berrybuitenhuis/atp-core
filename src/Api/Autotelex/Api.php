@@ -156,7 +156,7 @@ class Api extends BaseClass
             $this->setOriginalResponse($result);
             if ($this->debug) $this->log("response", "GetVehicle", json_encode($result));
             $status = $result->GetVehicleResult->Status;
-            if ($status->Code == 0) {
+            if (property_exists($status, "Code") && $status->Code == 0) {
                 if ($output == "object") {
                     return $this->mapVehicleResponse($result->GetVehicleResult);
                 } else {
@@ -226,7 +226,7 @@ class Api extends BaseClass
                 $this->setOriginalResponse($result);
                 if ($this->debug) $this->log("response", "InsertBod", json_encode($result));
                 $status = $result->InsertBodResult;
-                if ($status->Code == 0) {
+                if (property_exists($status, "Code") && $status->Code == 0) {
                     return true;
                 } else {
                     return $status;
@@ -319,7 +319,7 @@ class Api extends BaseClass
             $params = ["username"=>$this->username, "password"=>$this->password];
             $result = $this->client->GetVendorToken($params);
             $status = $result->GetVendorTokenResult->Status;
-            if ($status->Code == 0) {
+            if (property_exists($status, "Code") && $status->Code == 0) {
                 $this->token = $result->GetVendorTokenResult->Token;
                 return $this->token;
             } else {
