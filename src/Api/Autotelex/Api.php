@@ -486,10 +486,10 @@ class Api extends BaseClass
         }
         if (!empty($response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving)) {
             foreach ($response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving AS $key => $damage) {
-                if (is_int($damage->SchadeFotoIds->int)) {
+                if (property_exists($damage->SchadeFotoIds, "int") && is_int($damage->SchadeFotoIds->int)) {
                     $response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving[$key]->SchadeFotoIds->int = [$damage->SchadeFotoIds->int];
                 }
-                if (is_string($damage->SchadefotoURLs->string)) {
+                if (property_exists($damage->SchadefotoURLs, "string") && is_string($damage->SchadefotoURLs->string)) {
                     $response->VehicleInfo2->VoertuigVariabelen->SchadeGegevens->Schades->SchadeOmschrijving[$key]->SchadefotoURLs->string = [$damage->SchadefotoURLs->string];
                 }
             }
