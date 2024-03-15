@@ -264,8 +264,8 @@ class Api extends BaseClass
             $result = $this->client->NoInterest($params);
             $this->setOriginalResponse($result);
             if ($this->debug) $this->log("response", "NoInterest", json_encode($result));
-            $status = $result->NoInterestResult;
-            if (property_exists($status, "Code") && $status->Code == 0) {
+            $status = $result->NoInterestResult->Status;
+            if ($status->Code == 0) {
                 return true;
             } else {
                 return $status;
