@@ -8,6 +8,7 @@ namespace AtpCore\Api\CarCollect;
 use AtpCore\Api\CarCollect\Response\Vehicle;
 use AtpCore\BaseClass;
 use AtpCore\Extension\JsonMapperExtension;
+use AtpCore\Format;
 use GraphQL\Client;
 use GraphQL\Exception\QueryError;
 use GraphQL\Mutation;
@@ -121,7 +122,7 @@ class Api extends BaseClass
             $amount = (int) $amount;
             // Override bid, not possible to have 0 for bid, otherwise receive error-message "Unprocessable Entity")
             if ($amount === 0) $amount = 1;
-            $comment = preg_replace('/\s+/', ' ', trim($comment));
+            $comment = preg_replace('/\s+/', ' ', Format::trim($comment));
             $mutation = (new Mutation('createBidApi'))
                 ->setOperationName('createBidApi')
                 ->setVariables([

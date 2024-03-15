@@ -5,6 +5,7 @@ namespace AtpCore\Communication;
 use AtpCore\BaseClass;
 use AtpCore\Api\OneSignal\Api;
 use AtpCore\Api\OneSignal\Entity\Notification;
+use AtpCore\Format;
 use Exception;
 
 class PushNotification extends BaseClass
@@ -38,7 +39,7 @@ class PushNotification extends BaseClass
      */
     public function sendToDevice($platform, $tokens, $message, $options = NULL)
     {
-        if (strtolower($platform) == 'onesignal') {
+        if (Format::lowercase($platform) == 'onesignal') {
             // Set receiver (overwrite from config)
             if (!empty($this->config['oneSignal']['default_to'])) {
                 $tokens = [$this->config['oneSignal']['default_to']];
@@ -86,7 +87,7 @@ class PushNotification extends BaseClass
      */
     public function sendToAlias($platform, $aliases, $message, $options = NULL)
     {
-        if (strtolower($platform) == 'onesignal') {
+        if (Format::lowercase($platform) == 'onesignal') {
             // Set receiver (overwrite from config)
             if (!empty($this->config['oneSignal']['default_to'])) {
                 $aliases = [$this->config['oneSignal']['default_to']];

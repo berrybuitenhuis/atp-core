@@ -5,6 +5,7 @@
 namespace AtpCore\Api\RGB;
 
 use AtpCore\BaseClass;
+use AtpCore\Format;
 use GuzzleHttp\Client;
 use SimpleXMLElement;
 
@@ -149,7 +150,7 @@ class Api extends BaseClass
         $addressLocation->addChild('country', 'NLD');
         $addressLocation->addChild('city', htmlspecialchars(html_entity_decode($city)));
         $addressLocation->addChild('postal-code', $zipcode);
-        $addressLocation->addChild('house-number', trim($number));
+        $addressLocation->addChild('house-number', Format::trim($number));
         $addressLocation->addChild('street', htmlspecialchars(html_entity_decode($street)));
         $addressLocation->addChild('name', htmlspecialchars(html_entity_decode($companyName)));
         $addressLocation->addChild('remarks', htmlspecialchars(html_entity_decode($comment)));
@@ -194,8 +195,8 @@ class Api extends BaseClass
         $shipment->addChild('vin', $vin);
         $shipment->addChild('vehicle-registration-plate', $registration);
         $shipment->addChild('type', $vehicleType);
-        $shipment->addChild('make', htmlspecialchars(html_entity_decode(trim(preg_replace('/ {2,}/', ' ', $make)))));
-        $shipment->addChild('model', htmlspecialchars(html_entity_decode(trim(preg_replace('/ {2,}/', ' ', $model)))));
+        $shipment->addChild('make', htmlspecialchars(html_entity_decode(Format::trim(preg_replace('/ {2,}/', ' ', $make)))));
+        $shipment->addChild('model', htmlspecialchars(html_entity_decode(Format::trim(preg_replace('/ {2,}/', ' ', $model)))));
         $shipment->addChild('colour', htmlspecialchars(html_entity_decode($color)));
 
         if ($this->hostname == "https://exchange.transplan.nl/api/v2/") {

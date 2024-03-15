@@ -27,7 +27,7 @@ class Input
         if ($value === null) return null;
 
         // Return integer-value of boolean
-        if (strtolower($output) == "integer" || strtolower($output) == "int") {
+        if (Format::lowercase($output) == "integer" || Format::lowercase($output) == "int") {
             return $value ? 1 : 0;
         }
 
@@ -76,9 +76,9 @@ class Input
             // Replace empty object into null
             if ($value instanceOf \stdClass && empty((array) $value)) $data->$key = null;
             // Replace string false into boolean
-            elseif (is_string($value) && strtolower($value) === "false") $data->$key = false;
+            elseif (is_string($value) && Format::lowercase($value) === "false") $data->$key = false;
             // Replace string true into boolean
-            elseif (is_string($value) && strtolower($value) === "true") $data->$key = true;
+            elseif (is_string($value) && Format::lowercase($value) === "true") $data->$key = true;
             // Replace empty string into null
             elseif (is_string($value) && empty($value)) $data->$key = null;
         }
@@ -110,7 +110,7 @@ class Input
                 if(stripos($otherString, $match . $word . " ") === 0 || $otherString == $match . $word) {
                     $match .= $word . " ";
                 } else {
-                    $match = trim($match);
+                    $match = Format::trim($match);
                     break;
                 }
             }
@@ -201,7 +201,7 @@ class Input
         elseif (is_object($value)) $output = empty($value);
         elseif (is_bool($value)) $output = false;
         elseif ($value === null) $output = true;
-        elseif (trim($value) == "") $output = true;
+        elseif (Format::trim($value) == "") $output = true;
 
         // Return
         return $output;
@@ -235,7 +235,7 @@ class Input
         elseif (is_object($value)) $output = false;
         elseif (is_bool($value)) $output = false;
         elseif ($value === null) $output = true;
-        elseif (trim($value) == "") $output = true;
+        elseif (Format::trim($value) == "") $output = true;
         elseif (is_string($value) && preg_match("/^(0|([1-9])[0-9]*)$/", $value)) $output = true;
 
         // Return

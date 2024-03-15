@@ -3,6 +3,7 @@
 namespace AtpCore\Laminas\Repository;
 
 use AtpCore\BaseClass;
+use AtpCore\Format;
 use DateTime;
 use Exception;
 use Throwable;
@@ -391,16 +392,16 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         }
 
         // Iterate data-fields
-        $requestedFields["fields"] = array_map("strtolower", $requestedFields["fields"]);
+        $requestedFields["fields"] = array_map("\AtpCore\Format::lowercase", $requestedFields["fields"]);
         foreach ($record AS $fieldName => $fieldValue) {
             // Skip field if not configured for application
-            if (!in_array(strtolower($fieldName), $requestedFields["fields"]) && !array_key_exists($fieldName, $requestedFields["entities"])) {
+            if (!in_array(Format::lowercase($fieldName), $requestedFields["fields"]) && !array_key_exists($fieldName, $requestedFields["entities"])) {
                 unset($record[$fieldName]);
                 continue;
             }
 
             // Transform/unset values
-            if (in_array(strtolower($fieldName), $requestedFields["fields"]) && !in_array($fieldName, $processedFields)) {
+            if (in_array(Format::lowercase($fieldName), $requestedFields["fields"]) && !in_array($fieldName, $processedFields)) {
                 // Overwrite values
                 $values = $this->transformValues($record, [$fieldName], $recordOrig);
                 if (array_key_exists($fieldName, $values)) {
@@ -565,7 +566,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     // Set/merge to requestedFields
                     $requestedFields["entities"] = (!empty($requestedFields["entities"])) ? array_merge_recursive($requestedFields["entities"], $tmpRequestedFields) : $tmpRequestedFields;
                 }
-            } elseif (in_array(strtolower($customField), array_map("strtolower", $dataFields['fields']))) {
+            } elseif (in_array(Format::lowercase($customField), array_map("\AtpCore\Format::lowercase", $dataFields['fields']))) {
                 // Add field to requestedFields
                 $requestedFields["fields"][] = $customField;
             } elseif (array_key_exists($customField, $dataFields['entities'])) {
@@ -925,7 +926,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
-                    if (!in_array(strtolower($operator), $allowedOperators)) throw new Exception("Not allowed operator: " . $operator);
+                    if (!in_array(Format::lowercase($operator), $allowedOperators)) throw new Exception("Not allowed operator: " . $operator);
                     // Set filter-condition
                     $filterConditions->add($query->expr()->{$operator}($field, ':' . $valueKey));
                 }
@@ -943,7 +944,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
-                    if (!in_array(strtolower($operator), $allowedOperators)) throw new Exception("Not allowed operator: " . $operator);
+                    if (!in_array(Format::lowercase($operator), $allowedOperators)) throw new Exception("Not allowed operator: " . $operator);
                     // Set filter-condition
                     $filterConditions->add($query->expr()->{$operator}($field, ':' . $valueKey));
                 }
@@ -961,7 +962,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
-                    if (!in_array(strtolower($operator), $allowedOperators)) throw new Exception("Not allowed operator: " . $operator);
+                    if (!in_array(Format::lowercase($operator), $allowedOperators)) throw new Exception("Not allowed operator: " . $operator);
                     // Set filter-condition
                     $filterConditions->add($query->expr()->{$operator}($field, ':' . $valueKey));
                 }
@@ -979,7 +980,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
-                    if (!in_array(strtolower($operator), $allowedOperators)) throw new Exception("Not allowed operator: " . $operator);
+                    if (!in_array(Format::lowercase($operator), $allowedOperators)) throw new Exception("Not allowed operator: " . $operator);
                     // Set filter-condition
                     $filterConditions->add($query->expr()->{$operator}($field, ':' . $valueKey));
                 }
@@ -1000,7 +1001,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
-                    if (!in_array(strtolower($operator), $allowedOperators)) throw new Exception("Not allowed operator: " . $operator);
+                    if (!in_array(Format::lowercase($operator), $allowedOperators)) throw new Exception("Not allowed operator: " . $operator);
                     // Set filter-condition
                     $filterConditions->add($query->expr()->{$operator}($field, ':' . $valueKey));
                 }
@@ -1018,7 +1019,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
-                    if (!in_array(strtolower($operator), $allowedOperators)) throw new Exception("Not allowed operator: " . $operator);
+                    if (!in_array(Format::lowercase($operator), $allowedOperators)) throw new Exception("Not allowed operator: " . $operator);
                     // Set filter-condition
                     $filterConditions->add($query->expr()->{$operator}($field, ':' . $valueKey));
                 }
@@ -1036,7 +1037,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
-                    if (!in_array(strtolower($operator), $allowedOperators)) throw new Exception("Not allowed operator: " . $operator);
+                    if (!in_array(Format::lowercase($operator), $allowedOperators)) throw new Exception("Not allowed operator: " . $operator);
                     // Set filter-condition
                     $filterConditions->add($query->expr()->{$operator}($field, ':' . $valueKey));
                 }
@@ -1054,7 +1055,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
-                    if (!in_array(strtolower($operator), $allowedOperators)) throw new Exception("Not allowed operator: " . $operator);
+                    if (!in_array(Format::lowercase($operator), $allowedOperators)) throw new Exception("Not allowed operator: " . $operator);
                     // Set filter-condition
                     $filterConditions->add($query->expr()->{$operator}($field, ':' . $valueKey));
                 }

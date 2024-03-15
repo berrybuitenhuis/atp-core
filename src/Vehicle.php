@@ -14,7 +14,7 @@ class Vehicle
     {
         if (!empty($power)) {
             $factor = 1.359623;
-            if (strtolower($sourceUnit) == "pk") return round(((float) $power) / $factor);
+            if (Format::lowercase($sourceUnit) == "pk") return round(((float) $power) / $factor);
             else return round(((float) $power) * $factor);
         } else {
             return 0;

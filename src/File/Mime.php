@@ -2,6 +2,8 @@
 
 namespace AtpCore\File;
 
+use AtpCore\Format;
+
 class Mime
 {
 
@@ -26,7 +28,7 @@ class Mime
      */
     private static function getFileExtensions($mimeType)
     {
-        switch(strtolower($mimeType)) {
+        switch(Format::lowercase($mimeType)) {
             case "application/json":
                 $extensions = ["json"];
                 break;

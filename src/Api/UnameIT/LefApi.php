@@ -5,6 +5,7 @@
 namespace AtpCore\Api\UnameIT;
 
 use AtpCore\BaseClass;
+use AtpCore\Format;
 use GuzzleHttp\Client;
 
 class LefApi extends BaseClass
@@ -72,7 +73,7 @@ class LefApi extends BaseClass
      */
     private function convertFuelType($originalValue)
     {
-        switch (strtolower($originalValue)) {
+        switch (Format::lowercase($originalValue)) {
             case "benzine":
                 $output = 'Benzine';
                 break;
@@ -153,9 +154,9 @@ class LefApi extends BaseClass
             if(!empty($relation->dateOfBirth)) {
                 $consumer->addChild("GeboorteDatum", $relation->dateOfBirth->format("Y-m-d"));
             }
-            if (in_array(strtolower($relation->gender), ['man','male','mister'])) {
+            if (in_array(Format::lowercase($relation->gender), ['man','male','mister'])) {
                 $consumer->addChild("Geslacht", "Man");
-            } elseif (in_array(strtolower($relation->gender), ['vrouw','female','missis'])) {
+            } elseif (in_array(Format::lowercase($relation->gender), ['vrouw','female','missis'])) {
                 $consumer->addChild("Geslacht", "Vrouw");
             }
         }
@@ -203,9 +204,9 @@ class LefApi extends BaseClass
             $interest->addChild("Kenteken", $vehicleInterest->registration);
             if (!empty($vehicleInterest->year)) $interest->addChild("Bouwjaar", $vehicleInterest->year);
             if (!empty($vehicleInterest->fuelType))  $interest->addChild("SoortBrandstof", $this->convertFuelType($vehicleInterest->fuelType));
-            if (in_array(strtolower($vehicleInterest->vehicleCategory), ['nieuw','new'])) {
+            if (in_array(Format::lowercase($vehicleInterest->vehicleCategory), ['nieuw','new'])) {
                 $interest->addChild("SoortVoertuig", 'Nieuw');
-            } elseif (in_array(strtolower($vehicleInterest->vehicleCategory), ['gebruikt','used'])) {
+            } elseif (in_array(Format::lowercase($vehicleInterest->vehicleCategory), ['gebruikt','used'])) {
                 $interest->addChild("SoortVoertuig", 'Occasion');
             }
         }
@@ -239,11 +240,9 @@ class LefApi extends BaseClass
      */
     private function sanitize($value)
     {
-        // Trim
-        $value = trim($value);
-
         // Remove uppercase html-entities (example: &AMP; -> &amp;)
-        $value = htmlentities(strtoupper(html_entity_decode(strtolower($value))));
+        $value = Format::trim($value);
+        $value = htmlentities(Format::uppercase(html_entity_decode(Format::lowercase($value))));
 
         // Return
         return $value;

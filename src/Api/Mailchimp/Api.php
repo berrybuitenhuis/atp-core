@@ -6,6 +6,7 @@
 namespace AtpCore\Api\Mailchimp;
 
 use AtpCore\BaseClass;
+use AtpCore\Format;
 use MailchimpMarketing\ApiClient;
 
 class Api extends BaseClass
@@ -100,6 +101,6 @@ class Api extends BaseClass
      */
     private function getSubscriberHash($emailAddress)
     {
-        return md5(strtolower($emailAddress));
+        return md5(Format::lowercase($emailAddress));
     }
 }

@@ -36,7 +36,7 @@ class Format
         if (is_numeric(str_replace('+', '', $countryCode))) {
             $phoneNumber .= "+";
         }
-        $phoneNumber .= trim(str_replace("00", "", str_replace('+', '', $countryCode)));
+        $phoneNumber .= Format::trim(str_replace("00", "", str_replace('+', '', $countryCode)));
 
         // Add national-code to phone-number
         if (strlen($nationalCode) != 0 && is_numeric($nationalCode)) {

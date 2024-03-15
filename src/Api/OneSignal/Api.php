@@ -6,6 +6,7 @@ namespace AtpCore\Api\OneSignal;
 
 use AtpCore\BaseClass;
 use AtpCore\Api\OneSignal\Entity\Notification;
+use AtpCore\Format;
 use Exception;
 use GuzzleHttp\Client;
 
@@ -53,7 +54,7 @@ class Api extends BaseClass
         // Return
         if (!isset($response->errors) || empty($response->errors)) {
             return $response->subscriptions;
-        } elseif (isset($response->errors[0]) && is_object($response->errors[0]) && property_exists($response->errors[0], "title") && strpos(strtolower($response->errors[0]->title), "doesn't match an existing user")) {
+        } elseif (isset($response->errors[0]) && is_object($response->errors[0]) && property_exists($response->errors[0], "title") && strpos(Format::lowercase($response->errors[0]->title), "doesn't match an existing user")) {
             return null;
         } else {
             $this->setErrorData($response);

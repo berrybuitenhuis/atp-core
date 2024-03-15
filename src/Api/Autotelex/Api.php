@@ -8,6 +8,7 @@ namespace AtpCore\Api\Autotelex;
 use AtpCore\Api\Autotelex\Response\Vehicle;
 use AtpCore\BaseClass;
 use AtpCore\Extension\JsonMapperExtension;
+use AtpCore\Format;
 use Laminas\Soap\Client;
 
 class Api extends BaseClass
@@ -191,7 +192,7 @@ class Api extends BaseClass
         }
 
         if ($bid > 0) {
-            $btw = (strtolower($vatMarginType) == "btw") ? true : false;
+            $btw = Format::lowercase($vatMarginType) == "btw";
 
             // Get token
             $token = $this->getToken();
@@ -264,7 +265,7 @@ class Api extends BaseClass
             $this->setOriginalResponse($result);
             if ($this->debug) $this->log("response", "NoInterest", json_encode($result));
             $status = $result->NoInterestResult;
-            if ($status->Code == 0) {
+            if (property_exists($status, "Code") && $status->Code == 0) {
                 return true;
             } else {
                 return $status;
@@ -408,7 +409,7 @@ class Api extends BaseClass
                 $response->VehicleInfo->Pakketten->Packets = [$response->VehicleInfo->Pakketten->Packets];
             }
             foreach ($response->VehicleInfo->Pakketten->Packets as $key => $package) {
-                if (is_object($package->Opties->Options)) {
+                if (is_object($package->Opties) && is_object($package->Opties->Options)) {
                     $response->VehicleInfo->Pakketten->Packets[$key]->Opties->Options = [$package->Opties->Options];
                 }
                 if (!empty($response->VehicleInfo->Pakketten->Packets[$key]->Opties)) {

@@ -2,6 +2,7 @@
 
 namespace AtpCore\Extension;
 
+use AtpCore\Format;
 use JsonMapper;
 
 class JsonMapperExtension extends JsonMapper {
@@ -359,8 +360,8 @@ class JsonMapperExtension extends JsonMapper {
     {
         if (!empty($this->arInspectedClasses[$objectName])) {
             $objectProperties = array_change_key_case($this->arInspectedClasses[$objectName], CASE_LOWER);
-            if (array_key_exists(strtolower($propertyName), $objectProperties)) {
-                $scheme = $objectProperties[strtolower($propertyName)];
+            if (array_key_exists(Format::lowercase($propertyName), $objectProperties)) {
+                $scheme = $objectProperties[Format::lowercase($propertyName)];
             } else {
                 $scheme = $this->getPropertyDetails($objectName, $propertyName);
             }
@@ -414,7 +415,7 @@ class JsonMapperExtension extends JsonMapper {
      */
     private function validateData($name, $namespace, $expectedType, $nullable, $data)
     {
-        switch(strtolower(gettype($data))) {
+        switch(Format::lowercase(gettype($data))) {
             case "array":
                 if (preg_match("/.+(\[\])$/m", $expectedType)) {
                     $expectedPropertyType = str_ireplace("[]", "", $expectedType);

@@ -75,7 +75,7 @@ class Date extends BaseClass
      */
     public static function convertMonthName($monthName)
     {
-        switch (strtolower($monthName)) {
+        switch (Format::lowercase($monthName)) {
             case "jan":
             case "januari":
             case "january":
@@ -152,7 +152,7 @@ class Date extends BaseClass
         $dateInterval = $dateFuture->diff($this->date);
 
         // Convert difference into specified unit
-        switch (strtolower($unit)) {
+        switch (Format::lowercase($unit)) {
             case "day":
             case "days":
             case "dag":
@@ -210,8 +210,8 @@ class Date extends BaseClass
         // Conver date-object into string (by specified format)
         $result = $this->date->format($format);
 
-        // Translate day/month-names into dutch
-        if (strtolower($language) == "nl") {
+        // Translate day/month-names into Dutch
+        if (Format::lowercase($language) == "nl") {
             $dayNames = [
                 'Sunday' => 'zondag',
                 'Monday' => 'maandag',
@@ -404,7 +404,7 @@ class Date extends BaseClass
 
     private function convertInterval($interval, $format) {
         // Set interval (in seconds) by format
-        switch (strtolower($format)) {
+        switch (Format::lowercase($format)) {
             case "second":
             case "seconds":
             case "seconden":
@@ -452,7 +452,7 @@ class Date extends BaseClass
     {
         if (!is_array($weekendDays)) $weekendDays = ["sun"];
 
-        if (in_array(strtolower($this->date->format("D")), $weekendDays)) {
+        if (in_array(Format::lowercase($this->date->format("D")), $weekendDays)) {
             return true;
         } else {
             // Check Easter (Pasen)
