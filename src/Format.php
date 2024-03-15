@@ -57,6 +57,13 @@ class Format
         return $phoneNumber;
     }
 
+    public static function trim($value)
+    {
+        // PHP 8 does not support trim on null-value
+        if (is_null($value)) return null;
+        return trim($value);
+    }
+
     public static function uppercase($value)
     {
         // PHP 8 does not support strtoupper on null-value
