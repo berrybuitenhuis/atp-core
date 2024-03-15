@@ -26,7 +26,7 @@ class Api extends BaseClass
         // Set client
         $this->client = ClientBuilder::create()
             ->setElasticCloudId($cloudId)
-            ->setApiKey($apiId, $apiKey)
+            ->setApiKey($apiKey, $apiId)
             ->build();
 
         // Reset error-messages
