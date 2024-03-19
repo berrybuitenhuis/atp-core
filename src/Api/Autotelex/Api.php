@@ -467,7 +467,7 @@ class Api extends BaseClass
                 $response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets = [$response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets];
             }
             foreach ($response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets as $key => $package) {
-                if (is_object($package->Opties->Options)) {
+                if (is_object($package->Opties) && is_object($package->Opties->Options)) {
                     $response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets[$key]->Opties->Options = [$package->Opties->Options];
                 }
                 if (!empty($response->VehicleInfo2->VoertuigVariabelen->Pakketten->Packets[$key]->Opties)) {
