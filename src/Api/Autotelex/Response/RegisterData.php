@@ -22,6 +22,6 @@ class RegisterData
     public $temporaryRegistrationCode;
     /** @var boolean */
     public $transportBySeller;
-    /** @var string */
+    /** @var string|null */
     public $vin;
 }

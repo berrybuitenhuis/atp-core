@@ -6,6 +6,7 @@
 namespace AtpCore\Api\InMotive;
 
 use AtpCore\BaseClass;
+use AtpCore\Format;
 use Laminas\Soap\Client;
 
 class Api extends BaseClass
@@ -65,15 +66,15 @@ class Api extends BaseClass
     {
         // Add data to array
         $this->data[$type]["name"] = html_entity_decode($companyName);
-        if (trim($personName) != "") $this->data[$type]["contact"] = html_entity_decode($personName);
+        if (Format::trim($personName) != "") $this->data[$type]["contact"] = html_entity_decode($personName);
         $this->data[$type]["street"] = html_entity_decode($street);
-        $this->data[$type]["housenumber"] = trim($number);
+        $this->data[$type]["housenumber"] = Format::trim($number);
         $this->data[$type]["zipcode"] = $zipcode;
         $this->data[$type]["city"] = html_entity_decode($city);
-        if (trim($country) != "") $this->data[$type]["country"] = html_entity_decode($country);
-        if (trim($phone) != "") $this->data[$type]["telephone"] = $phone;
-        if (trim($email) != "") $this->data[$type]["email"] = $email;
-        if (trim($comment) != "") $this->data[$type]["remarks"] = html_entity_decode($comment);
+        if (Format::trim($country) != "") $this->data[$type]["country"] = html_entity_decode($country);
+        if (Format::trim($phone) != "") $this->data[$type]["telephone"] = $phone;
+        if (Format::trim($email) != "") $this->data[$type]["email"] = $email;
+        if (Format::trim($comment) != "") $this->data[$type]["remarks"] = html_entity_decode($comment);
     }
 
     public function setGeneral($transportId, $orderNumber, $debtor, $dateDeadline)
@@ -103,12 +104,12 @@ class Api extends BaseClass
         } else {
             $this->data["load"]["licenseplate"] = $registration;
         }
-        $this->data["load"]["make"] = html_entity_decode(trim(preg_replace('/ {2,}/', ' ', $make)));
-        $this->data["load"]["model"] = html_entity_decode(trim(preg_replace('/ {2,}/', ' ', $model)));
+        $this->data["load"]["make"] = html_entity_decode(Format::trim(preg_replace('/ {2,}/', ' ', $make)));
+        $this->data["load"]["model"] = html_entity_decode(Format::trim(preg_replace('/ {2,}/', ' ', $model)));
         $this->data["load"]["color"] = html_entity_decode($color);
         $this->data["load"]["class"] = $vehicleType;
         $this->data["load"]["weight"] = "0";
-        if (trim($comment) != "") $this->data["remarks"] = html_entity_decode($comment);
+        if (Format::trim($comment) != "") $this->data["remarks"] = html_entity_decode($comment);
     }
 
 }

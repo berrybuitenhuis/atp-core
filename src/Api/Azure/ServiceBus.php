@@ -5,6 +5,7 @@
 namespace AtpCore\Api\Azure;
 
 use AtpCore\BaseClass;
+use AtpCore\Format;
 use GuzzleHttp\Client;
 
 class ServiceBus extends BaseClass
@@ -100,7 +101,7 @@ class ServiceBus extends BaseClass
     private function generateSASToken($hostname, $sharedAccessKeyName, $sharedAccessKey)
     {
         // Set variables for SAS-token
-        $targetUri = strtolower(rawurlencode(strtolower($hostname)));
+        $targetUri = Format::lowercase(rawurlencode(Format::lowercase($hostname)));
         $expires = time() + 60;
 
         // Generate signature

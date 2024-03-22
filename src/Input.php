@@ -27,7 +27,7 @@ class Input
         if ($value === null) return null;
 
         // Return integer-value of boolean
-        if (strtolower($output) == "integer" || strtolower($output) == "int") {
+        if (Format::lowercase($output) == "integer" || Format::lowercase($output) == "int") {
             return $value ? 1 : 0;
         }
 
@@ -76,9 +76,9 @@ class Input
             // Replace empty object into null
             if ($value instanceOf \stdClass && empty((array) $value)) $data->$key = null;
             // Replace string false into boolean
-            elseif (is_string($value) && strtolower($value) === "false") $data->$key = false;
+            elseif (is_string($value) && Format::lowercase($value) === "false") $data->$key = false;
             // Replace string true into boolean
-            elseif (is_string($value) && strtolower($value) === "true") $data->$key = true;
+            elseif (is_string($value) && Format::lowercase($value) === "true") $data->$key = true;
             // Replace empty string into null
             elseif (is_string($value) && empty($value)) $data->$key = null;
         }
@@ -99,6 +99,7 @@ class Input
     {
         // Initialize matched string
         $match = "";
+        if (empty($string)) return $match;
 
         if ($completeWords === true) {
             // Split (source) string into array for words
@@ -110,7 +111,7 @@ class Input
                 if(stripos($otherString, $match . $word . " ") === 0 || $otherString == $match . $word) {
                     $match .= $word . " ";
                 } else {
-                    $match = trim($match);
+                    $match = Format::trim($match);
                     break;
                 }
             }
@@ -201,7 +202,7 @@ class Input
         elseif (is_object($value)) $output = empty($value);
         elseif (is_bool($value)) $output = false;
         elseif ($value === null) $output = true;
-        elseif (trim($value) == "") $output = true;
+        elseif (Format::trim($value) == "") $output = true;
 
         // Return
         return $output;
@@ -229,11 +230,13 @@ class Input
 
         // Verify if value is "integer"
         if (is_int($value)) $output = true;
+        elseif (is_double($value) && preg_match("/^\d+.0*$/", $value)) $output = true;
+        elseif (is_float($value) && preg_match("/^\d+.0*$/", $value)) $output = true;
         elseif (is_array($value)) $output = false;
         elseif (is_object($value)) $output = false;
         elseif (is_bool($value)) $output = false;
         elseif ($value === null) $output = true;
-        elseif (trim($value) == "") $output = true;
+        elseif (Format::trim($value) == "") $output = true;
         elseif (is_string($value) && preg_match("/^(0|([1-9])[0-9]*)$/", $value)) $output = true;
 
         // Return
@@ -387,10 +390,13 @@ class Input
         if (!is_array($array)) return $array;
 
         uksort($array, function($a, $b) use($order) {
-            foreach($order as $value){
-                if ($a == $value) return 0;
-                if ($b == $value) return 1;
-            }
+            $posA = array_search($a, $order);
+            $posB = array_search($b, $order);
+
+            if ($posA === false) return 1; // If $a not found in $order, move it to the end
+            if ($posB === false) return -1; // If $b not found in $order, move it to the beginning
+
+            return $posA <=> $posB; // Compare positions in $order array
         });
 
         return $array;
@@ -474,7 +480,7 @@ class Input
             }
 
             // Check for value-attributes (only for SimpleXMLElement-object)
-            if (gettype($data->$key) === 'object' && get_class($data->key) === 'SimpleXMLElement') {
+            if (is_object($data) && property_exists($data, $key) && gettype($data->$key) === 'object' && get_class($data->key) === 'SimpleXMLElement') {
                 $attributes = $data->$key->attributes();
                 if (!empty($attributes)) {
                     foreach ($attributes as $k => $v) {

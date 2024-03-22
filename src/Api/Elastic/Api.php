@@ -7,7 +7,7 @@
 namespace AtpCore\Api\Elastic;
 
 use AtpCore\BaseClass;
-use Elasticsearch\ClientBuilder;
+use Elastic\Elasticsearch\ClientBuilder;
 use Throwable;
 
 class Api extends BaseClass
@@ -26,7 +26,7 @@ class Api extends BaseClass
         // Set client
         $this->client = ClientBuilder::create()
             ->setElasticCloudId($cloudId)
-            ->setApiKey($apiId, $apiKey)
+            ->setApiKey($apiKey, $apiId)
             ->build();
 
         // Reset error-messages
