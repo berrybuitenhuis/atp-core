@@ -905,7 +905,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                         krsort($filterAssociationJoins);
                         foreach ($filterAssociationJoins AS $filterAssociationJoin) {
                             if (array_key_exists('condition', $filterAssociationJoin) && !empty($filterAssociationJoin['condition'])) {
-                                $query->leftJoin($filterAssociationJoin['join'], $filterAssociationJoin['alias'], $filterAssociationJoin['condition']);
+                                $query->leftJoin($filterAssociationJoin['join'], $filterAssociationJoin['alias'], "WITH", $filterAssociationJoin['condition']);
                             } else {
                                 $query->leftJoin($filterAssociationJoin['join'], $filterAssociationJoin['alias']);
                             }
@@ -914,7 +914,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     // Set association
                     $joins[] = $filterAssociation['alias'];
                     if (array_key_exists('condition', $filterAssociation) && !empty($filterAssociation['condition'])) {
-                        $query->leftJoin($filterAssociation['join'], $filterAssociation['alias'], $filterAssociation['condition']);
+                        $query->leftJoin($filterAssociation['join'], $filterAssociation['alias'], "WITH", $filterAssociation['condition']);
                     } else {
                         $query->leftJoin($filterAssociation['join'], $filterAssociation['alias']);
                     }
