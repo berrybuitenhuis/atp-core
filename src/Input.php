@@ -99,6 +99,7 @@ class Input
     {
         // Initialize matched string
         $match = "";
+        if (empty($string)) return $match;
 
         if ($completeWords === true) {
             // Split (source) string into array for words

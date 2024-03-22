@@ -421,7 +421,7 @@ class Api extends BaseClass
                 }
             }
         }
-        if (is_object($response->VehicleInfo->RDWVoertuigData->VoertuigData)) {
+        if (isset($response->VehicleInfo->RDWVoertuigData->VoertuigData) && is_object($response->VehicleInfo->RDWVoertuigData->VoertuigData)) {
             $response->VehicleInfo->RDWVoertuigData->VoertuigData = [$response->VehicleInfo->RDWVoertuigData->VoertuigData];
         }
         if (!empty($response->VehicleInfo->StandaardOpties->Options)) {
