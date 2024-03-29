@@ -242,7 +242,9 @@ class LefApi extends BaseClass
     {
         // Remove uppercase html-entities (example: &AMP; -> &amp;)
         $value = Format::trim($value);
-        $value = htmlentities(Format::uppercase(html_entity_decode(Format::lowercase($value))));
+        if (!empty($value)) {
+            $value = htmlentities(Format::uppercase(html_entity_decode(Format::lowercase($value))));
+        }
 
         // Return
         return $value;
