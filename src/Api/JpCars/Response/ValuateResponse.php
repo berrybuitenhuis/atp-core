@@ -34,6 +34,10 @@ class ValuateResponse
     public $window_url;
     /** @var string|null */
     public $specials_info;
+    /** @var integer|null */
+    public $apr;
+    /** @var AprBreakdown|null */
+    public $apr_breakdown;
     /** @var string|null */
     public $country;
     /** @var integer|null */
