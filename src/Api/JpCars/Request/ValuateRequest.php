@@ -18,4 +18,6 @@ class ValuateRequest
     public int $hp;
     public int $four_doors;
     public int $co2;
+    public int $maturity_months;
+    public int $mileage_at_maturity;
 }

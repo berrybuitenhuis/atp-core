@@ -10,6 +10,16 @@ class ValuateResponse
     public $value;
     /** @var integer */
     public $value_exex;
+    /** @var integer|null */
+    public $topdown_value;
+    /** @var TopDownValueBreakdown|null */
+    public $topdown_value_breakdown;
+    /** @var integer|null */
+    public $topdown_value_at_maturity;
+    /** @var TopDownValueBreakdown|null */
+    public $topdown_value_at_maturity_breakdown;
+    /** @var double|null */
+    public $value_at_maturity;
     /** @var integer */
     public $stat_turnover_ext;
     /** @var integer */
