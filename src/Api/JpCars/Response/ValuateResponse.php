@@ -6,9 +6,9 @@ class ValuateResponse
 {
     /** @var string */
     public $license_plate;
-    /** @var integer */
+    /** @var integer|null */
     public $value;
-    /** @var integer */
+    /** @var integer|null */
     public $value_exex;
     /** @var integer|null */
     public $topdown_value;
@@ -20,24 +20,28 @@ class ValuateResponse
     public $topdown_value_at_maturity_breakdown;
     /** @var double|null */
     public $value_at_maturity;
-    /** @var integer */
+    /** @var integer|null */
     public $stat_turnover_ext;
-    /** @var integer */
+    /** @var integer|null */
     public $stat_turnover_int;
-    /** @var integer */
+    /** @var integer|null */
     public $window_size;
-    /** @var double */
+    /** @var double|null */
     public $price_sensitivity;
-    /** @var double */
+    /** @var double|null */
     public $mileage_mean;
     /** @var string */
     public $window_url;
-    /** @var string */
+    /** @var string|null */
     public $specials_info;
-    /** @var string */
+    /** @var string|null */
     public $country;
-    /** @var integer */
+    /** @var integer|null */
     public $own_supply_window_count;
-    /** @var TaxResponse[] */
+    /** @var TaxResponse[]|null */
     public $taxes;
+    /** @var string|null */
+    public $error;
+    /** @var string|null */
+    public $error_message;
 }

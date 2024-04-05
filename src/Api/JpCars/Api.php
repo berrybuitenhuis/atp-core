@@ -52,6 +52,10 @@ class Api extends BaseClass
             $response = json_decode((string) $result->getBody());
             $this->setOriginalResponse($response);
             if ($this->debug) $this->log("response", "Valuate", json_encode($response));
+            if (!empty($response->error)) {
+                $this->setMessages("$response->error: $response->error_message");
+                return false;
+            }
             return $this->mapResponse($response, new ValuateResponse());
         } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
