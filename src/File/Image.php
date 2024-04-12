@@ -17,13 +17,16 @@ class Image extends BaseClass
      */
     public static function convertBase64Content($imageContent)
     {
+        // Check for empty image-content
+        if (empty($imageContent)) return null;
+
         // Check if image-content is valid base64-encoded string
         if (preg_match("/^data:image\/(bmp|jpeg|png|gif);base64,(.*)$/", $imageContent, $data)) {
             $imageContent = $data[2];
         }
 
         // Return
-        return base64_decode($imageContent);
+        return (!empty($imageContent)) ? base64_decode($imageContent) : null;
     }
 
     /**
