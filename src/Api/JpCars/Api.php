@@ -41,7 +41,7 @@ class Api extends BaseClass
     /**
      * Add single vehicle to auction-purchase
      */
-    public function auctionImport(AuctionImportRequest $request, string $auctionName): AuctionImportResponse|false
+    public function auctionImport(array $request, string $auctionName): bool
     {
         try {
             // Initialize request
@@ -53,12 +53,16 @@ class Api extends BaseClass
             // Handle response
             $response = json_decode((string) $result->getBody());
             $this->setOriginalResponse($response);
-            if ($this->debug) $this->log("response", "AuctionImport", json_encode($response));
+            if ($this->debug) $this->log("response", "AuctionImport", "{$result->getStatusCode()}: " . json_encode($response));
+            if ($result->getStatusCode() == 200) {
+                return true;
+            }
             if (!empty($response->error)) {
                 $this->setMessages("$response->error: $response->error_message");
                 return false;
             }
-            return $this->mapResponse($response, new AuctionImportResponse());
+            $this->setMessages("{$result->getStatusCode()}: {$result->getReasonPhrase()}");
+            return false;
         } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
             return false;
