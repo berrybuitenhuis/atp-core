@@ -2,7 +2,7 @@
 
 namespace AtpCore\Api\JpCars\Request;
 
-class ValuateRequest
+class AuctionImportRequest
 {
     public int $build;
     public int $co2;
@@ -13,6 +13,7 @@ class ValuateRequest
     public int $mileage_at_maturity;
     public string $body;
     public string $build_date;
+    public string $end_time;
     public string $equipment;
     public string $fuel;
     public string $gear;
@@ -20,4 +21,5 @@ class ValuateRequest
     public string $model;
     public string $reference;
     public string $specials;
+    public string $url;
 }

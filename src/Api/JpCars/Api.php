@@ -1,11 +1,13 @@
 <?php
 
 /**
- * API-information: https://api.jp.cars/doc
+ * API-information: https://api.nl.jp.cars/doc
  */
 namespace AtpCore\Api\JpCars;
 
+use AtpCore\Api\JpCars\Request\AuctionImportRequest;
 use AtpCore\Api\JpCars\Request\ValuateRequest;
+use AtpCore\Api\JpCars\Response\AuctionImportResponse;
 use AtpCore\Api\JpCars\Response\ValuateResponse;
 use AtpCore\BaseClass;
 use AtpCore\Extension\JsonMapperExtension;
@@ -37,6 +39,33 @@ class Api extends BaseClass
     }
 
     /**
+     * Add single vehicle to auction-purchase
+     */
+    public function auctionImport(AuctionImportRequest $request, string $auctionName): AuctionImportResponse|false
+    {
+        try {
+            // Initialize request
+            $client = $this->getClient();
+            $body = json_encode($request);
+            if ($this->debug) $this->log("request", "AuctionImport", $body);
+            // Execute request
+            $result = $client->post('api-purchase/auction/import', ['query'=>['auction_name'=>$auctionName], 'body'=>$body]);
+            // Handle response
+            $response = json_decode((string) $result->getBody());
+            $this->setOriginalResponse($response);
+            if ($this->debug) $this->log("response", "AuctionImport", json_encode($response));
+            if (!empty($response->error)) {
+                $this->setMessages("$response->error: $response->error_message");
+                return false;
+            }
+            return $this->mapResponse($response, new AuctionImportResponse());
+        } catch (\Exception $e) {
+            $this->setMessages($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Valuate single vehicle
      */
     public function valuate(ValuateRequest $request): ValuateResponse|false
@@ -47,7 +76,7 @@ class Api extends BaseClass
             $body = json_encode($request);
             if ($this->debug) $this->log("request", "Valuate", $body);
             // Execute request
-            $result = $client->post('valuate', ['body'=>$body]);
+            $result = $client->post('api/valuate', ['body'=>$body]);
             // Handle response
             $response = json_decode((string) $result->getBody());
             $this->setOriginalResponse($response);
