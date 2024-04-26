@@ -60,6 +60,8 @@ class VehicleVariables
     public $files;
     /** @var string|null */
     public $gebruiktAls;
+	/** @var Grading|null */
+    public $grading;
 	/** @var HeaderCalculation */
     public $headerberekening;
     /** @var TradeData */
