@@ -142,7 +142,7 @@ class LefApi extends BaseClass
         $customer = $lead->addChild("Relatie");
         if (!empty($relation->companyName)) {
             $company = $customer->addChild("Zakelijk");
-            $company->addChild("Bedrijfsnaam", $relation->companyName);
+            $company->addChild("Bedrijfsnaam", htmlspecialchars($relation->companyName));
             $company->addChild("KvkNummer", $relation->cocNumber);
         } else {
             $consumer = $customer->addChild("Particulier");
