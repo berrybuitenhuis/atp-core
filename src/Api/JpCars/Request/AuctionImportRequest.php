@@ -21,6 +21,6 @@ class AuctionImportRequest
     public string $make;
     public string $model;
     public string $reference;
-    public string $specials;
+    public string $specials_info;
     public string $url;
 }
