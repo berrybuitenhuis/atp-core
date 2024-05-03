@@ -39,14 +39,14 @@ class Api extends BaseClass
     }
 
     /**
-     * Add single vehicle to auction-purchase
+     * Add vehicles to auction-purchase
      */
-    public function auctionImport(array $request, string $auctionName): bool
+    public function auctionImport(array $requests, string $auctionName): bool
     {
         try {
             // Initialize request
             $client = $this->getClient();
-            $body = json_encode($request);
+            $body = json_encode($requests);
             if ($this->debug) $this->log("request", "AuctionImport", $body);
             // Execute request
             $result = $client->post('api-purchase/auction/import', ['query'=>['auction_name'=>$auctionName], 'body'=>$body]);
