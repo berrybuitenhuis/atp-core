@@ -60,8 +60,9 @@ class Api extends BaseClass
     /**
      * Count action
      *     
-     * @param array $params
-     * @return bool
+     * @param string $index
+     * @param array $body
+     * @return array|false
      */
     public function count($index, $body)
     {
@@ -71,7 +72,8 @@ class Api extends BaseClass
                 'body' => $body
             ];
 
-            return $this->client->count($params);
+            $result = $this->client->count($params);
+            return $result->asArray();
         } catch (Throwable $e) {
             $this->setMessages("Count action failed");
             $this->setErrorData($e->getMessage());
@@ -148,7 +150,7 @@ class Api extends BaseClass
      *     
      * @param string $index
      * @param array $body
-     * @return bool
+     * @return array|false
      */
     public function search($index, $body)
     {
@@ -158,7 +160,8 @@ class Api extends BaseClass
                 'body' => $body
             ];
 
-            return $this->client->search($params);
+            $result = $this->client->search($params);
+            return $result->asArray();
         } catch (Throwable $e) {
             $this->setMessages("Search action failed");
             $this->setErrorData($e->getMessage());
