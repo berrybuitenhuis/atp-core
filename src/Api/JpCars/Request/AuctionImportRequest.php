@@ -16,7 +16,7 @@ class AuctionImportRequest
     public string $end_time;
     public string $equipment;
     public string $fuel;
-    public string $gear;
+    public ?string $gear;
     public string $image;
     public string $make;
     public string $model;

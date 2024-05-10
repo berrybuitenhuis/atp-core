@@ -15,7 +15,7 @@ class ValuateRequest
     public string $build_date;
     public string $equipment;
     public string $fuel;
-    public string $gear;
+    public ?string $gear;
     public string $make;
     public string $model;
     public string $reference;
