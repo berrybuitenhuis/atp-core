@@ -64,30 +64,17 @@ class Api extends BaseClass
 
         try {
             // Get vehicle-data
-            $params = ["vendorToken"=>$token, "tp"=>["ExternalID"=>$externalId]];
-            if ($this->debug) $this->log("request", "GetVehicle", json_encode($params));
-            $result = $this->client->GetVehicle($params);
-            $this->setOriginalResponse($result);
-            if ($this->debug) $this->log("response", "GetVehicle", json_encode($result));
-            $status = $result->GetVehicleResult->Status;
-
-            if (property_exists($status, "Code") && $status->Code == 0) {
-                if (isset($result->GetVehicleResult->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData->BiedingId)) {
-                    $tmp = $result->GetVehicleResult->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData;
-                    if ($tmp->Soort == 16) return $tmp->Waarde;
-                } else {
-                    $tmp = $result->GetVehicleResult->VehicleInfo2->VoertuigVariabelen->Biedingen->BiedingData;
-                    if (is_array($tmp) && count($tmp) > 0) {
-                        foreach ($tmp as $v) {
-                            if ($v->Status == 2) continue;
-                            if ($v->Soort == 16) return $v->Waarde;
-                        }
-                    }
+            $vehicleData = $this->getVehicle($externalId, "object");
+            if ($vehicleData === false) return false;
+            // Get bids from vehicle-data
+            $bids = $vehicleData->voertuigVariabelen->biedingen;
+            if (is_array($bids) && count($bids) > 0) {
+                foreach ($bids as $bid) {
+                    if ($bid->status == 2) continue; // status "aanvraag"
+                    if ($bid->soort == 16) return $bid->waarde; // type "Autotaxatie Partners"
                 }
-                return false;
-            } else {
-                return false;
             }
+            return false;
         } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
             return false;
