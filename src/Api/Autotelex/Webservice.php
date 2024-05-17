@@ -5,7 +5,7 @@
  */
 namespace AtpCore\Api\Autotelex;
 
-use AtpCore\Api\Autotelex\Response\Vehicle;
+use AtpCore\Api\Autotelex\Response\Webservice\Vehicle;
 use AtpCore\BaseClass;
 use AtpCore\Extension\JsonMapperExtension;
 use AtpCore\Format;
