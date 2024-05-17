@@ -11,7 +11,7 @@ use AtpCore\Extension\JsonMapperExtension;
 use AtpCore\Format;
 use Laminas\Soap\Client;
 
-class Api extends BaseClass
+class Webservice extends BaseClass
 {
 
     private $client;
