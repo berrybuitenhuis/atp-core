@@ -36,7 +36,7 @@ class Requester
     public $iban;
     /** @var integer */
     public $id;
-    /** @var string */
+    /** @var string|null */
     public $mobile;
     /** @var string */
     public $name;
@@ -50,7 +50,7 @@ class Requester
     public $remark;
     /** @var string */
     public $streetNameAndNumber;
-    /** @var string */
+    /** @var string|null */
     public $telephone;
     /** @var string|null */
     public $title;

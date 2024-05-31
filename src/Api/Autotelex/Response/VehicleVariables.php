@@ -4,7 +4,7 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class VehicleVariables
 {
-    /** @var string|null */
+    /** @var RequestData|null */
     public $aanmeldData;
     /** @var integer */
     public $aantalSleutels;
@@ -84,7 +84,7 @@ class VehicleVariables
     public $files;
     /** @var integer|null */
     public $fueltypeId;
-    /** @var string */
+    /** @var string|null */
     public $gebruiktAls;
     /** @var Grading|null */
     public $grading;
@@ -122,7 +122,7 @@ class VehicleVariables
     public $laksoort;
     /** @var string|null */
     public $landVanHerkomst;
-    /** @var string|null */
+    /** @var LoadAddress|null */
     public $loadAddress;
     /** @var string|null */
     public $make;

@@ -66,6 +66,7 @@ class Api extends BaseClass
             // Get vehicle-data
             $vehicleData = $this->getVehicle($externalId, "object");
             if ($vehicleData === false) return false;
+
             // Get bids from vehicle-data
             $bids = $vehicleData->voertuigVariabelen->biedingen;
             if (is_array($bids) && count($bids) > 0) {
@@ -74,6 +75,8 @@ class Api extends BaseClass
                     if ($bid->soort == 16) return $bid->waarde; // type "Autotaxatie Partners"
                 }
             }
+
+            // Return
             return false;
         } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
@@ -139,7 +142,7 @@ class Api extends BaseClass
      * @param \DateTime $expirationDate
      * @param string $comment
      * @param int $rdwIdentificationNumber
-     * @return bool|object
+     * @return bool
      */
     public function sendBid($externalId, $resultType, $vatMarginType, $bid, $expirationDate, $comment = null, $rdwIdentificationNumber = null)
     {
@@ -157,35 +160,38 @@ class Api extends BaseClass
             try {
                 // Compose message/parameters
                 $params = [
-                    "vendorToken" => $token,
-                    "ibp" => [
-                        "ExternalID" => $externalId,
-                        "SoortBod" => 16,
-                        "Bod" => $bid,
-                        "isBTWVoertuig" => $btw,
-                        "Status" => 3,
-                        "InclExclBTW" => "Incl. BTW",
-                        "GeldigTot" => $expirationDate->format('c'),
-                        "Naam" => "Autotaxatie (Autotaxatie)",
-                        "Opmerking" => $comment
-                    ],
+                    "externalID" => $externalId,
+                    "soortBod" => 16,
+                    "bod" => $bid,
+                    "isBTWVoertuig" => $btw,
+                    "status" => 3,
+                    "inclExclBTW" => "Incl. BTW",
+                    "geldigTot" => $expirationDate->format('c'),
+                    "naam" => "Autotaxatie (Autotaxatie)",
+                    "opmerking" => $comment
                 ];
                 if (!empty($rdwIdentificationNumber)) {
-                    $params["ibp"]["Buyer"] = [
-                        "RdwNumber" => $rdwIdentificationNumber
+                    $params["buyer"] = [
+                        "rdwNumber" => $rdwIdentificationNumber
                     ];
                 }
 
                 // Send bid
+                $requestHeader = ["Authorization"=> "$token->token_type $token->access_token"];
                 if ($this->debug) $this->log("request", "InsertBod", json_encode($params));
-                $result = $this->client->InsertBod($params);
-                $this->setOriginalResponse($result);
-                if ($this->debug) $this->log("response", "InsertBod", json_encode($result));
-                $status = $result->InsertBodResult;
-                if (property_exists($status, "Code") && $status->Code == 0) {
+                $result = $this->client->post("InsertBod", ["headers"=>$requestHeader, "body"=>json_encode($params)]);
+                if ($result->getStatusCode() != 200) {
+                    $this->setMessages("{$result->getStatusCode()}: {$result->getReasonPhrase()}");
+                    return false;
+                }
+                $response = json_decode($result->getBody()->getContents());
+                $this->setOriginalResponse($response);
+                if ($this->debug) $this->log("response", "InsertBod", json_encode($response));
+                if (property_exists($response, "code") && $response->code == 0) {
                     return true;
                 } else {
-                    return $status;
+                    $this->setMessages("$response->code: $response->message");
+                    return false;
                 }
             } catch (\Exception $e) {
                 $this->setMessages($e->getMessage());
@@ -201,7 +207,7 @@ class Api extends BaseClass
      *
      * @param int $externalId
      * @param string $comment
-     * @return bool|object
+     * @return bool
      */
     public function sendNoInterest($externalId, $comment = null)
     {
@@ -210,21 +216,29 @@ class Api extends BaseClass
         if ($token === false) return false;
 
         try {
-            // Send no-interest
+            // Compose message/parameters
             $params = [
-                "vendorToken" => $token,
                 "vehicleId" => $externalId,
                 "comment" => $comment
             ];
+
+            // Send no-interest
+            $requestHeader = ["Authorization"=> "$token->token_type $token->access_token"];
             if ($this->debug) $this->log("request", "NoInterest", json_encode($params));
-            $result = $this->client->NoInterest($params);
-            $this->setOriginalResponse($result);
-            if ($this->debug) $this->log("response", "NoInterest", json_encode($result));
-            $status = $result->NoInterestResult->Status;
-            if (property_exists($status, "Code") && $status->Code == 0) {
+            $result = $this->client->post("NoInterest", ["headers"=>$requestHeader, "query"=>$params]);
+            if ($result->getStatusCode() != 200) {
+                $this->setMessages("{$result->getStatusCode()}: {$result->getReasonPhrase()}");
+                return false;
+            }
+            $response = json_decode($result->getBody()->getContents());
+            $this->setOriginalResponse($response);
+            if ($this->debug) $this->log("response", "NoInterest", json_encode($response));
+            $status = $response->status;
+            if (property_exists($status, "code") && $status->code == 0) {
                 return true;
             } else {
-                return $status;
+                $this->setMessages("$status->code: $status->message");
+                return false;
             }
         } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
