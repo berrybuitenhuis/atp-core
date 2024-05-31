@@ -16,7 +16,7 @@ class Attributes
     public $transmissionCount;
     /** @var Dealer */
     public $dealer;
-    /** @var string */
+    /** @var string|null */
     public $apkTill;
     /** @var string */
     public $inStock;

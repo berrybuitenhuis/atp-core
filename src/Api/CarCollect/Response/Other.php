@@ -4,7 +4,7 @@ namespace AtpCore\Api\CarCollect\Response;
 
 class Other
 {
-    /** @var string */
+    /** @var string|null */
     public $apk_valid_until;
     /** @var string */
     public $body_work;
