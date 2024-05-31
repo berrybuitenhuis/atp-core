@@ -20,6 +20,7 @@ class AuctionImportRequest
     public string $image;
     public string $make;
     public string $model;
+    public string $license_plate;
     public string $reference;
     public string $specials_info;
     public string $url;
