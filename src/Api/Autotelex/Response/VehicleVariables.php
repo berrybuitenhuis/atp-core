@@ -103,7 +103,7 @@ class VehicleVariables
     /** @var string|null */
     public $interieurBekleding;
     /** @var string|null */
-    public $interieurkleur;
+    public $interieurKleur;
     /** @var boolean */
     public $isAdvertisable;
     /** @var boolean */
