@@ -42,6 +42,8 @@ class ValuateResponse
     public $country;
     /** @var integer|null */
     public $own_supply_window_count;
+    /** @var string|null */
+    public $options;
     /** @var TaxResponse[]|null */
     public $taxes;
     /** @var string|null */
