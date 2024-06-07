@@ -24,11 +24,11 @@ class RDWData
     public $bijtellingspercentage;
     /** @var string|null */
     public $bijtellingspercentageGeldigTot;
-    /** @var boolean */
+    /** @var boolean|null */
     public $dubbeleCabine;
     /** @var string */
     public $gemiddeldeStatijd;
-    /** @var boolean */
+    /** @var boolean|null */
     public $isTaxi;
     /** @var string */
     public $kentekenStatus;
