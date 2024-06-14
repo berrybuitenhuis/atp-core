@@ -14,7 +14,7 @@ class ValuateResponse
     public $topdown_value;
     /** @var TopDownValueBreakdown|null */
     public $topdown_value_breakdown;
-    /** @var integer|null */
+    /** @var double|null */
     public $topdown_value_at_maturity;
     /** @var TopDownValueBreakdown|null */
     public $topdown_value_at_maturity_breakdown;
