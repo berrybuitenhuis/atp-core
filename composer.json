@@ -31,7 +31,9 @@
         "spatie/image-optimizer": "^1.7",
         "symfony/event-dispatcher": "^7.0",
         "twig/twig": "^v3.8",
-        "unleash/client": "^v2.3"
+        "unleash/client": "^v2.3",
+        "ext-simplexml": "*",
+        "ext-libxml": "*"
     },
     "autoload": {
         "psr-4": {
