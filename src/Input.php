@@ -14,6 +14,25 @@ class Input
         return !empty(array_filter($data, function($var) { return preg_match("/^[A-Z]{1}/", $var); }));
     }
 
+    /** Check if string matches (one or all) sub-strings */
+    public static function containsSubstring(string $string, array $substrings, bool $matchAll = false): bool {
+        // Initialize result
+        $result = true;
+
+        // Loop through each substring
+        foreach ($substrings as $substring) {
+            // Check if the current substring is found in the string
+            if (str_contains($string, $substring)) {
+                if ($matchAll !== true) return true;
+            } else {
+                $result = false;
+            }
+        }
+
+        // Return
+        return $result;
+    }
+
     /**
      * Convert boolean into string/integer
      *
