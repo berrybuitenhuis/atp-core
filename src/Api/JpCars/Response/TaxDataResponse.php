@@ -8,6 +8,6 @@ class TaxDataResponse
     public $discount;
     /** @var integer */
     public $value_init;
-    /** @var integer */
+    /** @var integer|null */
     public $price_catalog_average;
 }
