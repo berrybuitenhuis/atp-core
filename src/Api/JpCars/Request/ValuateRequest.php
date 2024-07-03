@@ -16,6 +16,7 @@ class ValuateRequest
     public string $equipment;
     public string $fuel;
     public ?string $gear;
+    public string $license_plate;
     public string $make;
     public string $model;
     public string $reference;
