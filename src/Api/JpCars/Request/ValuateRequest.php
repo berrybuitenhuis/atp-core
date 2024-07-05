@@ -8,9 +8,9 @@ class ValuateRequest
     public int $co2;
     public int $four_doors;
     public int $hp;
-    public int $maturity_months;
+    public ?int $maturity_months;
     public int $mileage;
-    public int $mileage_at_maturity;
+    public ?int $mileage_at_maturity;
     public string $body;
     public string $build_date;
     public string $equipment;
