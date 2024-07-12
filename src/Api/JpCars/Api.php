@@ -79,14 +79,24 @@ class Api extends BaseClass
             $client = $this->getClient();
             $body = json_encode($request);
             if ($this->debug) $this->log("request", "Valuate", $body);
+
             // Execute request
             $result = $client->post('api/valuate', ['body'=>$body]);
+
             // Handle response
             $response = json_decode((string) $result->getBody());
             $this->setOriginalResponse($response);
             if ($this->debug) $this->log("response", "Valuate", json_encode($response));
             if (!empty($response->error)) {
                 $this->setMessages("$response->error: $response->error_message");
+                return false;
+            }
+            if ($result->getStatusCode() != 200) {
+                $this->setMessages("{$result->getStatusCode()}: {$result->getReasonPhrase()}");
+                return false;
+            }
+            if (empty($response)) {
+                $this->setMessages("Empty response for JP.cars");
                 return false;
             }
             return $this->mapResponse($response, new ValuateResponse());
