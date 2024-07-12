@@ -442,6 +442,23 @@ class Input
         return stripslashes($var);
     }
 
+    public static function toBoolean(mixed $value): bool
+    {
+        if (is_null($value)) return false;
+        if (is_bool($value)) return $value;
+        if (is_int($value)) return $value !== 0;
+        if (is_string($value)) {
+            $value = strtolower(trim($value));
+            $trueValues = ["true", "1", "yes", "on"];
+            $falseValues = ["false", "0", "no", "off"];
+            if (in_array($value, $trueValues, true)) return true;
+            if (in_array($value, $falseValues, true)) return false;
+        }
+
+        // For any other types, use PHP's implicit boolean conversion
+        return (bool) $value;
+    }
+
     /**
      * Convert SimpleXMLElement-object into object
      *
