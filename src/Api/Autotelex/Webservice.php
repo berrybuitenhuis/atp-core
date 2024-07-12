@@ -49,6 +49,44 @@ class Webservice extends BaseClass
     }
 
     /**
+     * Extend existing bid
+     *
+     * @param $externalId
+     * @param \DateTime $expirationDate
+     * @return bool|object
+     */
+    public function extendBid($externalId, $expirationDate)
+    {
+        // Get token
+        $token = $this->getToken();
+        if ($token === false) return false;
+
+        try {
+            // Compose message/parameters
+            $params = [
+                "vendorToken" => $token,
+                "vehicleId" => $externalId,
+                "newExpiryDate" => $expirationDate->format('c'),
+            ];
+
+            // Extend bid
+            if ($this->debug) $this->log("request", "ExtendBid", json_encode($params));
+            $result = $this->client->ExtendBid($params);
+            $this->setOriginalResponse($result);
+            if ($this->debug) $this->log("response", "ExtendBid", json_encode($result));
+            $status = $result->ExtendBidResult;
+            if (property_exists($status, "Code") && $status->Code == 0) {
+                return true;
+            } else {
+                return $status;
+            }
+        } catch (\Exception $e) {
+            $this->setMessages($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Get (current) bid from Autotelex-request
      *
      * @param $externalId

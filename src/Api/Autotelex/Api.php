@@ -51,6 +51,49 @@ class Api extends BaseClass
     }
 
     /**
+     * Extend existing bid
+     *
+     * @param $externalId
+     * @param \DateTime $expirationDate
+     * @return bool|object
+     */
+    public function extendBid($externalId, $expirationDate)
+    {
+        // Get token
+        $token = $this->getToken();
+        if ($token === false) return false;
+
+        try {
+            // Compose message/parameters
+            $params = [
+                "vehicleId" => $externalId,
+                "newExpiryDate" => $expirationDate->format('c'),
+            ];
+
+            // Extend bid
+            $requestHeader = ["Authorization"=> "$token->token_type $token->access_token"];
+            if ($this->debug) $this->log("request", "ExtendBid", json_encode($params));
+            $result = $this->client->post("ExtendBid", ["headers"=>$requestHeader, "body"=>json_encode($params)]);
+            if ($result->getStatusCode() != 200) {
+                $this->setMessages("{$result->getStatusCode()}: {$result->getReasonPhrase()}");
+                return false;
+            }
+            $response = json_decode($result->getBody()->getContents());
+            $this->setOriginalResponse($response);
+            if ($this->debug) $this->log("response", "ExtendBid", json_encode($response));
+            if (property_exists($response, "code") && $response->code == 0) {
+                return true;
+            } else {
+                $this->setMessages("$response->code: $response->message");
+                return false;
+            }
+        } catch (\Exception $e) {
+            $this->setMessages($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Get (current) bid from Autotelex-request
      *
      * @param $externalId
@@ -178,15 +221,15 @@ class Api extends BaseClass
 
                 // Send bid
                 $requestHeader = ["Authorization"=> "$token->token_type $token->access_token"];
-                if ($this->debug) $this->log("request", "InsertBod", json_encode($params));
-                $result = $this->client->post("InsertBod", ["headers"=>$requestHeader, "body"=>json_encode($params)]);
+                if ($this->debug) $this->log("request", "InsertBid", json_encode($params));
+                $result = $this->client->post("InsertBid", ["headers"=>$requestHeader, "body"=>json_encode($params)]);
                 if ($result->getStatusCode() != 200) {
                     $this->setMessages("{$result->getStatusCode()}: {$result->getReasonPhrase()}");
                     return false;
                 }
                 $response = json_decode($result->getBody()->getContents());
                 $this->setOriginalResponse($response);
-                if ($this->debug) $this->log("response", "InsertBod", json_encode($response));
+                if ($this->debug) $this->log("response", "InsertBid", json_encode($response));
                 if (property_exists($response, "code") && $response->code == 0) {
                     return true;
                 } else {
