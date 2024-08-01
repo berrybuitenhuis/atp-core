@@ -14,6 +14,8 @@ class Grading
     public $Glass;
     /** @var integer|null */
     public $MissingItems;
+    /** @var MissingItems2[]|null */
+    public $missingItems2;
     /** @var integer|null */
     public $TechnicalConditionOfDrivetrainAndChassis;
     /** @var integer|null */
