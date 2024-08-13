@@ -490,6 +490,9 @@ class Webservice extends BaseClass
         if (isset($response->VehicleInfo2->VoertuigVariabelen->Files->UploadFileParameters) && is_object($response->VehicleInfo2->VoertuigVariabelen->Files->UploadFileParameters)) {
             $response->VehicleInfo2->VoertuigVariabelen->Files->UploadFileParameters = [$response->VehicleInfo2->VoertuigVariabelen->Files->UploadFileParameters];
         }
+        if (isset($response->VehicleInfo2->VoertuigVariabelen->Grading->MissingItems2->int) && is_int($response->VehicleInfo2->VoertuigVariabelen->Grading->MissingItems2->int)) {
+            $response->VehicleInfo2->VoertuigVariabelen->Grading->MissingItems2->int = [$response->VehicleInfo2->VoertuigVariabelen->Grading->MissingItems2->int];
+        }
         if (!empty($response->VehicleInfo2->VoertuigVariabelen->Opties->Options)) {
             if (is_object($response->VehicleInfo2->VoertuigVariabelen->Opties->Options)) {
                 $response->VehicleInfo2->VoertuigVariabelen->Opties->Options = [$response->VehicleInfo2->VoertuigVariabelen->Opties->Options];
