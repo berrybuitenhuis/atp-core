@@ -8,7 +8,7 @@ class Other
     public $apk_valid_until;
     /** @var string */
     public $body_work;
-    /** @var string */
+    /** @var string|null */
     public $color;
     /** @var integer */
     public $cylinders;
