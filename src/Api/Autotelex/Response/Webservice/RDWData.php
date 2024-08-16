@@ -52,6 +52,8 @@ class RDWData
     public $rdwBrandstofverbruikStad;
     /** @var integer|null */
     public $rdwBreedteVoertuigMax;
+    /** @var string|null */
+    public $rdwCallDate;
     /** @var string */
     public $rdwCo2emissie;
     /** @var string|null */
