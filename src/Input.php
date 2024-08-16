@@ -249,8 +249,8 @@ class Input
 
         // Verify if value is "integer"
         if (is_int($value)) $output = true;
-        elseif (is_double($value) && preg_match("/^\d+.0*$/", $value)) $output = true;
-        elseif (is_float($value) && preg_match("/^\d+.0*$/", $value)) $output = true;
+        elseif (is_double($value) && (preg_match("/^\d+.0*$/", $value) || preg_match("/^(0|([1-9])[0-9]*)$/", $value))) $output = true;
+        elseif (is_float($value) && (preg_match("/^\d+.0*$/", $value) || preg_match("/^(0|([1-9])[0-9]*)$/", $value))) $output = true;
         elseif (is_array($value)) $output = false;
         elseif (is_object($value)) $output = false;
         elseif (is_bool($value)) $output = false;
