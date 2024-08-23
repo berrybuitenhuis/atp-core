@@ -16,7 +16,7 @@ class Grading
     public $missingItems;
     /** @var MissingItems2|null */
     public $missingItems2;
-    /** @var TmStatusHistoryData[] */
+    /** @var integer|null */
     public $technicalConditionOfDrivetrainAndChassis;
     /** @var integer|null */
     public $technicalConditionOfEngine;

@@ -5,19 +5,19 @@ namespace AtpCore\Api\Autotelex\Response\Webservice;
 class Grading
 {
     /** @var integer|null */
-    public $ConditionExterior;
+    public $conditionExterior;
     /** @var integer|null */
-    public $ConditionInterior;
+    public $conditionInterior;
     /** @var integer|null */
-    public $Electric;
+    public $electric;
     /** @var integer|null */
-    public $Glass;
+    public $glass;
     /** @var integer|null */
-    public $MissingItems;
+    public $missingItems;
     /** @var MissingItems2|null */
     public $missingItems2;
     /** @var integer|null */
-    public $TechnicalConditionOfDrivetrainAndChassis;
+    public $technicalConditionOfDrivetrainAndChassis;
     /** @var integer|null */
-    public $TechnicalConditionOfEngine;
+    public $technicalConditionOfEngine;
 }
