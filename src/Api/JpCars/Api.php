@@ -115,6 +115,31 @@ class Api extends BaseClass
         return new Client(['base_uri'=>$this->host, 'headers'=>$headers, 'http_errors'=>false, 'debug'=>$this->debug]);
     }
 
+    private function fixDataTypes(object $response): object
+    {
+        if (isset($response->apr_breakdown->etr->bound) && (is_float($response->apr_breakdown->etr->bound) || is_int($response->apr_breakdown->etr->bound))) {
+            $response->apr_breakdown->etr->bound = (string) $response->apr_breakdown->etr->bound;
+        }
+        if (isset($response->apr_breakdown->mileage_mean->bound) && (is_float($response->apr_breakdown->mileage_mean->bound) || is_int($response->apr_breakdown->mileage_mean->bound))) {
+            $response->apr_breakdown->mileage_mean->bound = (string) $response->apr_breakdown->mileage_mean->bound;
+        }
+        if (isset($response->apr_breakdown->own_supply_window_ratio->bound) && (is_float($response->apr_breakdown->own_supply_window_ratio->bound) || is_int($response->apr_breakdown->own_supply_window_ratio->bound))) {
+            $response->apr_breakdown->own_supply_window_ratio->bound = (string) $response->apr_breakdown->own_supply_window_ratio->bound;
+        }
+        if (isset($response->apr_breakdown->sensitivity->bound) && (is_float($response->apr_breakdown->sensitivity->bound) || is_int($response->apr_breakdown->sensitivity->bound))) {
+            $response->apr_breakdown->sensitivity->bound = (string) $response->apr_breakdown->sensitivity->bound;
+        }
+        if (isset($response->apr_breakdown->window_size->bound) && (is_float($response->apr_breakdown->window_size->bound) || is_int($response->apr_breakdown->window_size->bound))) {
+            $response->apr_breakdown->window_size->bound = (string) $response->apr_breakdown->window_size->bound;
+        }
+        if (isset($response->apr_breakdown->window_unlocked->bound) && (is_float($response->apr_breakdown->window_unlocked->bound) || is_int($response->apr_breakdown->window_unlocked->bound))) {
+            $response->apr_breakdown->window_unlocked->bound = (string) $response->apr_breakdown->window_unlocked->bound;
+        }
+
+        // Return
+        return $response;
+    }
+
     /**
      * Log message in default format
      */
@@ -143,6 +168,8 @@ class Api extends BaseClass
      */
     private function mapResponse(object $response, mixed $responseClass): ValuateResponse|false
     {
+        $response = $this->fixDataTypes($response);
+
         try {
             // Setup JsonMapper
             $mapper = new JsonMapperExtension();
