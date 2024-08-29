@@ -4,7 +4,7 @@ namespace AtpCore\Api\JpCars\Response;
 
 class AprBreakdownElement
 {
-    /** @var double|string|null */
+    /** @var double|null */
     public $bound;
     /** @var integer */
     public $points;
