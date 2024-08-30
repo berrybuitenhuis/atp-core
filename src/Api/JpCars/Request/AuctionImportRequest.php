@@ -11,11 +11,11 @@ class AuctionImportRequest
     public int $maturity_months;
     public int $mileage;
     public int $mileage_at_maturity;
-    public string $body;
+    public ?string $body;
     public string $build_date;
     public string $end_time;
     public string $equipment;
-    public string $fuel;
+    public ?string $fuel;
     public ?string $gear;
     public string $image;
     public string $make;
