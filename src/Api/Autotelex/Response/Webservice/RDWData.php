@@ -116,7 +116,7 @@ class RDWData
     public $rdwVoertuigClassificatie;
     /** @var integer|null */
     public $rdwVoertuigClassificatieCode;
-    /** @var boolean */
+    /** @var boolean|null */
     public $rdwWamVerzekerd;
     /** @var boolean */
     public $rdwWokStatusIndicator;
