@@ -8,6 +8,7 @@ class Format
     {
         // PHP 8 does not support strtolower on null-value
         if (is_null($value)) return null;
+        if (!is_string($value)) return $value;
         return strtolower($value);
     }
 
