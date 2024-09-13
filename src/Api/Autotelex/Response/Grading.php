@@ -4,9 +4,9 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class Grading
 {
-    /** @var integer */
+    /** @var integer|null */
     public $conditionExterior;
-    /** @var integer */
+    /** @var integer|null */
     public $conditionInterior;
     /** @var integer|null */
     public $electric;
@@ -14,7 +14,7 @@ class Grading
     public $glass;
     /** @var integer|null */
     public $missingItems;
-    /** @var MissingItems2|null */
+    /** @var integer[]|null */
     public $missingItems2;
     /** @var integer|null */
     public $technicalConditionOfDrivetrainAndChassis;
