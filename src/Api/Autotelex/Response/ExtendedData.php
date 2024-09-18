@@ -63,6 +63,8 @@ class ExtendedData
     /** @var integer */
     public $rdwBreedteVoertuigMax;
     /** @var string */
+    public $rdwCallDate;
+    /** @var string */
     public $rdwCo2Emissie;
     /** @var string */
     public $rdwDatumAansprakelijkheid;

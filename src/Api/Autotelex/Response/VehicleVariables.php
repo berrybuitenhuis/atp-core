@@ -80,7 +80,7 @@ class VehicleVariables
     public $externalId;
     /** @var string|null */
     public $externalParameters;
-    /** @var File[] */
+    /** @var File[]|null */
     public $files;
     /** @var integer|null */
     public $fueltypeId;
