@@ -78,7 +78,8 @@ class Webservice extends BaseClass
             if (property_exists($status, "Code") && $status->Code == 0) {
                 return true;
             } else {
-                return $status;
+                $this->setMessages(json_encode($status));
+                return false;
             }
         } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
