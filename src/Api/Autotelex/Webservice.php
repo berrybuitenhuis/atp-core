@@ -77,6 +77,8 @@ class Webservice extends BaseClass
             $status = $result->ExtendBidResult;
             if (property_exists($status, "Code") && $status->Code == 0) {
                 return true;
+            } elseif (property_exists($status, "Status") && $status->Status->Code == 0) {
+                return true;
             } else {
                 $this->setMessages(json_encode($status));
                 return false;
