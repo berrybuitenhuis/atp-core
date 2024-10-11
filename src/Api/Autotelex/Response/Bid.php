@@ -24,6 +24,8 @@ class Bid
     public $hertaxatie;
     /** @var boolean|null */
     public $inclExclBtw;
+    /** @var boolean|null */
+    public $isPublicBid;
     /** @var boolean */
     public $isRenewable;
     /** @var string|null */
