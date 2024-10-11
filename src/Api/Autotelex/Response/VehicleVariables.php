@@ -109,6 +109,8 @@ class VehicleVariables
     /** @var boolean */
     public $isBtwVoertuigBlocked;
     /** @var string|null */
+    public $jatoVehicleTypeId;
+    /** @var string|null */
     public $klantGegevens;
     /** @var string|null */
     public $kleur;
