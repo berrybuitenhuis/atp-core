@@ -88,7 +88,8 @@ class Api extends BaseClass
             $this->setOriginalResponse($response);
             if ($this->debug) $this->log("response", "Valuate", json_encode($response));
             if (!empty($response->error)) {
-                $this->setMessages("$response->error: $response->error_message");
+                $errorMessage = $response->error_message ?? null;
+                $this->setMessages("$response->error: $errorMessage");
                 return false;
             }
             if ($result->getStatusCode() != 200) {
