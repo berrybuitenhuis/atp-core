@@ -209,13 +209,9 @@ class Api extends BaseClass
                 // Compose message/parameters
                 $params = [
                     "externalID" => $externalId,
-                    "soortBod" => 16,
                     "bod" => $bid,
-                    "isBTWVoertuig" => $btw,
-                    "status" => 3,
-                    "inclExclBTW" => "Incl. BTW",
+                    "inclExclBTW" => $btw,
                     "geldigTot" => $expirationDate->format('c'),
-                    "naam" => "Autotaxatie (Autotaxatie)",
                     "opmerking" => $comment
                 ];
                 if (!empty($rdwIdentificationNumber)) {
