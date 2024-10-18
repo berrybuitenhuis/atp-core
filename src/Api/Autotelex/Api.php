@@ -83,8 +83,13 @@ class Api extends BaseClass
             if ($this->debug) $this->log("response", "ExtendBid", json_encode($response));
             if (property_exists($response, "code") && $response->code == 0) {
                 return true;
+            } elseif (property_exists($response, "status") && $response->status->code == 0) {
+                return true;
             } else {
-                $this->setMessages("$response->code: $response->message");
+                $response = (property_exists($response, "status")) ? $response->status : $response;
+                $responseCode = $response->code ?? null;
+                $responseMessage = $response->message ?? null;
+                $this->setMessages("$responseCode: $responseMessage");
                 return false;
             }
         } catch (\Exception $e) {
@@ -232,8 +237,13 @@ class Api extends BaseClass
                 if ($this->debug) $this->log("response", "InsertBid", json_encode($response));
                 if (property_exists($response, "code") && $response->code == 0) {
                     return true;
+                } elseif (property_exists($response, "status") && $response->status->code == 0) {
+                    return true;
                 } else {
-                    $this->setMessages("$response->code: $response->message");
+                    $response = (property_exists($response, "status")) ? $response->status : $response;
+                    $responseCode = $response->code ?? null;
+                    $responseMessage = $response->message ?? null;
+                    $this->setMessages("$responseCode: $responseMessage");
                     return false;
                 }
             } catch (\Exception $e) {
@@ -276,11 +286,15 @@ class Api extends BaseClass
             $response = json_decode($result->getBody()->getContents());
             $this->setOriginalResponse($response);
             if ($this->debug) $this->log("response", "NoInterest", json_encode($response));
-            $status = $response->status;
-            if (property_exists($status, "code") && $status->code == 0) {
+            if (property_exists($response, "code") && $response->code == 0) {
+                return true;
+            } elseif (property_exists($response, "status") && $response->status->code == 0) {
                 return true;
             } else {
-                $this->setMessages("$status->code: $status->message");
+                $response = (property_exists($response, "status")) ? $response->status : $response;
+                $responseCode = $response->code ?? null;
+                $responseMessage = $response->message ?? null;
+                $this->setMessages("$responseCode: $responseMessage");
                 return false;
             }
         } catch (\Exception $e) {
