@@ -180,6 +180,8 @@ class VehicleInfo
     public $tankInhoud;
     /** @var boolean */
     public $taxatieData;
+    /** @var integer|null */
+    public $toonRoetFilterWaarschuwingsBericht;
     /** @var integer */
     public $topsnelheid;
     /** @var string|null */
