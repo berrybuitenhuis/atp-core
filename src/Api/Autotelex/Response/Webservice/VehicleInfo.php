@@ -152,6 +152,8 @@ class VehicleInfo
     public $rechargePossibility;
     /** @var boolean */
     public $roetfilter;
+    /** @var integer|null */
+    public $roetFilterVerwijdertStatus;
     /** @var string|null */
     public $segmentCode;
     /** @var string|null */
