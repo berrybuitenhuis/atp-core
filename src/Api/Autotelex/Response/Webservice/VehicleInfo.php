@@ -150,6 +150,8 @@ class VehicleInfo
     public $rdwVoertuigData;
     /** @var boolean */
     public $rechargePossibility;
+    /** @var integer|null */
+    public $roetfilterVerwijdertStatus;
     /** @var boolean */
     public $roetfilter;
     /** @var string|null */
