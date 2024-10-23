@@ -154,6 +154,8 @@ class VehicleInfo
     public $roetfilterVerwijdertStatus;
     /** @var boolean */
     public $roetfilter;
+    /** @var integer|null */
+    public $roetFilterVerwijdertStatus;
     /** @var string|null */
     public $segmentCode;
     /** @var string|null */
@@ -180,6 +182,8 @@ class VehicleInfo
     public $tankInhoud;
     /** @var boolean */
     public $taxatieData;
+    /** @var integer|null */
+    public $toonRoetFilterWaarschuwingsBericht;
     /** @var integer */
     public $topsnelheid;
     /** @var string|null */
