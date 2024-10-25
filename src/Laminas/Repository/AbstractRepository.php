@@ -1445,7 +1445,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         if (property_exists($object, 'lastUpdated')) $this->inputData['lastUpdated'] = new DateTime();
 
         // Verify data-fields for update
-        $res = $this->verifyDataFields();
+        $res = $this->verifyDataFields(__FUNCTION__);
         if ($res === false) return false;
 
         // hydrate object, apply inputfilter, save it, and return result
@@ -1574,12 +1574,12 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         }
     }
 
-    public function verifyDataFields() {
+    public function verifyDataFields($operation = "update") {
         // Verify data-fields for update
-        if (method_exists($this->options, 'verifyDataFields')) {
-            $this->inputData = $this->options->verifyDataFields(__FUNCTION__, $this->inputData);
+        if (method_exists($this->options, "verifyDataFields")) {
+            $this->inputData = $this->options->verifyDataFields($operation, $this->inputData);
             if (empty($this->inputData)) {
-                $this->setMessages(['invalidInput' => 'No data for update']);
+                $this->setMessages(["invalidInput"=>"No data for $operation"]);
                 return false;
             }
         }
