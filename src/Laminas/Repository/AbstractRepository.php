@@ -1579,7 +1579,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         if (method_exists($this->options, "verifyDataFields")) {
             $this->inputData = $this->options->verifyDataFields($operation, $this->inputData);
             if (empty($this->inputData)) {
-                $this->setMessages(["invalidInput"=>"No data for $operation"]);
+                $this->setMessages(["invalidInput"=>"No data for $operation ($this->objectName)"]);
                 return false;
             }
         }
