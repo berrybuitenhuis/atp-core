@@ -473,7 +473,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     $func = 'get' . ucfirst($k);
                     $values[$k] = $this->transformValues($data->$func(), $field, $dataOrig->$func());
                 } else {
-                    $fieldValue = "";
+                    $fieldValue = null;
 
                     // Method-check
                     $func = 'conv' . ucfirst($field);
