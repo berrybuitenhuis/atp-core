@@ -50,4 +50,8 @@ class ValuateResponse
     public $error;
     /** @var string|null */
     public $error_message;
+    /** @var double|null */
+    public $target_perc;
+    /** @var integer|null */
+    public $rank_target;
 }
