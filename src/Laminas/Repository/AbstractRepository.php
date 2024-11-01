@@ -486,7 +486,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     if (is_object($data)) {
                         // Check if convert-function exists (in corresponding repository-class)
                         if ($methodConvCheck === true) {
-                            $fieldValue = $repository->$func($data, $this->config['application'], $dataOrig);
+                            $fieldValue = $repository->$func($data, $this->config, $dataOrig);
                         } else {
                             // Check if get-function exists (in entity-class)
                             $func = 'get' . ucfirst($field);
@@ -497,7 +497,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     } elseif (is_array($data)) {
                         // Check if convert-function exists (in corresponding repository-class)
                         if ($methodConvCheck === true) {
-                            $fieldValue = $repository->$func($data, $this->config['application'], $dataOrig);
+                            $fieldValue = $repository->$func($data, $this->config, $dataOrig);
                         } else {
                             if (isset($data[$field])) {
                                 $fieldValue = $data[$field];
