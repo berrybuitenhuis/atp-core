@@ -18,6 +18,10 @@ class ValuateResponse
     public $topdown_value_at_maturity;
     /** @var TopDownValueBreakdown|null */
     public $topdown_value_at_maturity_breakdown;
+    /** @var integer|null */
+    public $topdown_value_exex;
+    /** @var TopDownValueBreakdown|null */
+    public $topdown_value_exex_breakdown;
     /** @var double|null */
     public $value_at_maturity;
     /** @var integer|null */
