@@ -63,4 +63,26 @@ class Api extends BaseClass
             return false;
         }
     }
+
+    public function getDataSet($code, $offset = 0, $limit = 1000)
+    {
+        try {
+            // Prepare request
+            $client = new Client(['base_uri'=>$this->hostname, 'http_errors'=>false, 'debug'=>$this->debug]);
+            $result = $client->get('resource/' . $code . '.json?$offset=' . $offset . '&$limit=' . $limit);
+
+            // Return
+            if ($result->getStatusCode() === 200) {
+                $data = json_decode((string) $result->getBody());
+                return $data;
+            } else {
+                $this->setErrorData((string) $result->getBody());
+                $this->setMessages($result->getReasonPhrase());
+                return false;
+            }
+        } catch (\Exception $e) {
+            $this->setMessages($e->getMessage());
+            return false;
+        }
+    }
 }
