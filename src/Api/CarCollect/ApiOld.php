@@ -17,10 +17,10 @@ use GraphQL\RawObject;
 use GraphQL\Variable;
 use GuzzleHttp\Exception\ClientException;
 
-class Api extends BaseClass
+class ApiOld extends BaseClass
 {
 
-    private $branch;
+    private $branches;
     private $debug;
     private $host;
     private $logger;
@@ -111,10 +111,12 @@ class Api extends BaseClass
         // Get branch and token
         $token = $this->getToken();
         if ($token === false) return false;
-        if (empty($this->branch)) {
-            $this->setMessages("No bid-branch found");
+        if (count($this->branches) == 0 || count($this->branches) > 1) {
+            if (count($this->branches) == 0) $this->setMessages("No bid-branch found");
+            else $this->setMessages("Multiple bid-branches found (count: " . count($this->branches) . ") ");
             return false;
         }
+        $branch = current($this->branches)->id;
 
         try {
             $amount = (int) $amount;
@@ -126,7 +128,7 @@ class Api extends BaseClass
                 ->setVariables([
                     new Variable('tradeDossierId', 'ID', true),
                 ])
-                ->setArguments(['tradeDossierId'=>'$tradeDossierId', 'bid'=>new RawObject("{amount: $amount, branch: \"$this->branch\", comment: \"$comment\"}")])
+                ->setArguments(['tradeDossierId'=>'$tradeDossierId', 'bid'=>new RawObject("{amount: $amount, branch: \"$branch\", comment: \"$comment\"}")])
                 ->setSelectionSet(['id','amount','comment']);
 
             $response = $this->getClient($token)->runQuery($mutation, false, ['tradeDossierId'=>$tradeDossierId]);
@@ -248,18 +250,19 @@ class Api extends BaseClass
 
         try {
             // Get token
-            $mutation = (new Mutation('loginApiAccount'))
+            $mutation = (new Mutation('loginApi'))
                 ->setArguments(['email'=>$this->username, 'password'=>$this->password])
                 ->setSelectionSet([
-                    'id', 'access_token', 'default_branch'
+                    'id', 'email', 'access_token',
+                    (new Query('branches'))->setSelectionSet(['id', 'name'])
                 ]);
 
             $response = $this->getClient()->runQuery($mutation);
             $result = $response->getData();
 
-            // Set branch and token
-            $this->branch = $result->loginApiAccount->default_branch;
-            $this->token = $result->loginApiAccount->access_token;
+            // Set branches and token
+            $this->branches = $result->loginApi->branches;
+            $this->token = $result->loginApi->access_token;
 
             // Return
             return $this->token;
