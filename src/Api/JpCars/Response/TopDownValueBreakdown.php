@@ -4,7 +4,7 @@ namespace AtpCore\Api\JpCars\Response;
 
 class TopDownValueBreakdown
 {
-    /** @var integer|null */
+    /** @var double|null */
     public $marginCorrectionRule;
     /** @var double|null */
     public $mileageCorrectionRule;
