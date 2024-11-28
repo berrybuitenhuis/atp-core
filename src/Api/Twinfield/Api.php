@@ -39,13 +39,14 @@ class Api extends BaseClass
     }
 
     /**
-     * Create cost-center (kostenplaats)
+     * Create dimension
      *
+     * @param string $type
      * @param string $code
      * @param string $name
      * @return boolean
      */
-    public function createCostCenter(string $code, string $name)
+    public function createDimension(string $type, string $code, string $name)
     {
         try {
             $connector = new \PhpTwinfield\ApiConnectors\OfficeApiConnector($this->connection);
@@ -53,7 +54,7 @@ class Api extends BaseClass
             $dimension = $xml->createElement('dimension');
             $office = $xml->createElement("office", $this->office->getCode());
             $dimension->appendChild($office);
-            $type = $xml->createElement("type", "KPL");
+            $type = $xml->createElement("type", $type);
             $dimension->appendChild($type);
             $code = $xml->createElement("code", $code);
             $dimension->appendChild($code);
