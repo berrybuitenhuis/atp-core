@@ -78,12 +78,11 @@ class Api extends BaseClass
      *
      * @param string $invoiceNumber
      * @param \DateTime $invoiceDate
-     * @param string $period
      * @param \DateTime $dueDate
      * @param \PhpTwinfield\PurchaseTransactionLine[] $purchaseTransactionLines
      * @return bool
      */
-    public function createPurchaseInvoice(string $invoiceNumber, \DateTime $invoiceDate, string $period, \DateTime $dueDate, array $purchaseTransactionLines)
+    public function createPurchaseInvoice(string $invoiceNumber, \DateTime $invoiceDate, \DateTime $dueDate, array $purchaseTransactionLines)
     {
         try {
             $connector = new \PhpTwinfield\ApiConnectors\TransactionApiConnector($this->connection);
@@ -91,7 +90,7 @@ class Api extends BaseClass
             $purchaseTransaction->setOffice($this->office);
             $purchaseTransaction->setCode("INK");
             $purchaseTransaction->setDateFromString($invoiceDate->format("Ymd"));
-            $purchaseTransaction->setPeriod($period);
+            $purchaseTransaction->setPeriod($invoiceDate->format("Y/m"));
             $purchaseTransaction->setInvoiceNumber($invoiceNumber);
             $purchaseTransaction->setDueDateFromString($dueDate->format("Ymd"));
             $purchaseTransaction->setDestiny(\PhpTwinfield\Enums\Destiny::TEMPORARY());
@@ -114,11 +113,10 @@ class Api extends BaseClass
      * @param string $invoiceType
      * @param string $customerId
      * @param \DateTime $invoiceDate
-     * @param string $period
      * @param \PhpTwinfield\InvoiceLine[] $invoiceLines
      * @return bool
      */
-    public function createSalesInvoice(string $invoiceType, string $customerId, \DateTime $invoiceDate, string $period, array $invoiceLines)
+    public function createSalesInvoice(string $invoiceType, string $customerId, \DateTime $invoiceDate, array $invoiceLines)
     {
         try {
             $customerConnector = new \PhpTwinfield\ApiConnectors\CustomerApiConnector($this->connection);
@@ -132,7 +130,7 @@ class Api extends BaseClass
                 ->setPaymentMethod("bank")
                 ->setCurrency(new \Money\Currency("EUR"))
                 ->setInvoiceDate($invoiceDate->format("Ymd"))
-                ->setPeriod($period)
+                ->setPeriod($invoiceDate->format("Y/m"))
                 ->setDueDateFromString($invoiceDate->add(new \DateInterval("P1M"))->format("Ymd")); // Month after invoice-date
             foreach ($invoiceLines as $invoiceLine) {
                 $invoice->addLine($invoiceLine);
