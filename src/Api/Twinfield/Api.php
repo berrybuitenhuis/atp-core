@@ -80,7 +80,7 @@ class Api extends BaseClass
      * @param \DateTime $invoiceDate
      * @param \DateTime $dueDate
      * @param \PhpTwinfield\PurchaseTransactionLine[] $purchaseTransactionLines
-     * @return bool
+     * @return int|false
      */
     public function createPurchaseInvoice(string $invoiceNumber, \DateTime $invoiceDate, \DateTime $dueDate, array $purchaseTransactionLines)
     {
@@ -97,6 +97,7 @@ class Api extends BaseClass
             $purchaseTransaction->setCurrency(new \Money\Currency("EUR"));
             $purchaseTransaction->setLines($purchaseTransactionLines);
             $res = $connector->send($purchaseTransaction);
+            $output = $res->getNumber();
         } catch(\Exception $e) {
             $this->setMessages($e->getMessage());
             $this->setErrorData($e->getTrace());
@@ -104,7 +105,7 @@ class Api extends BaseClass
         }
 
         // Return
-        return true;
+        return $output;
     }
 
     /**
@@ -114,7 +115,7 @@ class Api extends BaseClass
      * @param string $customerId
      * @param \DateTime $invoiceDate
      * @param \PhpTwinfield\InvoiceLine[] $invoiceLines
-     * @return bool
+     * @return string|false
      */
     public function createSalesInvoice(string $invoiceType, string $customerId, \DateTime $invoiceDate, array $invoiceLines)
     {
@@ -135,7 +136,8 @@ class Api extends BaseClass
             foreach ($invoiceLines as $invoiceLine) {
                 $invoice->addLine($invoiceLine);
             }
-            $invoiceConnector->send($invoice);
+            $res = $invoiceConnector->send($invoice);
+            $output = $res->getInvoiceNumber();
         } catch(\Exception $e) {
             $this->setMessages($e->getMessage());
             $this->setErrorData($e->getTrace());
@@ -143,7 +145,7 @@ class Api extends BaseClass
         }
 
         // Return
-        return true;
+        return $output;
     }
 
     /**
