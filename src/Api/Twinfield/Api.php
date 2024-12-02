@@ -112,12 +112,13 @@ class Api extends BaseClass
      * Create sales-invoices
      *
      * @param string $invoiceType
+     * @param string $bankCode
      * @param string $customerId
      * @param \DateTime $invoiceDate
      * @param \PhpTwinfield\InvoiceLine[] $invoiceLines
      * @return string|false
      */
-    public function createSalesInvoice(string $invoiceType, string $customerId, \DateTime $invoiceDate, array $invoiceLines)
+    public function createSalesInvoice(string $invoiceType, string $bankCode, string $customerId, \DateTime $invoiceDate, array $invoiceLines)
     {
         try {
             $customerConnector = new \PhpTwinfield\ApiConnectors\CustomerApiConnector($this->connection);
@@ -127,7 +128,7 @@ class Api extends BaseClass
                 ->setInvoiceType($invoiceType)
                 ->setStatus("concept")
                 ->setCustomer($customerConnector->get($customerId, $this->office))
-                ->setBank("BNK")
+                ->setBank($bankCode)
                 ->setPaymentMethod("bank")
                 ->setCurrency(new \Money\Currency("EUR"))
                 ->setInvoiceDate($invoiceDate->format("Ymd"))
