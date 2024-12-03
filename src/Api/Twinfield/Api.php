@@ -224,6 +224,27 @@ class Api extends BaseClass
     }
 
     /**
+     * Get supplier
+     *
+     * @param string $supplierId
+     * @return false|\PhpTwinfield\Supplier
+     */
+    public function getSupplier(string $supplierId)
+    {
+        try {
+            $connector = new \PhpTwinfield\ApiConnectors\SupplierApiConnector($this->connection);
+            $result = $connector->get($supplierId, $this->office);
+        } catch(\Exception $e) {
+            $this->setMessages($e->getMessage());
+            $this->setErrorData($e->getTrace());
+            return false;
+        }
+
+        // Return
+        return $result;
+    }
+
+    /**
      * Set connection
      *
      * @param \League\OAuth2\Client\Token\AccessToken $accessToken
