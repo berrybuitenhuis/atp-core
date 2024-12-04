@@ -18,6 +18,8 @@ class VehicleVariables
     public $autotelexUitvoeringID;
     /** @var TiresData */
     public $bandenGegevens;
+    /** @var boolean|null */
+    public $batteryChecked;
     /** @var string|null */
     public $bekleding;
     /** @var Destination */
