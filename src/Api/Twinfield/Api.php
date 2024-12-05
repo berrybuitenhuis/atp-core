@@ -20,11 +20,15 @@ class Api extends BaseClass
      * @param string $redirectUri
      * @param string $organisation
      * @param boolean $debug
+     * @param string|null $logFile
      */
     public function __construct(
-        $clientId, $clientSecret, $redirectUri,
-        private readonly string $organisation,
-        private readonly bool $debug = false)
+        $clientId,
+        $clientSecret,
+        $redirectUri,
+        $organisation,
+        private readonly bool $debug = false,
+        private readonly ?string $logFile = null)
     {
         // Reset error-messages
         $this->resetErrors();
@@ -50,6 +54,7 @@ class Api extends BaseClass
     {
         try {
             $connector = new \PhpTwinfield\ApiConnectors\OfficeApiConnector($this->connection);
+            if ($this->debug) $this->setLogger($connector);
             $xml = new \Domdocument();
             $dimension = $xml->createElement('dimension');
             $office = $xml->createElement("office", $this->office->getCode());
@@ -86,6 +91,7 @@ class Api extends BaseClass
     {
         try {
             $connector = new \PhpTwinfield\ApiConnectors\TransactionApiConnector($this->connection);
+            if ($this->debug) $this->setLogger($connector);
             $purchaseTransaction = new \PhpTwinfield\PurchaseTransaction();
             $purchaseTransaction->setOffice($this->office);
             $purchaseTransaction->setCode("INK");
@@ -122,7 +128,9 @@ class Api extends BaseClass
     {
         try {
             $customerConnector = new \PhpTwinfield\ApiConnectors\CustomerApiConnector($this->connection);
+            if ($this->debug) $this->setLogger($customerConnector);
             $invoiceConnector = new \PhpTwinfield\ApiConnectors\InvoiceApiConnector($this->connection);
+            if ($this->debug) $this->setLogger($invoiceConnector);
             $invoice = (new \PhpTwinfield\Invoice())
                 ->setOffice($this->office)
                 ->setInvoiceType($invoiceType)
@@ -190,6 +198,7 @@ class Api extends BaseClass
     {
         try {
             $connector = new \PhpTwinfield\ApiConnectors\TransactionApiConnector($this->connection);
+            if ($this->debug) $this->setLogger($connector);
             $result = $connector->get(\PhpTwinfield\PurchaseTransaction::class, "INK", $invoiceNumber, $this->office);
         } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
@@ -212,6 +221,7 @@ class Api extends BaseClass
     {
         try {
             $connector = new \PhpTwinfield\ApiConnectors\InvoiceApiConnector($this->connection);
+            if ($this->debug) $this->setLogger($connector);
             $result = $connector->get($invoiceType, $invoiceNumber, $this->office);
         } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
@@ -233,6 +243,7 @@ class Api extends BaseClass
     {
         try {
             $connector = new \PhpTwinfield\ApiConnectors\SupplierApiConnector($this->connection);
+            if ($this->debug) $this->setLogger($connector);
             $result = $connector->get($supplierId, $this->office);
         } catch(\Exception $e) {
             $this->setMessages($e->getMessage());
@@ -253,5 +264,17 @@ class Api extends BaseClass
     public function setConnection(\League\OAuth2\Client\Token\AccessToken $accessToken, string $refreshToken)
     {
         $this->connection = new \PhpTwinfield\Secure\OpenIdConnectAuthentication($this->provider, $refreshToken, $this->office, $accessToken);
+    }
+
+    /**
+     * Set logger for debug-information
+     *
+     * @param $connector
+     */
+    private function setLogger($connector)
+    {
+        $logger = new \Monolog\Logger('twinfield');
+        $logger->pushHandler(new \Monolog\Handler\StreamHandler($this->logFile, \Monolog\Logger::DEBUG));
+        $connector->setLogger($logger);
     }
 }

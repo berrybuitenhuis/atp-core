@@ -25,6 +25,7 @@
         "mailchimp/marketing": "^3.0",
         "mailgun/mailgun-php": "^4.1",
         "messagebird/php-rest-api": "^v3.1",
+        "monolog/monolog": "^2.10",
         "netresearch/jsonmapper": "^4.4",
         "php-http/curl-client": "^2.3",
         "php-twinfield/twinfield": "^3.7",
