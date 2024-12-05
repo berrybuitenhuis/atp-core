@@ -256,6 +256,22 @@ class Api extends BaseClass
     }
 
     /**
+     * Check if connection is authenticated
+     *
+     * @return boolean
+     */
+    public function isAuthenticated()
+    {
+        try {
+            $this->connection->getAuthenticatedClient(\PhpTwinfield\Enums\Services::PROCESSXML());
+            return true;
+        } catch(\Exception $e) {
+            $this->setMessages($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Set connection
      *
      * @param \League\OAuth2\Client\Token\AccessToken $accessToken
