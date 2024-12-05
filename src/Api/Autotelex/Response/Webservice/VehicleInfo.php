@@ -140,7 +140,7 @@ class VehicleInfo
     public $numberOfGears;
     /** @var string */
     public $opmerkingen;
-    /** @var Options */
+    /** @var Options|null */
     public $opties;
     /** @var Packets|null */
     public $pakketten;
