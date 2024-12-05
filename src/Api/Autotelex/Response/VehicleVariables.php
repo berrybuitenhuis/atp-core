@@ -22,6 +22,10 @@ class VehicleVariables
     public $autotelexUitvoeringId;
     /** @var TireData[]|null */
     public $bandenGegevens;
+    /** @var boolean|null */
+    public $batteryChecked;
+    /** @var null */
+    public $batteryHealth;
     /** @var integer|null */
     public $bedrijfId;
     /** @var string|null */
@@ -108,6 +112,8 @@ class VehicleVariables
     public $isAdvertisable;
     /** @var boolean */
     public $isBtwVoertuigBlocked;
+    /** @var null */
+    public $jatoVehiclePricelist;
     /** @var string|null */
     public $jatoVehicleTypeId;
     /** @var string|null */
@@ -150,6 +156,8 @@ class VehicleVariables
     public $owner;
     /** @var OptionPackage[]|null */
     public $pakketten;
+    /** @var integer|null */
+    public $particulateFilterStatus;
     /** @var integer|null */
     public $physicalOrOnline;
     /** @var integer|null */
