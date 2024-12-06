@@ -189,6 +189,28 @@ class Api extends BaseClass
     }
 
     /**
+     * Get customer
+     *
+     * @param string $customerId
+     * @return false|\PhpTwinfield\Customer
+     */
+    public function getCustomer(string $customerId)
+    {
+        try {
+            $connector = new \PhpTwinfield\ApiConnectors\CustomerApiConnector($this->connection);
+            if ($this->debug) $this->setLogger($connector);
+            $result = $connector->get($customerId, $this->office);
+        } catch(\Exception $e) {
+            $this->setMessages($e->getMessage());
+            $this->setErrorData($e->getTrace());
+            return false;
+        }
+
+        // Return
+        return $result;
+    }
+
+    /**
      * Get purchase-invoice
      *
      * @param string $invoiceNumber
