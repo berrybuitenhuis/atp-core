@@ -14,4 +14,6 @@ class TaxResponse
     public $source;
     /** @var integer */
     public $co2;
+    /** @var string */
+    public $country;
 }
