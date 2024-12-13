@@ -24,7 +24,7 @@ class VehicleVariables
     public $bandenGegevens;
     /** @var boolean|null */
     public $batteryChecked;
-    /** @var null */
+    /** @var integer|null */
     public $batteryHealth;
     /** @var integer|null */
     public $bedrijfId;
