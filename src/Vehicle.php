@@ -32,10 +32,10 @@ class Vehicle
     {
         // Specific check for vehicles older than 1981
         if ($year < 1981) {
-            return preg_match('/^[A-HJ-NPR-Z0-9]{11,16}$/', $vin);
+            return (bool) preg_match('/^[A-HJ-NPR-Z0-9]{11,16}$/', $vin);
         }
 
         // Return
-        return preg_match('/^[A-HJ-NPR-Z0-9]{17}$/', $vin);
+        return (bool) preg_match('/^[A-HJ-NPR-Z0-9]{17}$/', $vin);
     }
 }
