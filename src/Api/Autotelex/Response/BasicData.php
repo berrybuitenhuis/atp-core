@@ -102,6 +102,8 @@ class BasicData
     public $modelVariantGeleverdTot;
     /** @var string|null */
     public $modelVariantGeleverdVan;
+    /** @var boolean|null */
+    public $nakedBike;
     /** @var integer */
     public $nieuwPrijs;
     /** @var integer|null */
