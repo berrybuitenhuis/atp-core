@@ -128,6 +128,8 @@ class VehicleInfo
     public $modelVariantGeleverdTot;
     /** @var string|null */
     public $modelVariantGeleverdVan;
+    /** @var boolean|null */
+    public $nakedBike;
     /** @var string */
     public $nieuwPrijs;
     /** @var string */
