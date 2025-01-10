@@ -199,7 +199,7 @@ class Api extends BaseClass
         }
 
         if ($bid > 0) {
-            $isVat = Format::lowercase($vatMarginType) == "btw";
+            $isVat = (Format::lowercase($vatMarginType) == "btw" || Format::lowercase($vatMarginType) == "vat");
 
             // Get token
             $token = $this->getToken();

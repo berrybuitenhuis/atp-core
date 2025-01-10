@@ -233,7 +233,7 @@ class Webservice extends BaseClass
         }
 
         if ($bid > 0) {
-            $btw = Format::lowercase($vatMarginType) == "btw";
+            $isVat = (Format::lowercase($vatMarginType) == "btw" || Format::lowercase($vatMarginType) == "vat");
 
             // Get token
             $token = $this->getToken();
@@ -247,7 +247,7 @@ class Webservice extends BaseClass
                         "ExternalID" => $externalId,
                         "SoortBod" => 16,
                         "Bod" => $bid,
-                        "isBTWVoertuig" => $btw,
+                        "isBTWVoertuig" => $isVat,
                         "Status" => 3,
                         "InclExclBTW" => "Incl. BTW",
                         "GeldigTot" => $expirationDate->format('c'),
