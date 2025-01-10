@@ -209,14 +209,14 @@ class Api extends BaseClass
                 // Compose message/parameters
                 $params = [
                     "externalID" => $externalId,
-                    "bod" => $bid,
+                    "bod" => (int) $bid,
                     "inclExclBTW" => $isVat,
                     "geldigTot" => $expirationDate->format('c'),
-                    "opmerking" => $comment
+                    "opmerking" => $comment ?? "",
                 ];
                 if (!empty($rdwIdentificationNumber)) {
                     $params["buyer"] = [
-                        "rdwNumber" => $rdwIdentificationNumber
+                        "rdwNumber" => (string) $rdwIdentificationNumber
                     ];
                 }
 
