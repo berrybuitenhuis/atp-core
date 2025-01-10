@@ -199,7 +199,7 @@ class Api extends BaseClass
         }
 
         if ($bid > 0) {
-            $btw = Format::lowercase($vatMarginType) == "btw";
+            $isVat = Format::lowercase($vatMarginType) == "btw";
 
             // Get token
             $token = $this->getToken();
@@ -210,7 +210,7 @@ class Api extends BaseClass
                 $params = [
                     "externalID" => $externalId,
                     "bod" => $bid,
-                    "inclExclBTW" => $btw,
+                    "inclExclBTW" => $isVat,
                     "geldigTot" => $expirationDate->format('c'),
                     "opmerking" => $comment
                 ];
