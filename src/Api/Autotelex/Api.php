@@ -71,7 +71,7 @@ class Api extends BaseClass
             ];
 
             // Extend bid
-            $requestHeader = ["Authorization"=> "$token->token_type $token->access_token"];
+            $requestHeader = ["Authorization"=>"$token->token_type $token->access_token", "Content-Type"=>"application/json"];
             if ($this->debug) $this->log("request", "ExtendBid", json_encode($params));
             $result = $this->client->post("ExtendBid", ["headers"=>$requestHeader, "body"=>json_encode($params)]);
             if ($result->getStatusCode() != 200) {
@@ -146,7 +146,7 @@ class Api extends BaseClass
 
         try {
             // Get vehicle-data
-            $requestHeader = ["Authorization"=> "$token->token_type $token->access_token"];
+            $requestHeader = ["Authorization"=>"$token->token_type $token->access_token"];
             $params = ["vehicleId"=>$externalId];
             if ($this->debug) $this->log("request", "GetVehicle", json_encode($params));
             $result = $this->client->get("GetVehicle", ["headers"=>$requestHeader, "query"=>$params]);
@@ -221,11 +221,11 @@ class Api extends BaseClass
                 }
 
                 // Send bid
-                $requestHeader = ["Authorization"=> "$token->token_type $token->access_token"];
+                $requestHeader = ["Authorization"=>"$token->token_type $token->access_token", "Content-Type"=>"application/json"];
                 if ($this->debug) $this->log("request", "InsertBid", json_encode($params));
                 $result = $this->client->post("InsertBid", ["headers"=>$requestHeader, "body"=>json_encode($params)]);
                 if ($result->getStatusCode() != 200) {
-                    $this->setMessages("{$result->getStatusCode()}: {$result->getReasonPhrase()}");
+                    $this->setMessages("{$result->getStatusCode()}: {$result->getReasonPhrase()} ({$result->getBody()->getContents()})");
                     return false;
                 }
                 $response = json_decode($result->getBody()->getContents());
@@ -272,7 +272,7 @@ class Api extends BaseClass
             ];
 
             // Send no-interest
-            $requestHeader = ["Authorization"=> "$token->token_type $token->access_token"];
+            $requestHeader = ["Authorization"=>"$token->token_type $token->access_token"];
             if ($this->debug) $this->log("request", "NoInterest", json_encode($params));
             $result = $this->client->post("NoInterest", ["headers"=>$requestHeader, "query"=>$params]);
             if ($result->getStatusCode() != 200) {
