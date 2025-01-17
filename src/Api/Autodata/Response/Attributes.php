@@ -206,6 +206,10 @@ class Attributes
     public $accessories;
     /** @var Photo[]|null */
     public $photos;
+    /** @var string|null */
+    public $videos;
     /** @var Photo[]|null */
     public $damagePhotos;
+    /** @var string|null */
+    public $damageVideos;
 }
