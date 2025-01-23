@@ -13,4 +13,26 @@ class Buyer
     public string $phoneNumber;
     public string $mobileNumber;
     public string $rdwIdentificationNumber;
+
+    public function __construct(
+        string $chamberOfCommerceNumber,
+        string $companyName,
+        string $emailAddress,
+        string $firstName,
+        string $infix,
+        string $lastName,
+        string $phoneNumber,
+        string $mobileNumber,
+        string $rdwIdentificationNumber)
+    {
+        $this->chamberOfCommerceNumber = $chamberOfCommerceNumber;
+        $this->companyName = $companyName;
+        $this->emailAddress = $emailAddress;
+        $this->firstName = $firstName;
+        $this->infix = $infix;
+        $this->lastName = $lastName;
+        $this->phoneNumber = $phoneNumber;
+        $this->mobileNumber = $mobileNumber;
+        $this->rdwIdentificationNumber = $rdwIdentificationNumber;
+    }
 }
