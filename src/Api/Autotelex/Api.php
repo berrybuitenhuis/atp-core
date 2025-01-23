@@ -5,6 +5,7 @@
  */
 namespace AtpCore\Api\Autotelex;
 
+use AtpCore\Api\Autotelex\Request\Buyer;
 use AtpCore\Api\Autotelex\Response\Vehicle;
 use AtpCore\BaseClass;
 use AtpCore\Extension\JsonMapperExtension;
@@ -189,10 +190,10 @@ class Api extends BaseClass
      * @param int $bid
      * @param \DateTime $expirationDate
      * @param string $comment
-     * @param int $rdwIdentificationNumber
+     * @param ?Buyer $buyer
      * @return bool
      */
-    public function sendBid($externalId, $resultType, $vatMarginType, $bid, $expirationDate, $comment = null, $rdwIdentificationNumber = null)
+    public function sendBid($externalId, $resultType, $vatMarginType, $bid, $expirationDate, $comment = null, $buyer = null)
     {
         if ($resultType == "not_interested") {
             return $this->sendNoInterest($externalId, $comment);
@@ -214,9 +215,17 @@ class Api extends BaseClass
                     "geldigTot" => $expirationDate->format('c'),
                     "opmerking" => $comment ?? "",
                 ];
-                if (!empty($rdwIdentificationNumber)) {
+                if (!empty($buyer)) {
                     $params["buyer"] = [
-                        "rdwNumber" => (string) $rdwIdentificationNumber
+                        "chamberOfCommerceNumber" => $buyer->chamberOfCommerceNumber,
+                        "companyName" => $buyer->companyName,
+                        "emailaddress" => $buyer->emailAddress,
+                        "firstname" => $buyer->firstName,
+                        "phoneNumber" => $buyer->phoneNumber,
+                        "phoneNumberMobile" => $buyer->mobileNumber,
+                        "rdwNumber" => $buyer->rdwIdentificationNumber,
+                        "surname" => $buyer->lastName,
+                        "surnamePrefix" => $buyer->infix,
                     ];
                 }
 
