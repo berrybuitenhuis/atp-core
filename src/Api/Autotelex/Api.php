@@ -294,7 +294,7 @@ class Api extends BaseClass
             // Send no-interest
             $requestHeader = ["Authorization"=>"$token->token_type $token->access_token"];
             if ($this->debug) $this->log("request", "NoInterest", json_encode($params));
-            $result = $this->client->post("NoInterest", ["headers"=>$requestHeader, "query"=>$params]);
+            $result = $this->client->post("NotInterested", ["headers"=>$requestHeader, "body"=>json_encode($params)]);
             if ($result->getStatusCode() != 200) {
                 $this->setMessages("{$result->getStatusCode()}: {$result->getReasonPhrase()}");
                 return false;
