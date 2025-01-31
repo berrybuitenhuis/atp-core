@@ -11,6 +11,7 @@ class Buyer
     public string $infix;
     public string $lastName;
     public string $phoneNumber;
+    public BuyerAddress $mainAddress;
     public string $mobileNumber;
     public string $rdwIdentificationNumber;
 
@@ -32,8 +33,9 @@ class Buyer
         $this->firstName = $firstName;
         $this->infix = $infix;
         $this->lastName = $lastName;
-        $this->phoneNumber = $phoneNumber;
+        $this->mainAddress = $mainAddress;
         $this->mobileNumber = $mobileNumber;
+        $this->phoneNumber = $phoneNumber;
         $this->rdwIdentificationNumber = $rdwIdentificationNumber;
     }
 }
