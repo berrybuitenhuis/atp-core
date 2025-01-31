@@ -74,7 +74,7 @@ class Api extends BaseClass
             // Extend bid
             $requestHeader = ["Authorization"=>"$token->token_type $token->access_token", "Content-Type"=>"application/json"];
             if ($this->debug) $this->log("request", "ExtendBid", json_encode($params));
-            $result = $this->client->post("ExtendBid", ["headers"=>$requestHeader, "body"=>json_encode($params)]);
+            $result = $this->client->post("ExtendBid", ["headers"=>$requestHeader, "query"=>$params]);
             if ($result->getStatusCode() != 200) {
                 $this->setMessages("{$result->getStatusCode()}: {$result->getReasonPhrase()}");
                 return false;
