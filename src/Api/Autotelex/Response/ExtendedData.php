@@ -62,7 +62,7 @@ class ExtendedData
     public $rdwBrandstofverbruikStad;
     /** @var integer */
     public $rdwBreedteVoertuigMax;
-    /** @var string */
+    /** @var string|null */
     public $rdwCallDate;
     /** @var string */
     public $rdwCo2Emissie;
