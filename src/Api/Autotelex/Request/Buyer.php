@@ -23,7 +23,8 @@ class Buyer
         string $lastName,
         string $phoneNumber,
         string $mobileNumber,
-        string $rdwIdentificationNumber)
+        string $rdwIdentificationNumber,
+        BuyerAddress $mainAddress)
     {
         $this->chamberOfCommerceNumber = $chamberOfCommerceNumber;
         $this->companyName = $companyName;
