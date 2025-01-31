@@ -226,6 +226,17 @@ class Api extends BaseClass
                         "rdwNumber" => $buyer->rdwIdentificationNumber,
                         "surname" => $buyer->lastName,
                         "surnamePrefix" => $buyer->infix,
+                        "mainAddress" => [
+                            "city" => $buyer->mainAddress->city,
+                            "country" => $buyer->mainAddress->country,
+                            "emailaddress" => $buyer->mainAddress->emailAddress,
+                            "housenumber" => $buyer->mainAddress->houseNumber,
+                            "phonenumber" => $buyer->mainAddress->phoneNumber,
+                            "postalcode" => $buyer->mainAddress->postalCode,
+                            "state" => $buyer->mainAddress->state,
+                            "street" => $buyer->mainAddress->street,
+                            "website" => $buyer->mainAddress->website,
+                        ],
                     ];
                 }
 
