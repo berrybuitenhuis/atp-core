@@ -316,6 +316,17 @@ class Date extends BaseClass
     }
 
     /**
+     * Get (current) date in specific format
+     *
+     * @param string $format
+     * @return string
+     */
+    public static function getDate($format = "Y-m-d")
+    {
+        return (new DateTime())->format($format);
+    }
+
+    /**
      * Subtract interval (minutes, hours, days) from date-time
      *
      * @param int $interval
