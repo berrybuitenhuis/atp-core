@@ -120,7 +120,7 @@ class ExtendedData
     public $rdwNieuwPrijsBekend;
     /** @var boolean */
     public $rdwParallelImport;
-    /** @var integer|null */
+    /** @var integer */
     public $rdwStaanplaatsen;
     /** @var boolean|null */
     public $rdwTenaamstellenMogelijk;
