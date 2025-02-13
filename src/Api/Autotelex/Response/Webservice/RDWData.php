@@ -108,6 +108,8 @@ class RDWData
     public $rdwNieuwPrijsBekend;
     /** @var boolean */
     public $rdwParallelImport;
+    /** @var integer|null */
+    public $rdwStaanplaatsen;
     /** @var boolean|null */
     public $rdwTenaamstellenMogelijk;
     /** @var string */
