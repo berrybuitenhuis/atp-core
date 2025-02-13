@@ -352,7 +352,7 @@ class TradeApi extends BaseClass
             }
         } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
-            if (stristr($e->getMessage(), "JSON property") && stristr($e->getMessage(), "does not exist in object of type AtpCore\Api\Autotelex\Response")) {
+            if (stristr($e->getMessage(), "JSON property") && stristr($e->getMessage(), "does not exist in object of type AtpCore\Api\Autodata\Response")) {
                 return $this->mapVehicleResponse($response, false);
             }
             return false;
