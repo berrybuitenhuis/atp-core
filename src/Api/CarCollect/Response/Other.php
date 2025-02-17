@@ -16,7 +16,7 @@ class Other
     public $date_part_one;
     /** @var boolean|null */
     public $digital_instruction_manual_present;
-    /** @var integer */
+    /** @var integer|null */
     public $doors;
     /** @var string|null */
     public $drive;
