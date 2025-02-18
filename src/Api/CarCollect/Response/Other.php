@@ -10,7 +10,7 @@ class Other
     public $body_work;
     /** @var string|null */
     public $color;
-    /** @var integer */
+    /** @var integer|null */
     public $cylinders;
     /** @var string */
     public $date_part_one;
