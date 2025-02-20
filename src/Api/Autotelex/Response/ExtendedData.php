@@ -8,7 +8,7 @@ class ExtendedData
     public $afschrijvingspercentage;
     /** @var string|null */
     public $approvalDate;
-    /** @var string */
+    /** @var string|null */
     public $approvalNumber;
     /** @var integer */
     public $bpm;
@@ -16,9 +16,9 @@ class ExtendedData
     public $basisPercentage;
     /** @var integer */
     public $berekendeOptiebedrag;
-    /** @var string */
+    /** @var string|null */
     public $bijtellingHelpText;
-    /** @var integer */
+    /** @var integer|null */
     public $bijtellingHelpTextId;
     /** @var integer|null */
     public $bijtellingspercentage;
@@ -26,7 +26,7 @@ class ExtendedData
     public $bijtellingspercentageGeldigTot;
     /** @var boolean|null */
     public $dubbeleCabine;
-    /** @var string */
+    /** @var string|null */
     public $gemiddeldeStatijd;
     /** @var double|null */
     public $importPurchaseValueDeviation;
@@ -38,9 +38,9 @@ class ExtendedData
     public $importPurchaseValueTaxRecord;
     /** @var boolean|null */
     public $isTaxi;
-    /** @var string */
+    /** @var string|null */
     public $kentekenStatus;
-    /** @var string */
+    /** @var string|null */
     public $kleur;
     /** @var integer */
     public $maximumMassaAutonoomGeremd;
@@ -54,19 +54,19 @@ class ExtendedData
     public $nieuwprijsGrenswaarde;
     /** @var string|null */
     public $pseudoEtgCode;
-    /** @var string */
+    /** @var string|null */
     public $rdwBrandstofverbruikBuitenweg;
-    /** @var string */
+    /** @var string|null */
     public $rdwBrandstofverbruikGecombineerd;
-    /** @var string */
+    /** @var string|null */
     public $rdwBrandstofverbruikStad;
     /** @var integer */
     public $rdwBreedteVoertuigMax;
     /** @var string|null */
     public $rdwCallDate;
-    /** @var string */
+    /** @var string|null */
     public $rdwCo2Emissie;
-    /** @var string */
+    /** @var string|null */
     public $rdwDatumAansprakelijkheid;
     /** @var string|null */
     public $rdwDatumEersteToelatingInternationaal;
@@ -76,13 +76,13 @@ class ExtendedData
     public $rdwDatumRegistratieGoedkeuring;
     /** @var string|null */
     public $rdwDatumVervalApk;
-    /** @var string */
+    /** @var string|null */
     public $rdwEmissiecode;
-    /** @var string */
+    /** @var string|null */
     public $rdwEnergielabel;
-    /** @var string */
+    /** @var string|null */
     public $rdwEuroklasse;
-    /** @var boolean */
+    /** @var boolean|null */
     public $rdwExportIndicator;
     /** @var integer */
     public $rdwFijnstof;
@@ -90,13 +90,13 @@ class ExtendedData
     public $rdwG3Installatie;
     /** @var boolean|null */
     public $rdwGestolenIndicator;
-    /** @var string */
+    /** @var string|null */
     public $rdwHandelsbenaming;
     /** @var integer */
     public $rdwHoogteVoertuigMax;
     /** @var string|null */
     public $rdwInrichtingscode;
-    /** @var string */
+    /** @var string|null */
     public $rdwKleur2;
     /** @var integer */
     public $rdwLaadvermogen;
@@ -106,7 +106,7 @@ class ExtendedData
     public $rdwMassaLedigVoertuig;
     /** @var integer */
     public $rdwMassaRijklaar;
-    /** @var string */
+    /** @var string|null */
     public $rdwMaximaleConstructieSnelheid;
     /** @var integer */
     public $rdwMaximumMassa;
@@ -114,7 +114,7 @@ class ExtendedData
     public $rdwMaximumMassaGeremd;
     /** @var integer */
     public $rdwMaximumMassaOngeremd;
-    /** @var string */
+    /** @var string|null */
     public $rdwMerk;
     /** @var boolean */
     public $rdwNieuwPrijsBekend;
@@ -124,7 +124,7 @@ class ExtendedData
     public $rdwStaanplaatsen;
     /** @var boolean|null */
     public $rdwTenaamstellenMogelijk;
-    /** @var string */
+    /** @var string|null */
     public $rdwUitvoeringscode;
     /** @var boolean|null */
     public $rdwVermistIndicator;
@@ -132,9 +132,9 @@ class ExtendedData
     public $rdwVoertuigClassificatie;
     /** @var integer */
     public $rdwVoertuigClassificatieCode;
-    /** @var boolean */
+    /** @var boolean|null */
     public $rdwWamVerzekerd;
-    /** @var boolean */
+    /** @var boolean|null */
     public $rdwWokStatusIndicator;
     /** @var integer */
     public $rdwZitplaatsen;
