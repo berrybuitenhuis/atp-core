@@ -1336,17 +1336,19 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
 
         // Check (default)filters supported
         if (!empty($filters)) {
-            array_walk_recursive ($filters,
-                function($filter) {
-                    if (!in_array(\AtpCore\Format::lowercase($filter[0]), $this->supportedFiltersForQueryOptimizer['allowedFilterFields'])) {
+            if (!isset($this->supportedFiltersForQueryOptimizer['allowedFilterFields'])) return false;
+            foreach ($filters as $filterType) {
+                foreach ($filterType as $filter) {
+                    if (!isset($filter[0]) || !in_array(\AtpCore\Format::lowercase($filter[0]), array_map("\AtpCore\Format::lowercase", $this->supportedFiltersForQueryOptimizer['allowedFilterFields']))) {
                         return false;
                     }
                 }
-            );
+            }
         }
         if (!empty($defaulFilters)) {
-            foreach ($defaulFilters AS $defaulFilter) {
-                if (!in_array(\AtpCore\Format::lowercase($defaulFilter), $this->supportedFiltersForQueryOptimizer['allowedDefaultFilters'])) {
+            if (!isset($this->supportedFiltersForQueryOptimizer['allowedDefaultFilters'])) return false;
+            foreach ($defaulFilters AS $defaultFilter) {
+                if (!in_array(\AtpCore\Format::lowercase($defaultFilter), array_map("\AtpCore\Format::lowercase", $this->supportedFiltersForQueryOptimizer['allowedDefaultFilters']))) {
                     return false;
                 }
             }
