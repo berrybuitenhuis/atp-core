@@ -58,4 +58,6 @@ class ValuateResponse
     public $target_perc;
     /** @var integer|null */
     public $rank_target;
+    /** @var double|null */
+    public $currency_ratio;
 }
