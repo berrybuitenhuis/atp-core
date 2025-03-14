@@ -24,7 +24,11 @@ class Api extends BaseClass
      * @param string $password
      * @param boolean $debug
      */
-    public function __construct($hostname, $username, $password, $debug = false)
+    public function __construct(
+        $hostname,
+        private readonly mixed $username,
+        private readonly mixed $password,
+        $debug = false)
     {
         // Set client
         $this->client = new Client(['base_uri'=>$hostname, 'http_errors'=>false, 'debug'=>$debug]);
@@ -37,9 +41,6 @@ class Api extends BaseClass
             'Accept' => 'application/json',
             'Content-Type' => 'text/json',
         ];
-
-        // Get token
-        $this->getToken($username, $password);
     }
 
     /**
@@ -52,6 +53,7 @@ class Api extends BaseClass
     public function getATB54($accessoryIds, $vehicleType)
     {
         // Check token
+        $this->getToken($this->username, $this->password);
         if (empty($this->token)) {
             $this->setMessages("Not authorized");
             return false;
@@ -101,6 +103,7 @@ class Api extends BaseClass
     public function getATB56($licensePlate, $mileage = null, $historicOwners = false, $historicStatus = false)
     {
         // Check token
+        $this->getToken($this->username, $this->password);
         if (empty($this->token)) {
             $this->setMessages("Not authorized");
             return false;
@@ -154,6 +157,7 @@ class Api extends BaseClass
     public function getATB57($licensePlate, $atlCode, $bodyType, $category = null, $valuable = false, $distinctive = false)
     {
         // Check token
+        $this->getToken($this->username, $this->password);
         if (empty($this->token)) {
             $this->setMessages("Not authorized");
             return false;
@@ -205,6 +209,9 @@ class Api extends BaseClass
      */
     private function getToken($username, $password)
     {
+        // Check if token already set
+        if (!empty($this->token)) return true;
+
         // Set payload
         $body = [
             "get" => [

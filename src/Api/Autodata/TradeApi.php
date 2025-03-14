@@ -29,7 +29,12 @@ class TradeApi extends BaseClass
      * @param boolean $debug
      * @param \Closure|null $logger
      */
-    public function __construct($hostname, $username, $password, $debug = false, \Closure $logger = null)
+    public function __construct(
+        $hostname,
+        private readonly mixed $username,
+        private readonly mixed $password,
+        $debug = false,
+        \Closure $logger = null)
     {
         // Set client
         $this->client = new Client(['base_uri'=>$hostname, 'http_errors'=>false, 'debug'=>$debug]);
@@ -39,16 +44,6 @@ class TradeApi extends BaseClass
 
         // Reset error-messages
         $this->resetErrors();
-
-        // Get token
-        $this->token = $this->getToken($username, $password);
-
-        // Set default header for client-requests
-        $this->clientHeaders = [
-            'Authorization' => $this->token,
-            'Content-Type' => 'application/json',
-            "User-Agent" => 'AutoData Trade v1.1',
-        ];
     }
 
     /**
@@ -60,6 +55,8 @@ class TradeApi extends BaseClass
     public function isAllowed($externalId) {
         try {
             // Get vehicle
+            $res = $this->getToken($this->username, $this->password);
+            if ($res === false) return false;
             $requestHeader = $this->clientHeaders;
             $result = $this->client->get('bid/' . $externalId . "/vehicle", ['headers' => $requestHeader]);
             $response = json_decode((string)$result->getBody());
@@ -91,6 +88,8 @@ class TradeApi extends BaseClass
     public function getBid($externalId, $origResponse = false)
     {
         // Get bid
+        $res = $this->getToken($this->username, $this->password);
+        if ($res === false) return false;
         $requestHeader = $this->clientHeaders;
         $result = $this->client->get('bid/' . $externalId, ['headers'=>$requestHeader]);
         $response = json_decode((string) $result->getBody());
@@ -127,6 +126,8 @@ class TradeApi extends BaseClass
     public function getRequestByVehicleId($vehicleId, $origResponse = false, $multiple = false)
     {
         // Get bid
+        $res = $this->getToken($this->username, $this->password);
+        if ($res === false) return false;
         $requestHeader = $this->clientHeaders;
         $result = $this->client->get('bid?vehicle.id=' . $vehicleId, ['headers'=>$requestHeader]);
         if ($result->getStatusCode() != 200) {
@@ -164,6 +165,8 @@ class TradeApi extends BaseClass
         else $timestamp = $startDate->getTimestamp();
 
         // Get bid-requests
+        $res = $this->getToken($this->username, $this->password);
+        if ($res === false) return false;
         $requestHeader = $this->clientHeaders;
         $result = $this->client->get('bid?ts=' . $timestamp, ['headers'=>$requestHeader]);
         $response = json_decode((string) $result->getBody());
@@ -189,6 +192,8 @@ class TradeApi extends BaseClass
     public function getVehicle($externalId, $maptoObject = false) {
         try {
             // Get vehicle
+            $res = $this->getToken($this->username, $this->password);
+            if ($res === false) return false;
             $requestHeader = $this->clientHeaders;
             $result = $this->client->get('bid/' . $externalId . "/vehicle", ['headers' => $requestHeader]);
             $response = json_decode((string)$result->getBody());
@@ -222,6 +227,9 @@ class TradeApi extends BaseClass
     public function sendBid($externalId, $resultType, $bid, $expirationDate)
     {
         if ($bid > 0 || $resultType == "not_interested") {
+            $res = $this->getToken($this->username, $this->password);
+            if ($res === false) return false;
+
             // Send bid
             if ($resultType == "not_interested") {
                 $body = [
@@ -272,6 +280,9 @@ class TradeApi extends BaseClass
      */
     private function getToken($clientId, $clientSecret)
     {
+        // Check if token already set
+        if (!empty($this->token)) return $this->token;
+
         $body = [
             "grant_type" => "client_credentials",
             "client_id" => $clientId,
@@ -285,7 +296,15 @@ class TradeApi extends BaseClass
 
         // Return
         if (!isset($response->errors) || empty($response->errors)) {
-            return $response->token_type . " " . $response->access_token;
+            $this->token = $response->token_type . " " . $response->access_token;
+
+            // Set default header for client-requests
+            $this->clientHeaders = [
+                'Authorization' => $this->token,
+                'Content-Type' => 'application/json',
+                "User-Agent" => 'AutoData Trade v1.1',
+            ];
+            return $this->token;
         } else {
             $this->setErrorData($response);
             $this->setMessages($response->errors);

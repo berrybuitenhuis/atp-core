@@ -26,7 +26,11 @@ class Api extends BaseClass
      * @param string $apiKey
      * @param boolean $debug
      */
-    public function __construct($hostname, $applicationId, $apiKey, $debug = false)
+    public function __construct(
+        $hostname,
+        private readonly mixed $applicationId,
+        private readonly mixed $apiKey,
+        $debug = false)
     {
         // Set client
         $this->client = new Client(['base_uri'=>$hostname, 'http_errors'=>false, 'debug'=>$debug]);
@@ -39,9 +43,6 @@ class Api extends BaseClass
             'Accept' => 'application/json',
             'Content-Type' => 'text/json',
         ];
-
-        // Get token
-        $this->getToken($applicationId, $apiKey);
     }
 
     /**
@@ -51,6 +52,10 @@ class Api extends BaseClass
      */
     public function createDescription()
     {
+        // Set token
+        $res = $this->getToken($this->applicationId, $this->apiKey);
+        if ($res === false) return false;
+
         // Set payload
         $body = [
             "action" => [
@@ -88,6 +93,10 @@ class Api extends BaseClass
      */
     public function createImageNode($imageId = null)
     {
+        // Set token
+        $res = $this->getToken($this->applicationId, $this->apiKey);
+        if ($res === false) return false;
+
         // Set payload
         $vimImageId = (!empty($imageId)) ? $imageId : $this->descriptionId . "-extra-" . explode(" ", microtime())[0] . mt_rand();
         $body = [
@@ -124,6 +133,10 @@ class Api extends BaseClass
      */
     public function finishDescription()
     {
+        // Set token
+        $res = $this->getToken($this->applicationId, $this->apiKey);
+        if ($res === false) return false;
+
         // Set payload
         $body = [
             "action" => [
@@ -157,6 +170,10 @@ class Api extends BaseClass
      */
     public function getDescription()
     {
+        // Set token
+        $res = $this->getToken($this->applicationId, $this->apiKey);
+        if ($res === false) return false;
+
         // Set payload
         $body = [
             "get" => [
@@ -192,6 +209,10 @@ class Api extends BaseClass
      */
     public function saveValuation($valuationTypeId, $valuationParams)
     {
+        // Set token
+        $res = $this->getToken($this->applicationId, $this->apiKey);
+        if ($res === false) return false;
+
         $params = [];
         $params["valuationType"] = $valuationTypeId;
         $params["valuationParams"] = $valuationParams;
@@ -249,6 +270,10 @@ class Api extends BaseClass
      */
     public function updateDescription($data)
     {
+        // Set token
+        $res = $this->getToken($this->applicationId, $this->apiKey);
+        if ($res === false) return false;
+
         // Set payload
         $body = [
             "update" => [
@@ -285,6 +310,10 @@ class Api extends BaseClass
      */
     public function uploadImageByUrl($imageName, $imageUrl, $imageId = null)
     {
+        // Set token
+        $res = $this->getToken($this->applicationId, $this->apiKey);
+        if ($res === false) return false;
+
         // Create image-node if not available
         if (empty($imageId)) $imageId = $this->createImageNode();
 
@@ -316,6 +345,9 @@ class Api extends BaseClass
      */
     private function getToken($applicationId, $apiKey)
     {
+        // Check if token already set
+        if (!empty($this->token)) return true;
+
         // Set payload
         $body = [
             "action" => [
@@ -356,6 +388,10 @@ class Api extends BaseClass
      */
     private function validateInputRequirements($pluginId)
     {
+        // Set token
+        $res = $this->getToken($this->applicationId, $this->apiKey);
+        if ($res === false) return false;
+
         // Set payload
         $body = [
             "action" => [
