@@ -144,6 +144,8 @@ class Vehicle
     public $co2_uitstoot;
     /** @var string|null */
     public $roetdeeltjes;
+    /** @var string|null */
+    public $roetfilterverwijderd;
     /** @var integer|null */
     public $bijtellingspercentage;
     /** @var string|null */
