@@ -576,7 +576,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                 foreach ($filter['AND'] AS $k => $filterParams) {
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
-                    $valueKey = "customAnd" . ucfirst(str_replace(".", "", $field)) . $k;
+                    $valueKey = "customAnd" . $this->sanitizeField($field) . $k;
                     if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
@@ -594,7 +594,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                 foreach ($filter['OR'] AS $k => $filterParams) {
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
-                    $valueKey = "customOr" . ucfirst(str_replace(".", "", $field)) . $k;
+                    $valueKey = "customOr" . $this->sanitizeField($field) . $k;
                     if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
@@ -612,7 +612,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                 foreach ($filter['OR_AND'] AS $k => $filterParams) {
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
-                    $valueKey = "customOrAnd" . ucfirst(str_replace(".", "", $field)) . $k;
+                    $valueKey = "customOrAnd" . $this->sanitizeField($field) . $k;
                     if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
@@ -630,7 +630,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                 foreach ($filter['AND_OR'] AS $k => $filterParams) {
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
-                    $valueKey = "customAndOr" . ucfirst(str_replace(".", "", $field)) . $k;
+                    $valueKey = "customAndOr" . $this->sanitizeField($field) . $k;
                     if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
@@ -651,7 +651,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                 foreach ($defaultFilter['AND'] AS $k => $filterParams) {
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
-                    $valueKey = "defaultAnd" . ucfirst(str_replace(".", "", $field)) . $k;
+                    $valueKey = "defaultAnd" . $this->sanitizeField($field) . $k;
                     if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
@@ -669,7 +669,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                 foreach ($defaultFilter['OR'] AS $k => $filterParams) {
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
-                    $valueKey = "defaultOr" . ucfirst(str_replace(".", "", $field)) . $k;
+                    $valueKey = "defaultOr" . $this->sanitizeField($field) . $k;
                     if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
@@ -687,7 +687,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                 foreach ($defaultFilter['OR_AND'] AS $k => $filterParams) {
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
-                    $valueKey = "defaultOrAnd" . ucfirst(str_replace(".", "", $field)) . $k;
+                    $valueKey = "defaultOrAnd" . $this->sanitizeField($field) . $k;
                     if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
@@ -705,7 +705,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                 foreach ($defaultFilter['AND_OR'] AS $k => $filterParams) {
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
-                    $valueKey = "defaultAndOr" . ucfirst(str_replace(".", "", $field)) . $k;
+                    $valueKey = "defaultAndOr" . $this->sanitizeField($field) . $k;
                     if (isset($filterParams[2])) $parameters[$valueKey] = $filterParams[2];
 
                     // Check if operator is allowed
@@ -1756,5 +1756,15 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
 
         // Return
         return $this->inputData;
+    }
+
+    private function sanitizeField($field)
+    {
+        $field = str_replace(".", "", $field);
+        $field = str_replace("(", "", $field);
+        $field = str_replace(")", "", $field);
+        $field = str_replace(",", "", $field);
+        $field = str_replace(" ", "", $field);
+        return ucfirst($field);
     }
 }
