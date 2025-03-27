@@ -166,16 +166,17 @@ class Sqs extends BaseClass
      *
      * @param string $queueName
      * @param string|array $message
+     * @param int|null $delaySeconds
      * @return bool
      */
-    public function sendMessage($queueName, $message)
+    public function sendMessage($queueName, $message, $delaySeconds = null)
     {
         $queueUrl = $this->getQueueUrl($queueName);
         if ($queueUrl !== false) {
             $sqsMessage = [];
             $sqsMessage["QueueUrl"] = $queueUrl;
             $sqsMessage["MessageBody"] = (is_array($message)) ? json_encode($message) : $message;
-
+            $sqsMessage["DelaySeconds"] = $delaySeconds ?: 0;
             try {
                 $this->client->sendMessage($sqsMessage);
                 return true;
