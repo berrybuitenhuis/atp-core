@@ -64,12 +64,14 @@ class Api extends BaseClass
         }
     }
 
-    public function getDataSet($dataSetCode, $offset = 0, $limit = 1000)
+    public function getDataSet($dataSetCode, $offset = 0, $limit = 1000, $order = null)
     {
         try {
             // Prepare request
+            $uri = 'resource/' . $dataSetCode . '.json?$offset=' . $offset . '&$limit=' . $limit;
+            if (!empty($order)) $uri .= '&$order=' . $order;
             $client = new Client(['base_uri'=>$this->hostname, 'http_errors'=>false, 'debug'=>$this->debug]);
-            $result = $client->get('resource/' . $dataSetCode . '.json?$offset=' . $offset . '&$limit=' . $limit);
+            $result = $client->get($uri);
 
             // Return
             if ($result->getStatusCode() === 200) {
