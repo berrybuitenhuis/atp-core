@@ -6,7 +6,7 @@ class VehicleVariables
 {
     /** @var RequestData|null */
     public $aanmeldData;
-    /** @var integer */
+    /** @var integer|null */
     public $aantalSleutels;
     /** @var integer|null */
     public $aantalZenders;
