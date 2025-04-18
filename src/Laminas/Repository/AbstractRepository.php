@@ -1658,7 +1658,9 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         $this->prepareInputData();
 
         // Set default data (if not available)
-        if (property_exists($object, 'lastUpdated')) $this->inputData['lastUpdated'] = new DateTime();
+        if (property_exists($object, 'lastUpdated') || property_exists($this->getObjectName(), 'lastUpdated')) {
+            $this->inputData['lastUpdated'] = new DateTime();
+        }
 
         // Verify data-fields for update
         $res = $this->verifyDataFields(__FUNCTION__);
@@ -1720,7 +1722,9 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             $this->prepareInputData();
 
             // Set default data (if not available)
-            if (property_exists($object, 'lastUpdated')) $this->inputData['lastUpdated'] = new DateTime();
+            if (property_exists($object, 'lastUpdated') || property_exists($this->getObjectName(), 'lastUpdated')) {
+                $this->inputData['lastUpdated'] = new DateTime();
+            }
             $recordData[$id] = $this->inputData;
             $objects[$id] = $object;
         }
