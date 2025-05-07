@@ -34,6 +34,8 @@ class ValuateResponse
     public $price_sensitivity;
     /** @var double|null */
     public $mileage_mean;
+    /** @var integer|null */
+    public $mileage;
     /** @var string */
     public $window_url;
     /** @var string|null */
