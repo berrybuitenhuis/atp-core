@@ -189,8 +189,21 @@ class Input
      * @param array $data
      * @return array
      */
-    public static function getItemsContainingString($searchString, $data) {
+    public static function getItemsContainingString($searchString, $data)
+    {
         return array_filter($data, function($var) use ($searchString) { return preg_match("/\b$searchString\b/i", $var); });
+    }
+
+    /**
+     * Get list (array) of properties from list (array) of objects
+     *
+     * @param string $propertyName
+     * @param array $objects
+     * @return array
+     */
+    public static function getPropertyOfObjects($propertyName, $objects)
+    {
+        return array_map(fn($object) => $object->{$propertyName}, $objects);
     }
 
     /**
