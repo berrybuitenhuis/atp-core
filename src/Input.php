@@ -203,7 +203,8 @@ class Input
      */
     public static function getPropertyOfObjects($propertyName, $objects)
     {
-        return array_map(fn($object) => $object->{$propertyName}, $objects);
+        $propertyMethod = 'get' . ucfirst($propertyName);
+        return array_map(fn($object) => method_exists($object, $propertyMethod) ? $object->{$propertyMethod}() : (property_exists($object, $propertyName) ? $object->{$propertyName} : null), $objects);
     }
 
     /**
