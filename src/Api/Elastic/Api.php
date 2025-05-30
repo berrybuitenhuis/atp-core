@@ -99,12 +99,12 @@ class Api extends BaseClass
             ];
 
             $res = $this->client->update($params);
-            if ($res['errors'] == true) {
+            if (isset($res['result']) && in_array($res['result'], ['created', 'updated', 'noop'])) {
+                return true;
+            } else {
                 $this->setMessages("Update action failed");
                 $this->setErrorData($res);
                 return false;
-            } else {
-                return true;
             }
         } catch (Throwable $e) {
             $this->setMessages("Update action failed");
@@ -131,12 +131,12 @@ class Api extends BaseClass
             ];
 
             $res = $this->client->index($params);
-            if ($res['errors'] == true) {
+            if (isset($res['result']) && in_array($res['result'], ['created', 'updated', 'noop'])) {
+                return true;
+            } else {
                 $this->setMessages("Index action failed");
                 $this->setErrorData($res);
                 return false;
-            } else {
-                return true;
             }
         } catch (Throwable $e) {
             $this->setMessages("Index action failed");
@@ -185,12 +185,12 @@ class Api extends BaseClass
             ];
 
             $res = ($this->client->delete($params));
-            if ($res['errors'] == true) {
+            if (isset($res['result']) && in_array($res['result'], ['deleted', 'not_found'])) {
+                return true;
+            } else {
                 $this->setMessages("Delete action failed");
                 $this->setErrorData($res);
                 return false;
-            } else {
-                return true;
             }
         } catch (Throwable $e) {
             $this->setMessages("Delete action failed");
