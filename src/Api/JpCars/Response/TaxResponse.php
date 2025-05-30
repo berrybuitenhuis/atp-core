@@ -12,7 +12,7 @@ class TaxResponse
     public $data;
     /** @var string */
     public $source;
-    /** @var integer */
+    /** @var integer|null */
     public $co2;
     /** @var string */
     public $country;
