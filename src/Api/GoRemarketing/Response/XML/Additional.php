@@ -40,6 +40,8 @@ class Additional
     public $restbpm;
     /** @var integer|null */
     public $rookgeur;
+    /** @var string|null */
+    public $roetfilterverwijderd;
     /** @var string */
     public $staat;
 }
