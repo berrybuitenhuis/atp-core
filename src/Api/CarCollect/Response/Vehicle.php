@@ -94,7 +94,7 @@ class Vehicle
     public $sorting_date;
     /** @var string */
     public $status;
-    /** @var string */
+    /** @var string|null */
     public $steering_wheel_side;
     /** @var string[]|null */
     public $supply_countries;
