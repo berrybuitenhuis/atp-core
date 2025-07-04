@@ -12,7 +12,7 @@ class Image
     public $label;
     /** @var string|null */
     public $position;
-    /** @var string */
+    /** @var string|null */
     public $type;
     /** @var string */
     public $url_big;
