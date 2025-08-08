@@ -13,7 +13,6 @@ class EntityCollection  {
     public function __construct(
         protected readonly string $entityClass,
         protected readonly ?array $results = [],
-        protected readonly ?Error $error = null,
     ) {
         $this->collection = new \Doctrine\Common\Collections\ArrayCollection($results);
     }
@@ -37,9 +36,7 @@ class EntityCollection  {
     public function first()
     {
         // Check for error or empty collection
-        if (!empty($this->error)) {
-            return $this->error;
-        } elseif ($this->collection->isEmpty()) {
+        if ($this->collection->isEmpty()) {
             return new Error(messages: ["No results found for $this->entityClass"], stackTrace: debug_backtrace());
         }
 
@@ -66,9 +63,7 @@ class EntityCollection  {
     public function results()
     {
         // Check for error or empty collection
-        if (!empty($this->error)) {
-            return $this->error;
-        } elseif ($this->collection->isEmpty()) {
+        if ($this->collection->isEmpty()) {
             return new Error(messages: ["No results found for $this->entityClass"], stackTrace: debug_backtrace());
         }
 
@@ -84,9 +79,7 @@ class EntityCollection  {
     public function single()
     {
         // Check for error or empty collection
-        if (!empty($this->error)) {
-            return $this->error;
-        } elseif ($this->collection->isEmpty()) {
+        if ($this->collection->isEmpty()) {
             return new Error(messages: ["No results found for $this->entityClass"], stackTrace: debug_backtrace());
         } elseif ($this->collection->count() > 1) {
             return new Error(messages: ["Multiple results found for $this->entityClass"], stackTrace: debug_backtrace());
