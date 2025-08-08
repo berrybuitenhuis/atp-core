@@ -15,7 +15,7 @@ use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
- * Class AbstractRepository
+ * @template T of object
  */
 abstract class AbstractRepository extends BaseClass implements InputFilterAwareInterface
 {
@@ -110,7 +110,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         // Reset errors
         $this->resetErrors();
 
-        // Create object instance
+        // Create object-instance
         $object = new $this->objectName();
 
         // Prepare data
@@ -357,7 +357,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * @param string $output
      * @param boolean $refresh
      * @param null|array $fields
-     * @return object|array|bool
+     * @return T|array|bool
      * @throws Exception
      */
     public function get($id, $output = 'object', $refresh = false, $fields = null)

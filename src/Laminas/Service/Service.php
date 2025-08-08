@@ -3,12 +3,15 @@
 namespace AtpCore\Laminas\Service;
 
 use AtpCore\BaseClass;
+use AtpCore\Laminas\Repository\AbstractRepository;
 
+/**
+ * @template T of object
+ * @template R of AbstractRepository<T>
+ */
 class Service extends BaseClass
 {
-    /**
-     * @var mixed
-     */
+    /** @var R */
     protected $repository;
 
     /**
@@ -57,7 +60,7 @@ class Service extends BaseClass
      * @param string $output
      * @param bool $refresh
      * @param null $fields
-     * @return mixed
+     * @return T|array|bool
      */
     public function get($id, $output = 'object', $refresh = false, $fields = NULL)
     {
@@ -116,6 +119,17 @@ class Service extends BaseClass
             $this->setErrorData($this->repository->getErrorData());
         }
         return $res;
+    }
+
+
+    /**
+     * Get repository of service
+     *
+     * @return R
+     */
+    public function getRepository()
+    {
+        return $this->repository;
     }
 
     /**
