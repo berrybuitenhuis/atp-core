@@ -89,6 +89,15 @@ class Service extends BaseClass
     }
 
     /**
+     * @param array $parameters
+     * @return \AtpCore\Laminas\Doctrine\EntityCollection<T>
+     */
+    public function getByParametersNew($parameters)
+    {
+        return $this->repository->getByParametersNew($parameters);
+    }
+
+    /**
      * @return array
      */
     public function getDefaultFilterOptions()

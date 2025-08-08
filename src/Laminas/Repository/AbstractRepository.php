@@ -5,14 +5,14 @@ namespace AtpCore\Laminas\Repository;
 use AtpCore\BaseClass;
 use AtpCore\Format;
 use DateTime;
-use Exception;
-use Throwable;
-use Laminas\InputFilter\InputFilterAwareInterface;
-use Laminas\InputFilter\InputFilterInterface;
 use Doctrine\Laminas\Hydrator\DoctrineObject;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Exception;
+use Laminas\InputFilter\InputFilterAwareInterface;
+use Laminas\InputFilter\InputFilterInterface;
+use Throwable;
 
 /**
  * @template T of object
@@ -973,6 +973,23 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                 return $objects;
             }
         }
+    }
+
+    /**
+     * Return collection of objects with parameters
+     *
+     * @param array $parameters
+     * @return \AtpCore\Laminas\Doctrine\EntityCollection<T>
+     */
+    public function getByParametersNew($parameters)
+    {
+        // Get object(s) by filter
+        $objects = $this->objectManager
+            ->getRepository($this->objectName)
+            ->findBy($parameters);
+
+        // Return
+        return new \AtpCore\Laminas\Doctrine\EntityCollection($this->objectName, ($objects == null) ? [] : $objects);
     }
 
     /**
