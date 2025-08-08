@@ -1,9 +1,11 @@
 <?php
 
-namespace AtpCore\Laminas\Repository;
+namespace AtpCore\Laminas\Doctrine;
+
+use AtpCore\Laminas\Repository\AbstractRepository;
 
 class BaseEntity {
-    public function toDataSet(AbstractRepository $repository, $fields = null)
+    public function toResponse(AbstractRepository $repository, $fields = null)
     {
         // Return result
         $record = $repository->getHydrator()->extract($this);
