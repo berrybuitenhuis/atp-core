@@ -5,7 +5,7 @@ namespace AtpCore\Laminas\Doctrine;
 use AtpCore\Laminas\Repository\AbstractRepository;
 
 class BaseEntity {
-    public function toResponse(AbstractRepository $repository, $fields = null, $transform = true)
+    public function toResponse(AbstractRepository $repository, $transform = true, $fields = null)
     {
         // Return result
         $record = $repository->getHydrator()->extract($this);
