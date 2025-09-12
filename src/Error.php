@@ -57,4 +57,13 @@ class Error
         $this->data = $data;
     }
 
+    public static function isError($data): bool
+    {
+        return $data instanceof Error;
+    }
+
+    public static function isNotError($data): bool
+    {
+        return ($data instanceof Error) === false;
+    }
 }
