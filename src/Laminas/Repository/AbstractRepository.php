@@ -1629,6 +1629,10 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                             }
                         }
                     }
+
+                    // Overwrite empty array/object to NULL
+                    if (is_array($fieldValue) && empty($fieldValue)) $fieldValue = null;
+                    elseif (is_object($fieldValue) && ($fieldValue instanceof \DateTime) === false && count(get_object_vars($fieldValue)) === 0) $fieldValue = null;
                     $values[$field] = $fieldValue;
                 }
             }
