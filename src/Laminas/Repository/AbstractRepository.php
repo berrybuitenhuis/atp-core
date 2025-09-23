@@ -3,6 +3,7 @@
 namespace AtpCore\Laminas\Repository;
 
 use AtpCore\BaseClass;
+use AtpCore\Error;
 use AtpCore\Format;
 use DateTime;
 use Doctrine\Laminas\Hydrator\DoctrineObject;
@@ -399,6 +400,34 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         } else {
             return $object;
         }
+    }
+
+    /**
+     * Return a single object from the repository
+     *
+     * @param int $id
+     * @param boolean $refresh
+     * @return T|Error
+     */
+    public function getNew($id, $refresh = false)
+    {
+        // Get object by primary key
+        $object = $this->objectManager
+            ->getRepository($this->objectName)
+            ->find($id);
+
+        // Refresh entity (clear all local changes)
+        if ($refresh === true) {
+            $this->objectManager->refresh($object);
+        }
+
+        // Check if object found
+        if ($object == null) {
+            return new Error(messages: ["No results found for $this->objectName (id: $id)"], stackTrace: debug_backtrace());
+        }
+
+        // Return
+        return $object;
     }
 
     /**
