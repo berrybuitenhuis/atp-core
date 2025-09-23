@@ -3,6 +3,7 @@
 namespace AtpCore\Laminas\Service;
 
 use AtpCore\BaseClass;
+use AtpCore\Error;
 use AtpCore\Laminas\Repository\AbstractRepository;
 
 /**
@@ -70,6 +71,16 @@ class Service extends BaseClass
             $this->setErrorData($this->repository->getErrorData());
         }
         return $res;
+    }
+
+    /**
+     * @param int $id
+     * @param bool $refresh
+     * @return T|Error
+     */
+    public function getNew($id, $refresh = false)
+    {
+        return $this->repository->getNew($id, $refresh);
     }
 
     /**
