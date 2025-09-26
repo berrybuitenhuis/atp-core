@@ -32,6 +32,16 @@ class Service extends BaseClass
     }
 
     /**
+     * @param array $data
+     * @param array $overrule
+     * @return T|Error
+     */
+    public function createNew($data, $overrule = [])
+    {
+        return $this->repository->createNew($data, $overrule);
+    }
+
+    /**
      * @param int $id
      * @param bool $remove
      * @param bool $refresh

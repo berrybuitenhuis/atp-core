@@ -139,6 +139,41 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     }
 
     /**
+     * Create a new object
+     *
+     * @param $data
+     * @param $overrule
+     * @return T|Error
+     */
+    public function createNew($data, $overrule = [])
+    {
+        // Set operation
+        $this->operation = __FUNCTION__;
+
+        // Reset errors
+        $this->resetErrors();
+
+        // Create object-instance
+        $object = new $this->objectName();
+
+        // Prepare data
+        $this->prepareInputDataDefault($data, $overrule);
+        $this->prepareInputData();
+
+        // Set default data (if not available)
+        if (property_exists($object, 'created')) $this->inputData['created'] = new DateTime();
+        if (property_exists($object, 'status')) $this->inputData['status'] = true;
+        if (property_exists($object, 'deleted')) $this->inputData['deleted'] = false;
+
+        // Hydrate object, apply inputfilter, and save it
+        if ($this->filterAndPersist($this->inputData, $object)) {
+            return $object;
+        } else {
+            return new Error(messages: ["Record creation failed for $this->objectName"], stackTrace: debug_backtrace());
+        }
+    }
+
+    /**
      * Create new objects (in bulk)
      *
      * @param $data
