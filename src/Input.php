@@ -443,8 +443,8 @@ class Input
             return null;
         }
 
-        // Avoid converting integer-value into string-value with stripslashes
-        if (is_int($var)) {
+        // Avoid converting integer-value/DateTime-value into string-value with stripslashes
+        if (is_int($var) || $var instanceof \DateTime) {
             return $var;
         }
 
