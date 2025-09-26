@@ -1767,6 +1767,59 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     }
 
     /**
+     * Update an existing object
+     *
+     * @param $id
+     * @param $data
+     * @param $refresh
+     * @return T|Error
+     */
+    public function updateNew($id, $data, $refresh = false)
+    {
+        // Set operation
+        $this->operation = __FUNCTION__;
+
+        // Reset errors
+        $this->resetErrors();
+
+        // Get existing object
+        $object = $this->getObjectManager()
+            ->getRepository($this->getObjectName())
+            ->find($id);
+
+        if ($object == null) {
+            return new Error(messages: ["No results found for $this->objectName (id: $id)"], stackTrace: debug_backtrace());
+        }
+
+        // Refresh entity (clear all local changes)
+        if ($refresh === true) {
+            $this->objectManager->refresh($object);
+        }
+
+        // Prepare data
+        $this->prepareInputDataDefault($data);
+        $this->prepareInputData();
+
+        // Set default data (if not available)
+        if (property_exists($object, 'lastUpdated') || property_exists($this->getObjectName(), 'lastUpdated')) {
+            $this->inputData['lastUpdated'] = new DateTime();
+        }
+
+        // Verify data-fields for update
+        $res = $this->verifyDataFields(__FUNCTION__);
+        if ($res === false) {
+            return new Error(messages: ["Invalid data/fields provided for $this->objectName (id: $id)"], stackTrace: debug_backtrace());
+        }
+
+        // hydrate object, apply inputfilter, save it, and return result
+        if ($this->filterAndPersist($this->inputData, $object)) {
+            return $object;
+        } else {
+            return new Error(messages: ["Record update failed for $this->objectName (id: $id)"], stackTrace: debug_backtrace());
+        }
+    }
+
+    /**
      * Update existing objects (in bulk)
      *
      * @param $data

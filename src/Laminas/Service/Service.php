@@ -196,4 +196,14 @@ class Service extends BaseClass
         return $res;
     }
 
+    /**
+     * @param int $id
+     * @param array $data
+     * @param bool $refresh
+     * @return T|Error
+     */
+    public function updateNew($id, $data, $refresh = false)
+    {
+        return $this->repository->updateNew($id, $data, $refresh);
+    }
 }
