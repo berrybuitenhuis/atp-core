@@ -474,6 +474,27 @@ class Input
         return (bool) $value;
     }
 
+    public static function toSnakeCaseKeyNames(array $values): array
+    {
+        // Check for empty array
+        if (empty($values)) {
+            return $values;
+        }
+
+        // Iterate key-names
+        foreach ($values as $key => $value) {
+            // Convert camel-case into snake-case keys (emailAddress -> email_address)
+            $newKey = strtolower(preg_replace('/(?<=[a-z])([A-Z])/', '_$1', $key));
+            $values[$newKey] = $value;
+            if ($newKey !== $key) {
+                unset($values[$key]);
+            }
+        }
+
+        // Return
+        return $values;
+    }
+
     /**
      * Convert SimpleXMLElement-object into object
      *
