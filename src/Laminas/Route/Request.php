@@ -28,7 +28,16 @@ class Request
      */
     public function toRequest(LaminasRequest $request, string $requestClass)
     {
-        $content = json_decode($request->getContent(), true);
+        $data = $request->getContent();
+        if (Input::isJson($data)) {
+            // Decode JSON-string
+            $content = json_decode($data, true);
+        } else {
+            // Parse string into array
+            parse_str($data, $content);
+        }
+
+        // Transform camel-case key-names (to snake-case key-names)
         $content = Input::toSnakeCaseKeyNames($content);
 
         try {
