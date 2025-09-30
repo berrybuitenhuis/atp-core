@@ -6,27 +6,24 @@ use AtpCore\Error;
 use AtpCore\Input;
 use Laminas\Http\Request as LaminasRequest;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
 class Request
 {
-    private Serializer $serializer;
-
-    public function __construct()
-    {
-        $normalizer = new ObjectNormalizer(null, new CamelCaseToSnakeCaseNameConverter());
-        $this->serializer = new Serializer([$normalizer], [new JsonEncoder()]);
-    }
+    private static ?object $serializer = null;
 
     /**
-     * @template T
+     * Initialize (custom) request-model from HTTP-request
+     *
      * @param LaminasRequest $request
-     * @param class-string<T> $requestClass
-     * @return T|Error
+     * @return static|Error
      */
-    public function toRequest(LaminasRequest $request, string $requestClass)
+    public static function fromHttpRequest(LaminasRequest $request): static|\AtpCore\Error
     {
         $data = $request->getContent();
         if (Input::isJson($data)) {
@@ -40,14 +37,56 @@ class Request
         // Transform camel-case key-names (to snake-case key-names)
         $content = Input::toSnakeCaseKeyNames($content);
 
+        // Deserialize request-model
+        $serializer = self::getSerializer();
         try {
-            return $this->serializer->deserialize(
+            return $serializer->deserialize(
                 data: json_encode($content),
-                type: $requestClass,
+                type: static::class,
                 format: 'json',
             );
         } catch (\Throwable $e) {
             return new Error(messages: ["Invalid request body: " . $e->getMessage()]);
         }
+    }
+
+    /**
+     * Convert request-object into array
+     *
+     * @param bool $excludeNulls
+     * @return array
+     */
+    public function toArray(bool $excludeNulls = false): array
+    {
+        // Get array of object
+        $data = get_object_vars($this);
+
+        // Remove nullable values (if applicable)
+        if ($excludeNulls === true) {
+            $data = array_filter($data, static fn($v) => $v !== null);
+        }
+
+        // Return
+        return $data;
+    }
+
+    private static function getSerializer(): object
+    {
+        // Return serializer if already initiated
+        if (self::$serializer !== null) {
+            return self::$serializer;
+        }
+
+        // Initialize serializer
+        $metadataFactory = new ClassMetadataFactory(new AttributeLoader());
+        $normalizer = new ObjectNormalizer(
+            classMetadataFactory: $metadataFactory,
+            nameConverter: new CamelCaseToSnakeCaseNameConverter(),
+            defaultContext: [AbstractObjectNormalizer::ALLOW_EXTRA_ATTRIBUTES => false]
+        );
+        self::$serializer = new Serializer(normalizers: [$normalizer], encoders: [new JsonEncoder()]);
+
+        // Return
+        return self::$serializer;
     }
 }
