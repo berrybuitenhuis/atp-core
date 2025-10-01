@@ -21,9 +21,9 @@ class Request
      * Initialize (custom) request-model from HTTP-request
      *
      * @param LaminasRequest $request
-     * @return static|Error
+     * @return static|Error|\stdClass
      */
-    public static function fromHttpRequest(LaminasRequest $request): static|\AtpCore\Error
+    public static function fromHttpRequest(LaminasRequest $request, bool $safe = true): static|\AtpCore\Error|\stdClass
     {
         $data = $request->getContent();
         if (Input::isJson($data)) {
@@ -46,7 +46,14 @@ class Request
                 format: 'json',
             );
         } catch (\Throwable $e) {
-            return new Error(messages: ["Invalid request body: " . $e->getMessage()]);
+            if ($safe) {
+                trigger_error("Invalid request body: {$e->getMessage()}", E_USER_WARNING);
+                $reflectionClass = new \ReflectionClass(static::class);
+                $properties = array_map(fn($p) => $p->getName(), $reflectionClass->getConstructor()?->getParameters() ?? []);
+                return \AtpCore\Input::formDecode(json_encode($content), $properties);
+            } else {
+                return new Error(messages: ["Invalid request body: {$e->getMessage()}"]);
+            }
         }
     }
 
