@@ -128,6 +128,15 @@ class Service extends BaseClass
     }
 
     /**
+     * @param \Interop\Container\ContainerInterface $serviceManager
+     * @return static
+     */
+    public static function getFromServiceManager($serviceManager)
+    {
+        return $serviceManager->get(static::class);
+    }
+
+    /**
      * @param string $output
      * @param null|false|array $fields
      * @param null|array $defaultFilter
@@ -205,14 +214,5 @@ class Service extends BaseClass
     public function updateNew($id, $data, $refresh = false)
     {
         return $this->repository->updateNew($id, $data, $refresh);
-    }
-
-    /**
-     * @param \Interop\Container\ContainerInterface $serviceManager
-     * @return static
-     */
-    public static function getFromServiceManager($serviceManager)
-    {
-        return $serviceManager->get(static::class);
     }
 }

@@ -1148,6 +1148,15 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     }
 
     /**
+     * @param \Interop\Container\ContainerInterface $serviceManager
+     * @return static
+     */
+    public static function getFromServiceManager($serviceManager)
+    {
+        return $serviceManager->get(static::class);
+    }
+
+    /**
      * Get Hydrator
      *
      * @return DoctrineObject
