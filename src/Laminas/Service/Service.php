@@ -206,4 +206,13 @@ class Service extends BaseClass
     {
         return $this->repository->updateNew($id, $data, $refresh);
     }
+
+    /**
+     * @param \Interop\Container\ContainerInterface $serviceManager
+     * @return static
+     */
+    public static function getFromServiceManager($serviceManager)
+    {
+        return $serviceManager->get(static::class);
+    }
 }
