@@ -59,7 +59,7 @@ class Api extends BaseClass
      *
      * @param int $externalId
      * @param boolean $maptoObject
-     * @return Vehicle|object|bool
+     * @return Vehicle|object|false
      */
     public function getVehicle($externalId, $maptoObject = true)
     {

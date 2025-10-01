@@ -137,7 +137,7 @@ class Api extends BaseClass
      * Get vehicle-data
      *
      * @param int $externalId
-     * @return Vehicle|object|bool
+     * @return Vehicle|object|false
      */
     public function getVehicle($externalId, $output = null)
     {
