@@ -1645,7 +1645,8 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         } else {
             if (is_object($data)) {
                 // Get repository-class by entity-class
-                $className = (get_parent_class($data)) ? get_parent_class($data) : get_class($data);
+                $parentClassName = get_parent_class($data);
+                $className = ($parentClassName && $parentClassName != \AtpCore\Laminas\Doctrine\BaseEntity::class) ? get_parent_class($data) : get_class($data);
                 $repositoryName = str_replace("\Entity\\", "\Repository\\", $className);
                 $repositoryName = preg_replace("~Entity(?!.*Entity)~", "Repository", $repositoryName) . 'Repository';
                 if (class_exists($repositoryName)) {
