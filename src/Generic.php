@@ -23,4 +23,24 @@ class Generic
         }
     }
 
+    public static function emptyDirectory($path, $recursive = false)
+    {
+        // Remove trailing slash from path
+        $path = rtrim($path, '/');
+
+        // Iterate files in path
+        $files = glob("$path/*");
+        foreach ($files as $file) {
+            if (is_dir($file)) {
+                $dirFiles = glob("$path/$file/*");
+                if (count($dirFiles) > 0 && $recursive === true) {
+                    self::emptyDirectory("$path/$file", true);
+                } else {
+                    rmdir($file);
+                }
+            } elseif (is_file($file)) {
+                unlink($file);
+            }
+        }
+    }
 }
