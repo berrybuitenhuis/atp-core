@@ -28,14 +28,14 @@ class Request
         $data = $request->getContent();
         if (Input::isJson($data)) {
             // Decode JSON-string
-            $content = json_decode($data, true);
+            $originalContent = json_decode($data, true);
         } else {
             // Parse string into array
-            parse_str($data, $content);
+            parse_str($data, $originalContent);
         }
 
         // Transform camel-case key-names (to snake-case key-names)
-        $content = Input::toSnakeCaseKeyNames($content);
+        $content = Input::toSnakeCaseKeyNames($originalContent);
 
         // Deserialize request-model
         $serializer = self::getSerializer();
@@ -50,7 +50,7 @@ class Request
                 trigger_error("Invalid request body: {$e->getMessage()}", E_USER_WARNING);
                 $reflectionClass = new \ReflectionClass(static::class);
                 $properties = array_map(fn($p) => $p->getName(), $reflectionClass->getConstructor()?->getParameters() ?? []);
-                return \AtpCore\Input::formDecode(json_encode($content), $properties);
+                return \AtpCore\Input::formDecode(json_encode($originalContent), $properties);
             } else {
                 return new Error(messages: ["Invalid request body: {$e->getMessage()}"]);
             }
