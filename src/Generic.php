@@ -32,9 +32,9 @@ class Generic
         $files = glob("$path/*");
         foreach ($files as $file) {
             if (is_dir($file)) {
-                $dirFiles = glob("$path/$file/*");
+                $dirFiles = glob("$file/*");
                 if (count($dirFiles) > 0 && $recursive === true) {
-                    self::emptyDirectory("$path/$file", true);
+                    self::emptyDirectory($file, true);
                 } else {
                     rmdir($file);
                 }
