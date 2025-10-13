@@ -220,6 +220,18 @@ class Input
     }
 
     /**
+     * Check if value is DateTime array (not object)
+     *
+     * @param array $value
+     * @return bool
+     */
+    public static function isDateTimeArray($value)
+    {
+        $expectedKeys = ['date', 'timezone', 'timezone_type'];
+        return empty(array_diff($expectedKeys, array_keys($value)));
+    }
+
+    /**
      * Check if value is empty (false/0 results in non-empty)
      *
      * @param mixed $value
@@ -239,21 +251,6 @@ class Input
 
         // Return
         return $output;
-    }
-
-    /**
-     * Check if value is NOT empty (false/0 results in non-empty)
-     *
-     * @param mixed $value
-     * @return boolean
-     */
-    public static function isNotEmpty($value)
-    {
-        // Initialize output
-        $empty = self::isEmpty($value);
-
-        // Return
-        return !($empty === true);
     }
 
     public static function isInteger($value)
@@ -285,6 +282,21 @@ class Input
     public static function isJson($dataString)
     {
         return is_string($dataString) && is_array(json_decode($dataString, true)) && (json_last_error() == JSON_ERROR_NONE) ? true : false;
+    }
+
+    /**
+     * Check if value is NOT empty (false/0 results in non-empty)
+     *
+     * @param mixed $value
+     * @return boolean
+     */
+    public static function isNotEmpty($value)
+    {
+        // Initialize output
+        $empty = self::isEmpty($value);
+
+        // Return
+        return !($empty === true);
     }
 
     /**
