@@ -227,6 +227,7 @@ class Input
      */
     public static function isDateTimeArray($value)
     {
+        if (is_array($value) === false) return false;
         $expectedKeys = ['date', 'timezone', 'timezone_type'];
         return empty(array_diff($expectedKeys, array_keys($value)));
     }
