@@ -36,14 +36,15 @@ class Image extends BaseClass
      * @param string $type
      * @return string|false
      */
-    public static function getMimeType($resource, $type = "string") {
+    public static function getMimeType($resource, $type = "string")
+    {
         // Set memory
         $memory = ini_get('memory_limit');
         if ($memory < "256M") ini_set('memory_limit', '256M');
 
         // Get mime-type
         $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $mimeType = ($type =='string') ? $finfo->buffer($resource) : $finfo->file($resource);
+        $mimeType = ($type == 'string') ? $finfo->buffer($resource) : $finfo->file($resource);
 
         // Reset memory
         ini_set('memory_limit', $memory);
@@ -70,7 +71,8 @@ class Image extends BaseClass
         if ($validUrl !== true) return false;
 
         try {
-            $content = file_get_contents($url);
+            $context = stream_context_create(['http' => ['follow_location' => 1, 'max_redirects' => 5]]);
+            $content = file_get_contents($url, false, $context);
             if ($content === false) {
                 $this->setMessages("Unable to read image");
                 $this->setErrorData("Unknown image-url");
@@ -143,25 +145,27 @@ class Image extends BaseClass
      */
     public function validateUrl($url)
     {
-        // Prevent error "Failed to enable crypto":
-        // The issue is down to the server certificate being presented as a wildcard so it can allow all sub-domains under the same certificate,
-        // but for some reason the wildcard is used literally during the SSL verify leading to failure
-        // Solution: https://stackoverflow.com/questions/40830265/php-errors-with-get-headers-and-ssl
+        // Keep your existing defaults (redirects + relaxed SSL)
         stream_context_set_default([
-            'ssl' => [
-                'verify_peer' => false,
-                'verify_peer_name' => false,
-            ],
+            'http' => ['follow_location' => 1, 'max_redirects' => 5],
+            'ssl'  => ['verify_peer' => false, 'verify_peer_name' => false],
         ]);
 
-        $headers = get_headers($url);
-        $statusCode = substr($headers[0], 9, 3);
-        if ($statusCode != "200") {
-            $this->setMessages("Invalid image-url (status-code: {$statusCode})");
+        $headers = @get_headers($url);
+        if ($headers === false || !isset($headers[0])) {
+            $this->setMessages("Invalid image-url (no headers)");
             return false;
-        } else {
+        }
+
+        $statusCode = (int) substr($headers[0], 9, 3);
+
+        // Accept 2xx and 3xx (redirects will be handled when reading the image)
+        if ($statusCode >= 200 && $statusCode < 400) {
             return true;
         }
+
+        $this->setMessages("Invalid image-url (status-code: {$statusCode})");
+        return false;
     }
 
     /**
@@ -246,7 +250,7 @@ class Image extends BaseClass
             }
 
             // Return
-            return ($thumb === true) ? ["image"=>$optimizedImageString, "thumbnail"=>$optimizedThumbString] : $optimizedImageString;
+            return ($thumb === true) ? ["image" => $optimizedImageString, "thumbnail" => $optimizedThumbString] : $optimizedImageString;
         } catch (\Throwable $e) {
             $this->setMessages("Unable to resize image");
             $this->setErrorData($e->getMessage());
