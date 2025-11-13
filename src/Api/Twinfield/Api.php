@@ -1,7 +1,9 @@
 <?php
+
 /**
  * API-information: https://accounting.twinfield.com/webservices/documentation/#/ApiReference
  */
+
 namespace AtpCore\Api\Twinfield;
 
 use AtpCore\BaseClass;
@@ -28,8 +30,8 @@ class Api extends BaseClass
         $redirectUri,
         $organisation,
         private readonly bool $debug = false,
-        private readonly ?string $logFile = null)
-    {
+        private readonly ?string $logFile = null
+    ) {
         // Reset error-messages
         $this->resetErrors();
 
@@ -55,15 +57,21 @@ class Api extends BaseClass
         try {
             $connector = new \PhpTwinfield\ApiConnectors\OfficeApiConnector($this->connection);
             if ($this->debug) $this->setLogger($connector);
-            $xml = new \Domdocument();
+            $xml = new \DOMDocument('1.0', 'UTF-8');
+            // Escape values for XML (&, <, >, quotes, etc.)
+            $officeCode = htmlspecialchars($this->office->getCode(), ENT_XML1, 'UTF-8');
+            $typeValue = htmlspecialchars($type, ENT_XML1, 'UTF-8');
+            $codeValue = htmlspecialchars($code, ENT_XML1, 'UTF-8');
+            $nameValue = htmlspecialchars($name, ENT_XML1, 'UTF-8');
+
             $dimension = $xml->createElement('dimension');
-            $office = $xml->createElement("office", $this->office->getCode());
+            $office = $xml->createElement("office", $officeCode);
             $dimension->appendChild($office);
-            $type = $xml->createElement("type", $type);
+            $type = $xml->createElement("type", $typeValue);
             $dimension->appendChild($type);
-            $code = $xml->createElement("code", $code);
+            $code = $xml->createElement("code", $codeValue);
             $dimension->appendChild($code);
-            $name = $xml->createElement("name", $name);
+            $name = $xml->createElement("name", $nameValue);
             $dimension->appendChild($name);
             $xml->appendChild($dimension);
             $res = $connector->sendXmlDocument($xml);
@@ -104,7 +112,7 @@ class Api extends BaseClass
             $purchaseTransaction->setLines($purchaseTransactionLines);
             $res = $connector->send($purchaseTransaction);
             $output = $res->getNumber();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
             $this->setErrorData($e->getTrace());
             return false;
@@ -147,7 +155,7 @@ class Api extends BaseClass
             }
             $res = $invoiceConnector->send($invoice);
             $output = $res->getInvoiceNumber();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
             $this->setErrorData($e->getTrace());
             return false;
@@ -166,7 +174,7 @@ class Api extends BaseClass
     public function getAccessToken(string $authorizationCode)
     {
         try {
-            $accessToken = $this->provider->getAccessToken("authorization_code", ["code"=>$authorizationCode]);
+            $accessToken = $this->provider->getAccessToken("authorization_code", ["code" => $authorizationCode]);
         } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
             return false;
@@ -185,7 +193,7 @@ class Api extends BaseClass
     public function getAuthorizationUrl(string $state)
     {
         // Return
-        return $this->provider->getAuthorizationUrl(["state"=>$state]);
+        return $this->provider->getAuthorizationUrl(["state" => $state]);
     }
 
     /**
@@ -200,7 +208,7 @@ class Api extends BaseClass
             $connector = new \PhpTwinfield\ApiConnectors\CustomerApiConnector($this->connection);
             if ($this->debug) $this->setLogger($connector);
             $result = $connector->get($customerId, $this->office);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
             $this->setErrorData($e->getTrace());
             return false;
@@ -267,7 +275,7 @@ class Api extends BaseClass
             $connector = new \PhpTwinfield\ApiConnectors\SupplierApiConnector($this->connection);
             if ($this->debug) $this->setLogger($connector);
             $result = $connector->get($supplierId, $this->office);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
             $this->setErrorData($e->getTrace());
             return false;
@@ -287,7 +295,7 @@ class Api extends BaseClass
         try {
             $this->connection->getAuthenticatedClient(\PhpTwinfield\Enums\Services::PROCESSXML());
             return true;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
             return false;
         }
