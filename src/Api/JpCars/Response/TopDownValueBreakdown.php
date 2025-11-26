@@ -8,4 +8,6 @@ class TopDownValueBreakdown
     public $marginCorrectionRule;
     /** @var double|null */
     public $mileageCorrectionRule;
+    /** @var double|null */
+    public $buildCorrectionRule;
 }
