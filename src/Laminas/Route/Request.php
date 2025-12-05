@@ -24,7 +24,7 @@ class Request
      * @param mixed $data
      * @return static|Error|\stdClass
      */
-    public static function fromData(mixed $data, bool $safe = true): static|Error|\stdClass
+    public static function fromData(mixed $data, bool $safe = true): static|Error|array
     {
         // Parse data into array
         if (is_string($data)) {
@@ -105,7 +105,7 @@ class Request
         return $data;
     }
 
-    private static function deserialize(array $data): \stdClass|Error
+    private static function deserialize(array $data): static|Error
     {
         // Transform camel-case key-names (to snake-case key-names)
         $content = Input::toSnakeCaseKeyNames($data);
