@@ -5,7 +5,7 @@ namespace AtpCore;
 class Error
 {
     public function __construct(
-        private mixed $data = null,
+        private array|object|null $data = null,
         private array $messages = [],
         private array $stackTrace = [],
     ) {}
@@ -28,7 +28,7 @@ class Error
     /**
      * Get error-data
      */
-    public function getData(): ?array
+    public function getData(): array|object|null
     {
         return $this->data;
     }
