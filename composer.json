@@ -35,8 +35,9 @@
         "symfony/event-dispatcher": "^7.0",
         "twig/twig": "^v3.8",
         "unleash/client": "^v2.3",
-        "ext-simplexml": "*",
-        "ext-libxml": "*"
+        "ext-ftp": "*",
+        "ext-libxml": "*",
+        "ext-simplexml": "*"
     },
     "autoload": {
         "psr-4": {
