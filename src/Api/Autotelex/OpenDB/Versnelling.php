@@ -9,4 +9,15 @@ class Versnelling
     public int $aantalVersnellingen;
     public string $omschrijving;
     public string $mutatiecode;
+
+    public static function getSchema($filename)
+    {
+        return [
+            'versnellingNummer' => 2,
+            'afkorting' => 6,
+            'aantalVersnellingen' => 2,
+            'omschrijving' => 25,
+            'mutatiecode' => 1,
+        ];
+    }
 }
