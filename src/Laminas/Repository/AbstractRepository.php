@@ -1043,14 +1043,15 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * Return collection of objects with parameters
      *
      * @param array $parameters
+     * @param array|null $orderBy
      * @return \AtpCore\Laminas\Doctrine\EntityCollection<T>
      */
-    public function getByParametersNew($parameters)
+    public function getByParametersNew($parameters, $orderBy = null)
     {
         // Get object(s) by filter
         $objects = $this->objectManager
             ->getRepository($this->objectName)
-            ->findBy($parameters);
+            ->findBy($parameters, $orderBy);
 
         // Return
         return new \AtpCore\Laminas\Doctrine\EntityCollection($this->objectName, ($objects == null) ? [] : $objects);
