@@ -12,7 +12,7 @@ class Model
     public string $modelNaam;
     public ?string $carrosserieVariant;
     public int $afleverprijs;
-    public int $typeNummer;
+    public int $serieNummer;
     public int $merkNummer;
     public string $mutatiecode;
     public string $hash;
@@ -31,7 +31,7 @@ class Model
                     'modelNaam' => 15,
                     'carrosserieVariant' => 15,
                     'afleverprijs' => 5,
-                    'typeNummer' => 4,
+                    'serieNummer' => 4,
                     'merkNummer' => 4,
                     'mutatiecode' => 1,
                 ];
