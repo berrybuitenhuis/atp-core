@@ -8,6 +8,7 @@ class Brandstof
     public string $soortBrandstof;
     public string $omschrijving;
     public string $mutatiecode;
+    public string $hash;
 
     public static function getSchema($filename)
     {

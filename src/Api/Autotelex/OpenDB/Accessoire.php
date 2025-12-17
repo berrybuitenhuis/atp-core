@@ -17,6 +17,7 @@ class Accessoire
     public string $restwaardeVerhogend180;
     public string $accessoireNaamLang;
     public string $mutatiecode;
+    public string $hash;
 
     public static function getSchema($filename)
     {

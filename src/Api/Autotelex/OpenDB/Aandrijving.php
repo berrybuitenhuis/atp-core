@@ -7,6 +7,7 @@ class Aandrijving
     public string $aandrijvingCode;
     public string $omschrijving;
     public string $mutatiecode;
+    public string $hash;
 
     public static function getSchema($filename)
     {

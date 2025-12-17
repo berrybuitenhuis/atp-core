@@ -6,6 +6,7 @@ use AtpCore\Error;
 
 class Model
 {
+    public int $soortVoertuig;
     public int $modelNummer;
     public int $datumPrijslijst;
     public string $modelNaam;
@@ -14,6 +15,7 @@ class Model
     public int $typeNummer;
     public int $merkNummer;
     public string $mutatiecode;
+    public string $hash;
 
     public static function getSchema($filename)
     {

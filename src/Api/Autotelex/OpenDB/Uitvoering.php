@@ -6,6 +6,7 @@ use AtpCore\Error;
 
 class Uitvoering
 {
+    public int $soortVoertuig;
     public int $uitvoeringNummer;
     public string $uitvoering;
     public ?int $aantalDeuren = null;
@@ -67,6 +68,7 @@ class Uitvoering
     public ?string $import = null;
     public ?string $nakedBike = null;
     public string $mutatiecode;
+    public string $hash;
 
     public static function getSchema($filename)
     {

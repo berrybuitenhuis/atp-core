@@ -7,6 +7,7 @@ class Koetswerk
     public string $koetswerkCode;
     public string $omschrijving;
     public string $mutatiecode;
+    public string $hash;
 
     public static function getSchema($filename)
     {

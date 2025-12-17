@@ -7,6 +7,7 @@ class Soort
     public int $soortNummer;
     public string $soortNaam;
     public string $mutatiecode;
+    public string $hash;
 
     public static function getSchema($filename)
     {
