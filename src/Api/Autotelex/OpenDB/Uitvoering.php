@@ -15,8 +15,8 @@ class Uitvoering
     public ?string $automaat = null;
     public int $gewicht;
     public ?string $turbo = null;
-    public int $motorVermogen;
-    public int $motorInhoud;
+    public int $motorvermogen;
+    public int $motorinhoud;
     public int $aantalCilinders;
     public ?string $emissieCode = null;
     public string $brandstof;
@@ -24,7 +24,7 @@ class Uitvoering
     public int $topsnelheid;
     public int $acceleratie;
     public ?int $aantalPersonen = null;
-    public ?int $motorVermogenTpm = null;
+    public ?int $motorvermogenTpm = null;
     public ?int $koppel = null;
     public ?int $koppelTpm = null;
     public ?int $tankinhoud = null;
@@ -83,8 +83,8 @@ class Uitvoering
                     'automaat' => 1,
                     'gewicht' => 5,
                     'turbo' => 1,
-                    'motorVermogen' => 4,
-                    'motorInhoud' => 4,
+                    'motorvermogen' => 4,
+                    'motorinhoud' => 4,
                     'aantalCilinders' => 2,
                     'emissieCode' => 5,
                     'brandstof' => 1,
@@ -105,7 +105,7 @@ class Uitvoering
                 unset($base['mutatiecode']);
                 $fields = [
                     'aantalPersonen' => 2,
-                    'motorVermogenTpm' => 5,
+                    'motorvermogenTpm' => 5,
                     'koppel' => 4,
                     'koppelTpm' => 5,
                     'tankinhoud' => 3,
@@ -199,8 +199,8 @@ class Uitvoering
                     'laadVermogen' => 5,
                     'wielbasis' => 3,
                     'hoogteLaadruimte' => 3,
-                    'motorVermogen' => 4,
-                    'motorInhoud' => 4,
+                    'motorvermogen' => 4,
+                    'motorinhoud' => 4,
                     'aantalCilinders' => 2,
                     'brandstof' => 1,
                     'geelKenteken' => 1,
@@ -303,9 +303,9 @@ class Uitvoering
                     'uitvoering' => 30,
                     'aantalCilinders' => 2,
                     'takt' => 2,
-                    'motorInhoud' => 4,
-                    'motorVermogen' => 3,
-                    'motorVermogenTpm' => 5,
+                    'motorinhoud' => 4,
+                    'motorvermogen' => 3,
+                    'motorvermogenTpm' => 5,
                     'gewicht' => 5,
                     'versnellingCode' => 2,
                     'import' => 1,
