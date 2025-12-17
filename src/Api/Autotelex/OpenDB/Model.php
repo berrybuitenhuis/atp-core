@@ -10,7 +10,7 @@ class Model
     public int $modelNummer;
     public int $datumPrijslijst;
     public string $modelNaam;
-    public ?string $carvariant;
+    public ?string $carrosserieVariant;
     public int $afleverprijs;
     public int $typeNummer;
     public int $merkNummer;
@@ -29,7 +29,7 @@ class Model
                     'modelNummer' => 4,
                     'datumPrijslijst' => 8,
                     'modelNaam' => 15,
-                    'carvariant' => 15,
+                    'carrosserieVariant' => 15,
                     'afleverprijs' => 5,
                     'typeNummer' => 4,
                     'merkNummer' => 4,
