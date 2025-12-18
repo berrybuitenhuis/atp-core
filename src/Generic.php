@@ -43,4 +43,31 @@ class Generic
             }
         }
     }
+
+    public static function getLocalFiles($path)
+    {
+        // Return if path not exists
+        if (!is_dir($path)) {
+            return null;
+        }
+
+        // Get all files (also hidden-files)
+        $files = glob($path . '/{*,.*}', GLOB_BRACE | GLOB_NOSORT);
+        // Filter "." and ".." from file-list
+        $files = array_diff($files, [$path . '/.', $path . '/..']);
+        if (empty($files)) $files = null;
+
+        // Return
+        return $files;
+    }
+
+    public static function isEmptyDirectory($path, $failIfNotExists = false)
+    {
+        if ($failIfNotExists === true && !is_dir($path)) {
+            return false;
+        }
+
+        // Return
+        return self::getLocalFiles($path) === null;
+    }
 }
