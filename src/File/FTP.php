@@ -65,10 +65,9 @@ class FTP
             preg_match('/(\S+)\s+(\d+)\s+(\S+)\s+(\S+)\s+(\d+)\s+(\w{3}\s+\d{2})\s+(\d{4}|\d{2}:\d{2})\s+(.+)/', $file, $fileDetails);
 
             // Add file to list
-            $fileYear = (strstr($fileDetails[7], ":")) ? date("Y") : $fileDetails[7];
             $list[] = [
                 "file" => $fileDetails[8],
-                "created" => (new \DateTime())->setTimestamp(strtotime("{$fileDetails[6]} $fileYear")),
+                "created" => $this->getCreated($fileDetails[6], $fileDetails[7]),
                 "size" => $fileDetails[5],
             ];
         }
@@ -110,5 +109,24 @@ class FTP
     private function disconnect($connection)
     {
         ftp_close($connection);
+    }
+
+    /**
+     * Get proper file-date
+     *
+     * @param string $fileDate
+     * @param string|int $fileYear
+     * @return \DateTime
+     */
+    private function getCreated($fileDate, $fileYear)
+    {
+        $fileYear = (strstr($fileYear, ":")) ? date("Y") : $fileYear;
+        $date = (new \DateTime())->setTimestamp(strtotime("$fileDate $fileYear"));
+        if ($date->format("Y-m-d") > (new \AtpCore\Date())->format("Y-m-d")) {
+            return $this->getCreated($fileDate, $fileYear - 1);
+        }
+
+        // Return
+        return $date;
     }
 }
