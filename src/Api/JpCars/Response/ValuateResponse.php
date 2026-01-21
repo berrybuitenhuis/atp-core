@@ -25,9 +25,15 @@ class ValuateResponse
     /** @var double|null */
     public $value_at_maturity;
     /** @var integer|null */
+    public $stat_sold_count;
+    /** @var integer|null */
+    public $stat_stock_count;
+    /** @var integer|null */
     public $stat_turnover_ext;
     /** @var integer|null */
     public $stat_turnover_int;
+    /** @var integer|null */
+    public $stock_days_average;
     /** @var integer|null */
     public $stock_days_average_in_stock;
     /** @var integer|null */
