@@ -29,6 +29,8 @@ class ValuateResponse
     /** @var integer|null */
     public $stat_turnover_int;
     /** @var integer|null */
+    public $stock_days_average_in_stock;
+    /** @var integer|null */
     public $window_size;
     /** @var double|null */
     public $price_sensitivity;
