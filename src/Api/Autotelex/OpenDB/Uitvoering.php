@@ -306,10 +306,10 @@ class Uitvoering
                     'motorinhoud' => 4,
                     'motorvermogen' => 3,
                     'motorvermogenTpm' => 5,
-                    'gewicht' => 5,
+                    'gewicht' => 4,
                     'versnellingCode' => 2,
                     'import' => 1,
-                    'modelNummer' => 4,
+                    'modelNummer' => 5,
                     'mutatiecode' => 1,
                 ];
             case "uitv.150.ext":
