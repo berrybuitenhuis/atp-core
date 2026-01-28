@@ -167,14 +167,14 @@ class Api extends BaseClass
     /**
      * Map response to (internal) response-object
      */
-    private function mapResponse(object $response, mixed $responseClass): ValuateResponse|false
+    private function mapResponse(object $response, mixed $responseClass, $failOnUndefinedProperty = true): ValuateResponse|false
     {
         $response = $this->fixDataTypes($response);
 
         try {
             // Setup JsonMapper
             $mapper = new JsonMapperExtension();
-            $mapper->bExceptionOnUndefinedProperty = true;
+            $mapper->bExceptionOnUndefinedProperty = $failOnUndefinedProperty;
             $mapper->bStrictObjectTypeChecking = true;
             $mapper->bExceptionOnMissingData = true;
             $mapper->bStrictNullTypes = true;
@@ -188,6 +188,9 @@ class Api extends BaseClass
                 return false;
             }
         } catch (\Exception $e) {
+            if (stristr($e->getMessage(), "JSON property") && stristr($e->getMessage(), "does not exist in object of type AtpCore\Api\JpCars\Response\ValuateResponse")) {
+                return $this->mapResponse($response, new ValuateResponse(), false);
+            }
             $this->setMessages($e->getMessage());
             return false;
         }
