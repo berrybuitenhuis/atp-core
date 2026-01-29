@@ -63,7 +63,7 @@ class Api extends BaseClass
             // Get vehicle-data
             $requestHeader = ["Authorization"=>"$token->token_type $token->access_token"];
             $params = ["licenseplate"=>$licensePlate];
-            if ($this->debug) $this->log("request", "GetData", json_encode($params));
+            if ($this->debug) $this->log("request", "GetVehicledata", json_encode($params));
             $result = $this->client->get("GetVehicledata", ["headers"=>$requestHeader, "query"=>$params]);
             if ($result->getStatusCode() != 200) {
                 $this->setMessages("{$result->getStatusCode()}: {$result->getReasonPhrase()}");
