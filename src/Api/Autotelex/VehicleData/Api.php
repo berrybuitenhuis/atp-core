@@ -73,7 +73,7 @@ class Api extends BaseClass
             $this->setOriginalResponse($response);
             if ($this->debug) $this->log("response", "GetVehicledata", json_encode($response));
             $status = $response->status;
-            if (property_exists($status, "code") && $status->code == 11) {
+            if (property_exists($status, "code") && in_array($status->code, [0, 11])) {
                 return $response;
             } else {
                 $this->setErrorData($status);
