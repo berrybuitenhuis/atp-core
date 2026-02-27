@@ -157,6 +157,26 @@ class Mail extends BaseClass
     }
 
     /**
+     * Get list of active domains
+     *
+     * @param string $region
+     * @return array
+     */
+    public function getActiveDomains($region = "EU")
+    {
+        $activeDomains = [];
+        if ($region == "US") $domains = $this->mailgunUS->domains()->index();
+        else $domains = $this->mailgunEU->domains()->index();
+        foreach ($domains->getDomains() AS $domain) {
+            if ($domain->getState() == 'active') {
+                $activeDomains[] = $domain;
+            }
+        }
+
+        return $activeDomains;
+    }
+
+    /**
      * Get events
      *
      * @param \DateTime $startDate
@@ -199,23 +219,28 @@ class Mail extends BaseClass
     }
 
     /**
-     * Get list of active domains
+     * Get usages/metrics of (specific/current) period
      *
      * @param string $region
+     * @param \DateTime|null $startDate
+     * @param \DateTime|null$endDate
      * @return array
      */
-    public function getActiveDomains($region = "EU")
+    function getUsage($region = "EU", $startDate = null, $endDate = null)
     {
-        $activeDomains = [];
-        if ($region == "US") $domains = $this->mailgunUS->domains()->index();
-        else $domains = $this->mailgunEU->domains()->index();
-        foreach ($domains->getDomains() AS $domain) {
-            if ($domain->getState() == 'active') {
-                $activeDomains[] = $domain;
-            }
-        }
+        $start = $startDate ?: new \DateTime('first day of this month 00:00:00', new \DateTimeZone('UTC'));
+        $end = $endDate ?: new \DateTime('last day of this month 23:59:59', new \DateTimeZone('UTC'));
+        $parameters = [
+            'start' => $start->format(DATE_RFC2822),
+            'end' => $end->format(DATE_RFC2822),
+            'resolution' => 'month',
+            'metrics' => ['email_validation_count','email_validation_single_count','email_validation_bulk_count','email_validation_valid_count']
+        ];
+        if ($region == "US") $usage = $this->mailgunUS->metrics()->loadMetrics($parameters)->getItems();
+        else $usage = $this->mailgunEU->metrics()->loadMetrics($parameters)->getItems();
 
-        return $activeDomains;
+        // Return
+        return $usage;
     }
 
     /**
