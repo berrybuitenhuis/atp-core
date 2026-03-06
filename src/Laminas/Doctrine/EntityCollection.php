@@ -18,6 +18,17 @@ class EntityCollection  {
     }
 
     /**
+     * Get number of records in collection
+     *
+     * @return int
+     */
+    public function count()
+    {
+        // Return
+        return ($this->collection->isEmpty()) ? 0 : $this->collection->count();
+    }
+
+    /**
      * Check if collection has results
      *
      * @return bool
