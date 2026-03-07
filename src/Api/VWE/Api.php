@@ -5,6 +5,8 @@
 namespace AtpCore\Api\VWE;
 
 use AtpCore\BaseClass;
+use AtpCore\Error;
+use AtpCore\Extension\JsonMapperExtension;
 use Laminas\Soap\Client;
 
 class Api extends BaseClass
@@ -126,6 +128,37 @@ class Api extends BaseClass
     public function getOriginalResponse()
     {
         return $this->originalResponse;
+    }
+
+    /**
+     * @template T of object
+     * @param array|object $data
+     * @param class-string<T> $className
+     * @return T
+     */
+    public function map($data, $className)
+    {
+        try {
+            $record = new $className();
+            $mapper = new JsonMapperExtension();
+            $mapper->bExceptionOnUndefinedProperty = true;
+            $mapper->bStrictObjectTypeChecking = true;
+            $mapper->bExceptionOnMissingData = true;
+            $mapper->bStrictNullTypes = true;
+            $mapper->bCastToExpectedType = false;
+
+            // Map response to internal object
+            $object = $mapper->map((object) $data, $record);
+            $valid = $mapper->isValid($object, get_class($record));
+            if ($valid === false) {
+                return new Error(messages: $mapper->getMessages());
+            }
+        } catch (\Throwable $e) {
+            return new Error(messages: [$e->getMessage()]);
+        }
+
+        // Return
+        return $object;
     }
 
     /**

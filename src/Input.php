@@ -526,7 +526,17 @@ class Input
                     $output->$key = [];
                     foreach ($value AS $v) {
                         if (is_object($v) || is_array($v)) {
-                            $output->$key[] = self::convertXMLData($v);
+                            $res = self::convertXMLData($v);
+                            // Check for value-attributes (only for SimpleXMLElement-object)
+                            if (is_object($v) && $v instanceof \SimpleXMLElement) {
+                                $attributes = $v->attributes();
+                                if (!empty($attributes)) {
+                                    foreach ($attributes as $k1 => $v1) {
+                                        $res->{$key . "_" . $k1} = self::convertXMLValue($v1);
+                                    }
+                                }
+                            }
+                            $output->$key[] = $res;
                         } else {
                             $output->$key[] = self::convertXMLValue($v);
                         }
@@ -565,7 +575,7 @@ class Input
             }
 
             // Check for value-attributes (only for SimpleXMLElement-object)
-            if (is_object($data) && property_exists($data, $key) && gettype($data->$key) === 'object' && get_class($data->key) === 'SimpleXMLElement') {
+            if (is_object($data) && property_exists($data, $key) && gettype($data->$key) === 'object' && $data->key instanceof \SimpleXMLElement && !is_array($output->$key)) {
                 $attributes = $data->$key->attributes();
                 if (!empty($attributes)) {
                     foreach ($attributes as $k => $v) {
