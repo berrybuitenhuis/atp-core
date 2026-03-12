@@ -538,7 +538,18 @@ class Input
                             }
                             $output->$key[] = $res;
                         } else {
-                            $output->$key[] = self::convertXMLValue($v);
+                            // Check for value-attributes (only for SimpleXMLElement-object)
+                            if (is_object($data->$key) && $data->$key instanceof \SimpleXMLElement) {
+                                $attributes = $data->$key->attributes();
+                                if (!empty($attributes)) {
+                                    $res = new \stdClass();
+                                    $res->$key = self::convertXMLValue($v);
+                                    foreach ($attributes as $k1 => $v1) {
+                                        $res->{$key . "_" . $k1} = self::convertXMLValue($v1);
+                                    }
+                                }
+                            }
+                            $output->$key[] = (isset($res)) ? $res : self::convertXMLValue($v);
                         }
                     }
                 } else {
@@ -575,6 +586,7 @@ class Input
             }
 
             // Check for value-attributes (only for SimpleXMLElement-object)
+//            if (is_object($data) && property_exists($data, $key) && gettype($data->$key) === 'object' && $data->key instanceof \SimpleXMLElement && !is_array($output->$key)) {
             if (is_object($data) && property_exists($data, $key) && gettype($data->$key) === 'object' && $data->key instanceof \SimpleXMLElement && !is_array($output->$key)) {
                 $attributes = $data->$key->attributes();
                 if (!empty($attributes)) {
