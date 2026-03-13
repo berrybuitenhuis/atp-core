@@ -524,7 +524,7 @@ class Input
                 // If element is not associative array (but sequential) avoid numeric element-keys (but respect sequential array)
                 if (self::isAssocArray($value) === false) {
                     $output->$key = [];
-                    foreach ($value AS $v) {
+                    foreach ($value AS $k => $v) {
                         if (is_object($v) || is_array($v)) {
                             $res = self::convertXMLData($v);
                             // Check for value-attributes (only for SimpleXMLElement-object)
@@ -540,7 +540,7 @@ class Input
                         } else {
                             // Check for value-attributes (only for SimpleXMLElement-object)
                             if (is_object($data->$key) && $data->$key instanceof \SimpleXMLElement) {
-                                $attributes = $data->$key->attributes();
+                                $attributes = $data->$key[$k]->attributes();
                                 if (!empty($attributes)) {
                                     $res = new \stdClass();
                                     $res->$key = self::convertXMLValue($v);
@@ -586,7 +586,6 @@ class Input
             }
 
             // Check for value-attributes (only for SimpleXMLElement-object)
-//            if (is_object($data) && property_exists($data, $key) && gettype($data->$key) === 'object' && $data->key instanceof \SimpleXMLElement && !is_array($output->$key)) {
             if (is_object($data) && property_exists($data, $key) && gettype($data->$key) === 'object' && $data->key instanceof \SimpleXMLElement && !is_array($output->$key)) {
                 $attributes = $data->$key->attributes();
                 if (!empty($attributes)) {
