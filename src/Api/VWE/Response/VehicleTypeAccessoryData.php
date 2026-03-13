@@ -4,10 +4,10 @@ namespace AtpCore\Api\VWE\Response;
 
 class VehicleTypeAccessoryData
 {
-    /** @var AtlVehicleOpties */
+    /** @var AtlVehicleOptions */
     public $atlOptieStandaard;
-    /** @var AtlVehicleOpties */
+    /** @var AtlVehicleOptions */
     public $atlOptieFabriek;
-    /** @var AtlVehicleOpties */
+    /** @var AtlVehiclePackages */
     public $atlOptiePakket;
 }

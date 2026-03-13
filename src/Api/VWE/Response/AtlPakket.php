@@ -2,12 +2,14 @@
 
 namespace AtpCore\Api\VWE\Response;
 
-class AtlVehicleOpties
+class AtlPakket
 {
     /** @var string */
-    public $kenteken;
+    public $naam;
     /** @var int */
-    public $atlCode;
+    public $pakket_id;
+    /** @var int|null */
+    public $opakket_bedrag;
     /** @var AtlOpties */
     public $opties;
 }
