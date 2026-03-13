@@ -9,7 +9,7 @@ class AtlPakket
     /** @var int */
     public $pakket_id;
     /** @var int|null */
-    public $opakket_bedrag;
+    public $pakket_bedrag;
     /** @var AtlOpties */
     public $opties;
 }
