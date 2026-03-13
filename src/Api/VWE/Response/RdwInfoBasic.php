@@ -2,7 +2,7 @@
 
 namespace AtpCore\Api\VWE\Response;
 
-class RdwInfoAdvanced
+class RdwInfoBasic
 {
     /** @var string */
     public $kenteken;
@@ -68,68 +68,8 @@ class RdwInfoAdvanced
     public $maximumMassaAutonoomGeremd;
     /** @var int */
     public $maximumMassaMiddenasGeremd;
-    /** @var boolean */
-    public $parallelImport;
-    /** @var int|null */
-    public $uitvoeringsVolgnummer;
-    /** @var int */
-    public $aantalDeuren;
-    /** @var string */
-    public $inrichting;
-    /** @var string|null */
-    public $inrichting_code;
-    /** @var int|null*/
-    public $voertuigClassificatie;
-    /** @var string|null*/
-    public $voertuigClassificatie_code;
-    /** @var int */
-    public $aantalWielen;
-    /** @var int */
-    public $vermogenKw;
-    /** @var int|null */
-    public $vermogenBromfiets;
-    /** @var int */
-    public $maximaleConstructiesnelheid;
-    /** @var int */
-    public $emissieCode;
-    /** @var boolean */
-    public $g3Installatie;
-    /** @var int */
-    public $bpm;
-    /** @var boolean */
-    public $verplichtingennemer;
-    /** @var boolean */
-    public $wamVerzekerd;
-    /** @var int */
-    public int $wielbasis;
-    /** @var string */
-    public $motorcode;
-    /** @var int */
-    public $catalogusPrijs;
-    /** @var boolean */
-    public $isTaxi;
-    /** @var string */
-    public $typeEigenaar;
-    /** @var string */
-    public $datumMeldApk;
-    /** @var string */
-    public $wijzeVanInvoer;
-    /** @var boolean */
-    public $isDubbeleCabine;
     /** @var string */
     public $tijdAansprakelijkheid;
     /** @var string|null */
     public $brandstof3;
-    /** @var int */
-    public $lengteVoertuigMax;
-    /** @var int */
-    public $breedteVoertuigMax;
-    /** @var int */
-    public $hoogteVoertuigMax;
-    /** @var boolean */
-    public $isTaxiGeweest;
-    /** @var string|null */
-    public $datumRegistratieGoedkeuring;
-    /** @var boolean */
-    public $tenaamstellenMogelijk;
 }

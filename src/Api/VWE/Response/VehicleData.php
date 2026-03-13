@@ -2,7 +2,7 @@
 
 namespace AtpCore\Api\VWE\Response;
 
-class Message
+class VehicleData
 {
     /** @var RdwInfoAdvanced */
     public $rdwInfoAdvanced;
