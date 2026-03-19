@@ -102,7 +102,7 @@ class RdwInfoAdvanced
     public $wamVerzekerd;
     /** @var int */
     public int $wielbasis;
-    /** @var string */
+    /** @var string|null */
     public $motorcode;
     /** @var int */
     public $catalogusPrijs;
