@@ -118,7 +118,7 @@ class RdwInfoAdvanced
     public $brandstof3;
     /** @var int|null */
     public $lengteVoertuigMax;
-    /** @var int */
+    /** @var int|null */
     public $breedteVoertuigMax;
     /** @var int */
     public $hoogteVoertuigMax;
