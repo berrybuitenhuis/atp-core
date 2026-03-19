@@ -76,12 +76,8 @@ class RdwInfoAdvanced
     public $aantalDeuren;
     /** @var string */
     public $inrichting;
-    /** @var string|null */
-    public $inrichting_code;
     /** @var int|null*/
     public $voertuigClassificatie;
-    /** @var string|null*/
-    public $voertuigClassificatie_code;
     /** @var int */
     public $aantalWielen;
     /** @var int */
