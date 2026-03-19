@@ -6,7 +6,7 @@ class AtlPakket
 {
     /** @var string */
     public $naam;
-    /** @var int */
+    /** @var int|null */
     public $pakket_id;
     /** @var int|null */
     public $pakket_bedrag;
