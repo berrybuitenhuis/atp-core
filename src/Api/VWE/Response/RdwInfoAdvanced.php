@@ -90,7 +90,7 @@ class RdwInfoAdvanced
     public $vermogenBromfiets;
     /** @var int */
     public $maximaleConstructiesnelheid;
-    /** @var int */
+    /** @var int|null */
     public $emissieCode;
     /** @var boolean */
     public $g3Installatie;
