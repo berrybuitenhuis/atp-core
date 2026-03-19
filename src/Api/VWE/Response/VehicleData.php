@@ -6,7 +6,7 @@ class VehicleData
 {
     /** @var RdwInfoAdvanced */
     public $rdwInfoAdvanced;
-    /** @var AtlTransmissie */
+    /** @var AtlTransmissie|null */
     public $atlTransmissie;
     /** @var AtlFoto */
     public $atlFoto;
