@@ -84,7 +84,7 @@ class RdwInfoAdvanced
     public $vermogenKw;
     /** @var int|null */
     public $vermogenBromfiets;
-    /** @var int */
+    /** @var int|null */
     public $maximaleConstructiesnelheid;
     /** @var int|null */
     public $emissieCode;
