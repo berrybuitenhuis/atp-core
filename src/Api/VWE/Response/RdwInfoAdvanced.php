@@ -14,7 +14,7 @@ class RdwInfoAdvanced
     public $merk;
     /** @var string */
     public $merk_code;
-    /** @var string */
+    /** @var mixed */
     public $handelsbenaming;
     /** @var string */
     public $voertuigsoort;
