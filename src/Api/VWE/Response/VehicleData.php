@@ -10,6 +10,6 @@ class VehicleData
     public $atlTransmissie;
     /** @var AtlFoto|null */
     public $atlFoto;
-    /** @var AtlMmtInfo */
+    /** @var AtlMmtInfo|null */
     public $atlMmtInfo;
 }
