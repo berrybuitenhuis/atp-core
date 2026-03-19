@@ -66,7 +66,7 @@ class RdwInfoAdvanced
     public $maximumMassaOpleggerGeremd;
     /** @var int|null */
     public $maximumMassaAutonoomGeremd;
-    /** @var int */
+    /** @var int|null */
     public $maximumMassaMiddenasGeremd;
     /** @var boolean */
     public $parallelImport;
