@@ -100,7 +100,7 @@ class RdwInfoAdvanced
     public int $wielbasis;
     /** @var string|null */
     public $motorcode;
-    /** @var int */
+    /** @var int|null */
     public $catalogusPrijs;
     /** @var boolean */
     public $isTaxi;
