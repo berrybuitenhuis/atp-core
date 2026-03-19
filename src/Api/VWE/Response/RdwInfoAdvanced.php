@@ -106,7 +106,7 @@ class RdwInfoAdvanced
     public $isTaxi;
     /** @var string */
     public $typeEigenaar;
-    /** @var string */
+    /** @var string|null */
     public $datumMeldApk;
     /** @var string */
     public $wijzeVanInvoer;
