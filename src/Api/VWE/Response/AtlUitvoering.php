@@ -16,6 +16,6 @@ class AtlUitvoering
     public $uitvoeringGeldigVanaf;
     /** @var string */
     public $uitvoeringGeldigTot;
-    /** @var int */
+    /** @var int|null */
     public $uitvoeringItem_ranking;
 }
