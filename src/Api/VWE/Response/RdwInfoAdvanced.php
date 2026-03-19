@@ -120,7 +120,7 @@ class RdwInfoAdvanced
     public $lengteVoertuigMax;
     /** @var int|null */
     public $breedteVoertuigMax;
-    /** @var int */
+    /** @var int|null */
     public $hoogteVoertuigMax;
     /** @var boolean */
     public $isTaxiGeweest;
