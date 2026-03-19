@@ -58,7 +58,7 @@ class RdwInfoAdvanced
     public $maximumMassa;
     /** @var int */
     public $massaRijklaar;
-    /** @var int */
+    /** @var int|null */
     public $maximumMassaOngeremd;
     /** @var int */
     public $maximumMassaGeremd;
@@ -116,7 +116,7 @@ class RdwInfoAdvanced
     public $tijdAansprakelijkheid;
     /** @var string|null */
     public $brandstof3;
-    /** @var int */
+    /** @var int|null */
     public $lengteVoertuigMax;
     /** @var int */
     public $breedteVoertuigMax;
