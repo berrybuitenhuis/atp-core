@@ -60,7 +60,7 @@ class RdwInfoAdvanced
     public $massaRijklaar;
     /** @var int|null */
     public $maximumMassaOngeremd;
-    /** @var int */
+    /** @var int|null */
     public $maximumMassaGeremd;
     /** @var int|null */
     public $maximumMassaOpleggerGeremd;
