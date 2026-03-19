@@ -130,6 +130,6 @@ class RdwInfoAdvanced
     public $isTaxiGeweest;
     /** @var string|null */
     public $datumRegistratieGoedkeuring;
-    /** @var boolean */
+    /** @var boolean|null */
     public $tenaamstellenMogelijk;
 }
