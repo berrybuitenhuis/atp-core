@@ -8,7 +8,7 @@ class VehicleData
     public $rdwInfoAdvanced;
     /** @var AtlTransmissie|null */
     public $atlTransmissie;
-    /** @var AtlFoto */
+    /** @var AtlFoto|null */
     public $atlFoto;
     /** @var AtlMmtInfo */
     public $atlMmtInfo;
