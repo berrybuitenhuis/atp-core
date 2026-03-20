@@ -14,7 +14,7 @@ class RepositoryFactory implements FactoryInterface
      * @param array|null $options
      * @return mixed|object
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $objectManager = $container->get(EntityManager::class);
 

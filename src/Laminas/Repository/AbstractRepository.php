@@ -83,9 +83,9 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     /**
      * Constructor
      *
-     * @param EntityManager $objectManager
+     * @param EntityManager|null $objectManager
      */
-    public function __construct(EntityManager $objectManager = null)
+    public function __construct(?EntityManager $objectManager = null)
     {
         if (!empty($objectManager)) {
             $this->objectManager = $objectManager;
