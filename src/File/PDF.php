@@ -12,8 +12,8 @@ class PDF
      * Generate PDF-document by HTML
      *
      * @param $html
-     * @param string $filename
      * @param array $options
+     * @param string|null $filename
      * @return string|boolean
      */
     public function generate($html, $options = [], $filename = null)

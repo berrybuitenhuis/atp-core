@@ -100,7 +100,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * @param $data
      * @param $output
      * @param $overrule
-     * @param array $fields
+     * @param array|null $fields
      * @return array|bool
      */
     public function create($data, $output = 'object', $overrule = [], $fields = null)
@@ -179,7 +179,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * @param $data
      * @param $output
      * @param $overrule
-     * @param array $fields
+     * @param array|null $fields
      * @return array|bool
      */
     public function createBulk($data, $output = 'object', $overrule = [], $fields = null)
@@ -470,7 +470,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      *
      * @param string $output
      * @param bool $refresh
-     * @param array $fields
+     * @param array|null $fields
      * @return object|array
      */
     public function getAll($output = 'object', $refresh = false, $fields = null)
@@ -1248,12 +1248,12 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * Return a list of objects from the repository
      *
      * @param string $output
-     * @param array|false $fields
-     * @param array $defaultFilter
-     * @param array $filter
-     * @param array $groupBy
-     * @param array $having
-     * @param array $orderBy
+     * @param array|false|null $fields
+     * @param array|null $defaultFilter
+     * @param array|null $filter
+     * @param array|null $groupBy
+     * @param array|null $having
+     * @param array|null $orderBy
      * @param integer $limitRecords
      * @param integer $offset
      * @param boolean $paginator
@@ -1539,7 +1539,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * Transform object-data into usable data
      *
      * @param array $data
-     * @param array $fields
+     * @param array|null $fields
      * @return array
      */
     public function transformData($data, $fields = null)
@@ -1562,7 +1562,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * Transform object-record into usable record
      *
      * @param array $record
-     * @param array $fields
+     * @param array|null $fields
      * @return array
      */
     public function transformRecord($record, $fields = null)
@@ -1628,7 +1628,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      *
      * @param mixed $data
      * @param array $fields
-     * @param mixed $dataOrig
+     * @param mixed|null $dataOrig
      * @return array
      */
     public function transformValues($data, $fields, $dataOrig = null)
@@ -1723,7 +1723,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * @param $data
      * @param $output
      * @param $refresh
-     * @param array $fields
+     * @param array|null $fields
      * @return array|object|bool
      */
     public function update($id, $data, $output = 'object', $refresh = false, $fields = null)
@@ -1836,7 +1836,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * @param $data
      * @param $output
      * @param $refresh
-     * @param array $fields
+     * @param array|null $fields
      * @return array|bool
      */
     public function updateBulk($data, $output = 'object', $refresh = false, $fields = null)

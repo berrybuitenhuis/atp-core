@@ -33,7 +33,7 @@ class PushNotification extends BaseClass
      * @param string $platform
      * @param string|array $tokens
      * @param string $message
-     * @param array $options
+     * @param array|null $options
      * @return bool
      * @throws Exception
      */
@@ -81,7 +81,7 @@ class PushNotification extends BaseClass
      * @param string $platform
      * @param string|array $aliases
      * @param string $message
-     * @param array $options
+     * @param array|null $options
      * @return bool
      * @throws Exception
      */

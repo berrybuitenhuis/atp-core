@@ -14,7 +14,7 @@ class PasswordInputFilter
     /**
      * Get InputFilter for a Password-type field
      *
-     * @param string $name
+     * @param string|null $name
      * @param boolean $required
      * @param integer $minLength
      * @param integer $minUppercase

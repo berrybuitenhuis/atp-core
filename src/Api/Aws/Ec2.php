@@ -20,8 +20,8 @@ class Ec2 extends BaseClass
      *
      * @param string $version
      * @param string $region
-     * @param string $awsKey
-     * @param string $awsSecret
+     * @param string|null $awsKey
+     * @param string|null $awsSecret
      */
     public function __construct($version = "latest", $region = "eu-west-1", $awsKey = null, $awsSecret = null)
     {

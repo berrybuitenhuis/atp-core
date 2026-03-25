@@ -19,8 +19,8 @@ class S3 extends BaseClass
      *
      * @param string $version
      * @param string $region
-     * @param string $awsKey
-     * @param string $awsSecret
+     * @param string|null $awsKey
+     * @param string|null $awsSecret
      */
     public function __construct($version = "latest", $region = "eu-west-1", $awsKey = null, $awsSecret = null)
     {
@@ -362,7 +362,7 @@ class S3 extends BaseClass
      * @param string $file
      * @param string|null $filename
      * @param string $acl
-     * @param array $tags
+     * @param array|null $tags
      * @param boolean $overwrite
      * @return \Aws\Result|bool
      */
@@ -400,7 +400,7 @@ class S3 extends BaseClass
      * @param string $content
      * @param string|null $filename
      * @param string $acl
-     * @param array $tags
+     * @param array|null $tags
      * @param boolean $overwrite
      * @param boolean $failIfTargetExists
      * @return \Aws\Result|bool

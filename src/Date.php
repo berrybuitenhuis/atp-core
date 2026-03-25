@@ -13,7 +13,7 @@ class Date extends BaseClass
     private $date;
 
     /**
-     * @param DateTime $date
+     * @param DateTime|null $date
      */
     public function __construct($date = null)
     {
@@ -26,7 +26,7 @@ class Date extends BaseClass
      *
      * @param int $interval
      * @param string $format
-     * @param array|bool $weekendDays
+     * @param array|bool|null $weekendDays
      * @return bool|DateTime
      */
     public function addInterval($interval, $format = "seconds", $weekendDays = null)
@@ -271,7 +271,7 @@ class Date extends BaseClass
      * Get date-range for maximum number of days (except weekend-days and days-off)
      *
      * @param int $numberOfDays
-     * @param array|bool $weekendDays
+     * @param array|bool|null $weekendDays
      * @return false|array
      */
     public function getDateRange($numberOfDays, $weekendDays = null)
@@ -331,7 +331,7 @@ class Date extends BaseClass
      *
      * @param int $interval
      * @param string $format
-     * @param array|bool $weekendDays
+     * @param array|bool|null $weekendDays
      * @return bool|DateTime
      */
     public function subtractInterval($interval, $format = "seconds", $weekendDays = null)
@@ -376,7 +376,7 @@ class Date extends BaseClass
      * Add number of workdays to date
      *
      * @param int $numberOfDays
-     * @param array|bool $weekendDays
+     * @param array|bool|null $weekendDays
      * @return boolean
      */
     private function addWorkDays($numberOfDays, $weekendDays = null)
@@ -455,7 +455,7 @@ class Date extends BaseClass
     /**
      * Check if date is day-off
      *
-     * @param array $weekendDays
+     * @param array|null $weekendDays
      * @return boolean
      * @throws Exception
      */
@@ -519,7 +519,7 @@ class Date extends BaseClass
      * Subtract number of workdays to date
      *
      * @param int $numberOfDays
-     * @param array|bool $weekendDays
+     * @param array|bool|null $weekendDays
      * @return boolean
      */
     private function subtractWorkDays($numberOfDays, $weekendDays = null)

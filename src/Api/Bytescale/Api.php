@@ -28,7 +28,7 @@ class Api extends BaseClass
      * @param boolean $debug
      * @param \Closure|null $logger
      */
-    public function __construct($hostname, $accountId, $token, $debug = false, \Closure $logger = null)
+    public function __construct($hostname, $accountId, $token, $debug = false, ?\Closure $logger = null)
     {
         $this->client = new Client(['base_uri'=>$hostname, 'http_errors'=>false, 'debug'=>$debug]);
         $this->accountId = $accountId;

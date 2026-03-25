@@ -227,7 +227,7 @@ abstract class BaseList implements BaseInterface, ArrayAccess, Iterator, Countab
     /**
      * Gets a slice of elements
      * @param int $offset
-     * @param int $number
+     * @param int|null $number
      * @return array
      */
     public function slice($offset, $number = null)

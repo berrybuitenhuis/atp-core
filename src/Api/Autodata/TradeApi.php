@@ -34,7 +34,7 @@ class TradeApi extends BaseClass
         private readonly mixed $username,
         private readonly mixed $password,
         $debug = false,
-        \Closure $logger = null)
+        ?\Closure $logger = null)
     {
         // Set client
         $this->client = new Client(['base_uri'=>$hostname, 'http_errors'=>false, 'debug'=>$debug]);
@@ -154,7 +154,7 @@ class TradeApi extends BaseClass
     /**
      * Get bid-requests
      *
-     * @param \DateTime $startDate
+     * @param \DateTime|null $startDate
      * @param boolean $origResponse
      * @return object|bool
      */

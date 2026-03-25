@@ -9,7 +9,7 @@ class Digits extends LaminasDigits
     /**
      * Sets validator options
      *
-     * @param  array|Traversable $options
+     * @param  array|Traversable|null $options
      * @throws Exception\InvalidArgumentException
      */
     public function __construct($options = null)

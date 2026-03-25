@@ -13,7 +13,7 @@ class ServiceFactory implements FactoryInterface
      * @param array|null $options
      * @return mixed|object
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         // Set repository-name (replace service into repository
         $repositoryName = str_replace("\Service\\", "\Repository\\", $requestedName);

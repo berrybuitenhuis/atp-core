@@ -603,7 +603,7 @@ class Input
     /**
      * Convert SimpleXMLElement-value into primitive
      *
-     * @param \SimpleXMLElement $value
+     * @param \SimpleXMLElement|null $value
      * @return int|string
      */
     private static function convertXMLValue($value)

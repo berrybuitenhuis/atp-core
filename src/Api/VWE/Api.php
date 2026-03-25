@@ -29,7 +29,7 @@ class Api extends BaseClass
      * @param boolean $debug
      * @param \Closure|null $logger
      */
-    public function __construct($wsdl, $username, $password, $debug = false, \Closure $logger = null)
+    public function __construct($wsdl, $username, $password, $debug = false, ?\Closure $logger = null)
     {
         $this->client = new Client($wsdl, ['encoding' => 'UTF-8']);
         $this->client->setSoapVersion(SOAP_1_2);

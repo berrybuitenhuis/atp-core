@@ -30,7 +30,7 @@ class SMS extends BaseClass
      *
      * @param int $recipient
      * @param string $body
-     * @param string $originator
+     * @param string|null $originator
      * @return bool
      * @throws Exception
      */

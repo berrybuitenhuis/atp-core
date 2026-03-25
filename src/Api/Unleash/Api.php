@@ -26,7 +26,7 @@ class Api extends BaseClass
      * @param string $appUrl
      * @param string $instanceId
      * @param string $environment
-     * @param string $cacheFolder
+     * @param string|null $cacheFolder
      * @param boolean $cacheTTL
      * @param boolean $debug
      */

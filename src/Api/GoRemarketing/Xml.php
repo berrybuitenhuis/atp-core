@@ -28,7 +28,7 @@ class Xml extends BaseClass
      * @param boolean $debug
      * @param \Closure|null $logger
      */
-    public function __construct($host, $port, $username, $password, $debug = false, \Closure $logger = null)
+    public function __construct($host, $port, $username, $password, $debug = false, ?\Closure $logger = null)
     {
         $this->debug = $debug;
         $this->host = $host;

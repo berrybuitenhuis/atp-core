@@ -42,10 +42,10 @@ class LefApi extends BaseClass
      * @param Entity\Lead $lead
      * @param Entity\Relation $relation
      * @param Entity\VehicleCurrent $vehicleCurrent
-     * @param Entity\VehicleInterest $vehicleInterest
+     * @param Entity\VehicleInterest|null $vehicleInterest
      * @return bool
      */
-    function createLead(Entity\Lead $lead, Entity\Relation $relation, Entity\VehicleCurrent $vehicleCurrent, Entity\VehicleInterest $vehicleInterest = null)
+    function createLead(Entity\Lead $lead, Entity\Relation $relation, Entity\VehicleCurrent $vehicleCurrent, ?Entity\VehicleInterest $vehicleInterest = null)
     {
         $body = $this->generateLead($lead, $relation, $vehicleCurrent, $vehicleInterest);
 
@@ -117,10 +117,10 @@ class LefApi extends BaseClass
      * @param Entity\Lead $leadInfo
      * @param Entity\Relation $relation
      * @param Entity\VehicleCurrent $vehicleCurrent
-     * @param Entity\VehicleInterest $vehicleInterest
+     * @param Entity\VehicleInterest|null $vehicleInterest
      * @return string
      */
-    private function generateLead(Entity\Lead $leadInfo, Entity\Relation $relation, Entity\VehicleCurrent $vehicleCurrent, Entity\VehicleInterest $vehicleInterest = null)
+    private function generateLead(Entity\Lead $leadInfo, Entity\Relation $relation, Entity\VehicleCurrent $vehicleCurrent, ?Entity\VehicleInterest $vehicleInterest = null)
     {
         // Initialize XML-document
         $xml = new \SimpleXMLElement("<?xml version=\"1.0\" encoding=\"utf-8\" ?><Leads xmlns=\"http://www.uname-it.nl/unameit/xsd/LEF/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.uname-it.nl/unameit/xsd/LEF/Leads.xsd\"></Leads>");

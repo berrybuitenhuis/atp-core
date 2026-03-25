@@ -149,7 +149,7 @@ class Api extends BaseClass
      * @param string $licensePlate
      * @param int $atlCode
      * @param string $bodyType
-     * @param string $category
+     * @param string|null $category
      * @param boolean $valuable
      * @param boolean $distinctive
      * @return object|bool

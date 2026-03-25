@@ -19,7 +19,7 @@ class SMS extends BaseClass
     /**
      * Constructor
      *
-     * @param string $apiKey
+     * @param string|null $apiKey
      * @param bool $debug
      */
     public function __construct($apiKey = null, $debug = false)
@@ -56,7 +56,7 @@ class SMS extends BaseClass
      *
      * @param int $recipient
      * @param string $body
-     * @param string $originator
+     * @param string|null $originator
      * @return bool
      */
     public function send($recipient, $body, $originator = null)

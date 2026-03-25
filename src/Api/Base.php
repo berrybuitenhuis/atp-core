@@ -85,7 +85,7 @@ abstract class Base implements BaseInterface
 
     /**
      * Loop over all properties and set them in the entity
-     * @param \stdClass $data
+     * @param \stdClass|null $data
      * @return self
      * @throws Exception
      */

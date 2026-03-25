@@ -35,7 +35,7 @@ class Api extends BaseClass
      * @param boolean $debug
      * @param \Closure|null $logger
      */
-    public function __construct($hostname, $hostnameToken, $username, $password, $debug = false, \Closure $logger = null)
+    public function __construct($hostname, $hostnameToken, $username, $password, $debug = false, ?\Closure $logger = null)
     {
         $this->client = new Client(['base_uri'=>$hostname, 'http_errors'=>false, 'debug'=>$debug]);
         $this->debug = $debug;
@@ -189,8 +189,8 @@ class Api extends BaseClass
      * @param string $vatMarginType
      * @param int $bid
      * @param \DateTime $expirationDate
-     * @param string $comment
-     * @param ?Buyer $buyer
+     * @param string|null $comment
+     * @param Buyer|null $buyer
      * @return bool
      */
     public function sendBid($externalId, $resultType, $vatMarginType, $bid, $expirationDate, $comment = null, $buyer = null)
@@ -275,7 +275,7 @@ class Api extends BaseClass
      * Send no-interest to Autotelex
      *
      * @param int $externalId
-     * @param string $comment
+     * @param string|null $comment
      * @return bool
      */
     public function sendNoInterest($externalId, $comment = null)

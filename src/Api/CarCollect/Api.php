@@ -39,7 +39,7 @@ class Api extends BaseClass
      * @param boolean $debug
      * @param \Closure|null $logger
      */
-    public function __construct($host, $username, $password, $debug = false, \Closure $logger = null)
+    public function __construct($host, $username, $password, $debug = false, ?\Closure $logger = null)
     {
         $this->host = $host;
         $this->debug = $debug;

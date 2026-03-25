@@ -180,7 +180,7 @@ class Mail extends BaseClass
      * Get events
      *
      * @param \DateTime $startDate
-     * @param string $type
+     * @param string|null $type
      * @param string $region
      * @return array
      */
@@ -223,7 +223,7 @@ class Mail extends BaseClass
      *
      * @param string $region
      * @param \DateTime|null $startDate
-     * @param \DateTime|null$endDate
+     * @param \DateTime|null $endDate
      * @return array
      */
     function getUsage($region = "EU", $startDate = null, $endDate = null)
@@ -253,7 +253,7 @@ class Mail extends BaseClass
      * @param string|array $bcc
      * @param string $subject
      * @param string $text
-     * @param string $html
+     * @param string|null $html
      * @param array $attachments
      * @param array $images
      * @return boolean
@@ -350,7 +350,7 @@ class Mail extends BaseClass
      * @param string|array $bcc
      * @param string $subject
      * @param string $text
-     * @param string $html
+     * @param string|null $html
      * @param array $attachments
      * @param array $images
      * @return boolean

@@ -20,8 +20,8 @@ class Api extends BaseClass
      * Constructor
      *
      * @param string $hostname
-     * @param string $username
-     * @param string $password
+     * @param string|null $username
+     * @param string|null $password
      * @param boolean $debug
      */
     public function __construct($hostname, $username = null, $password = null, $debug = false)

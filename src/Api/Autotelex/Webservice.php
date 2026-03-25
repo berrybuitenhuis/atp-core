@@ -32,7 +32,7 @@ class Webservice extends BaseClass
      * @param boolean $debug
      * @param \Closure|null $logger
      */
-    public function __construct($wsdl, $username, $password, $debug = false, \Closure $logger = null)
+    public function __construct($wsdl, $username, $password, $debug = false, ?\Closure $logger = null)
     {
         $this->client = new Client($wsdl, ['encoding' => 'UTF-8']);
         $this->client->setSoapVersion(SOAP_1_1);
@@ -222,8 +222,8 @@ class Webservice extends BaseClass
      * @param string $vatMarginType
      * @param int $bid
      * @param \DateTime $expirationDate
-     * @param string $comment
-     * @param int $rdwIdentificationNumber
+     * @param string|null $comment
+     * @param int|null $rdwIdentificationNumber
      * @return bool|object
      */
     public function sendBid($externalId, $resultType, $vatMarginType, $bid, $expirationDate, $comment = null, $rdwIdentificationNumber = null)
@@ -285,7 +285,7 @@ class Webservice extends BaseClass
      * Send no-interest to Autotelex
      *
      * @param int $externalId
-     * @param string $comment
+     * @param string|null $comment
      * @return bool|object
      */
     public function sendNoInterest($externalId, $comment = null)
