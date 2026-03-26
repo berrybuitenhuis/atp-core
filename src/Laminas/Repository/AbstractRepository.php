@@ -1263,10 +1263,18 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      */
     public function getList($output = 'object', $fields = null, $defaultFilter = null, $filter = null, $groupBy = null, $having = null, $orderBy = null, $limitRecords = 25, $offset = 0, $paginator = false, $debug = false)
     {
-        if (!empty((int) $limitRecords)) $limit['limit'] = (int) $limitRecords;
-        else $limit['limit'] = 25;
+        if (!empty((int) $limitRecords)) {
+            $limit['limit'] = (int) $limitRecords;
+        } else {
+            $limit['limit'] = 25;
+        }
         $limit['offset'] = $offset;
-        if (!is_array($filter)) $filter = [];
+        if (!is_array($filter)) {
+            $filter = [];
+        }
+        if (!empty($defaultFilter) && is_string($defaultFilter)) {
+            $defaultFilter = [$defaultFilter];
+        }
 
         // Get results
         $isSupportedForQueryOptimizer = (empty($groupBy) && empty($having)) ? $this->isSupportedForQueryOptimizer($defaultFilter, $filter) : false;
