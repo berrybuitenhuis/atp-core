@@ -71,8 +71,16 @@ class Image extends BaseClass
         if ($validUrl !== true) return false;
 
         try {
+            // Set temporary error-handling to avoid warning-messages
+            set_error_handler(function (int $errno, string $errstr): never {
+                throw new \RuntimeException($errstr, $errno);
+            });
             $context = stream_context_create(['http' => ['follow_location' => 1, 'max_redirects' => 5]]);
-            $content = file_get_contents($url, false, $context);
+            try {
+                $content = file_get_contents($url, false, $context);
+            } finally {
+                restore_error_handler();
+            }
             if ($content === false) {
                 $this->setMessages("Unable to read image");
                 $this->setErrorData("Unknown image-url");
