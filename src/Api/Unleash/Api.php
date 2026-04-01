@@ -7,9 +7,7 @@
 namespace AtpCore\Api\Unleash;
 
 use AtpCore\BaseClass;
-use Cache\Adapter\Filesystem\FilesystemCachePool;
-use League\Flysystem\Adapter\Local;
-use League\Flysystem\Filesystem;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Unleash\Client\Unleash;
 use Unleash\Client\UnleashBuilder;
 use Unleash\Client\Configuration\UnleashContext;
@@ -44,11 +42,7 @@ class Api extends BaseClass
                 ->withAppUrl($appUrl)
                 ->withGitlabEnvironment($environment)
                 ->withCacheHandler(
-                    new FilesystemCachePool(
-                        new Filesystem(
-                            new Local($cacheFolder)
-                        )
-                    )
+                    new FilesystemAdapter('unleash', 0, $cacheFolder)
                 )
                 ->withCacheTimeToLive($cacheTTL)
                 ->build();

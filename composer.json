@@ -14,7 +14,6 @@
     "require": {
         "php": "^8.4",
         "aws/aws-sdk-php": "^3.376",
-        "cache/filesystem-adapter": "^1.2",
         "dompdf/dompdf": "^v3.1",
         "elasticsearch/elasticsearch": "^v8.19",
         "gmostafa/php-graphql-client": "^v1.13",
@@ -32,6 +31,7 @@
         "phpoffice/phpspreadsheet": "^5.5",
         "phpseclib/phpseclib": "^3.0",
         "spatie/image-optimizer": "^1.8",
+        "symfony/cache": "^v8.0",
         "twig/twig": "^v3.24",
         "unleash/client": "^v2.9",
         "ext-ftp": "*",
