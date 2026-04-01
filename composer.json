@@ -16,7 +16,7 @@
         "aws/aws-sdk-php": "^3.376",
         "cache/filesystem-adapter": "^1.2",
         "dompdf/dompdf": "^v3.1",
-        "elasticsearch/elasticsearch": "^v9.3",
+        "elasticsearch/elasticsearch": "^v8.19",
         "gmostafa/php-graphql-client": "^v1.13",
         "gumlet/php-image-resize": "^2.1",
         "guzzlehttp/guzzle": "^7.10",
