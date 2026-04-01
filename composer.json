@@ -12,7 +12,7 @@
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "aws/aws-sdk-php": "^3.300",
         "cache/filesystem-adapter": "^1.2",
         "dompdf/dompdf": "^v2.0",
@@ -32,7 +32,6 @@
         "phpoffice/phpspreadsheet": "^2.0",
         "phpseclib/phpseclib": "^3.0",
         "spatie/image-optimizer": "^1.7",
-        "symfony/event-dispatcher": "^7.0",
         "twig/twig": "^v3.8",
         "unleash/client": "^v2.3",
         "ext-ftp": "*",
