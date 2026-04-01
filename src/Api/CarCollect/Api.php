@@ -9,13 +9,7 @@ use AtpCore\Api\CarCollect\Response\Vehicle;
 use AtpCore\BaseClass;
 use AtpCore\Extension\JsonMapperExtension;
 use AtpCore\Format;
-use GraphQL\Client;
-use GraphQL\Exception\QueryError;
-use GraphQL\Mutation;
-use GraphQL\Query;
-use GraphQL\RawObject;
-use GraphQL\Variable;
-use GuzzleHttp\Exception\ClientException;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class Api extends BaseClass
 {
@@ -36,10 +30,11 @@ class Api extends BaseClass
      * @param string $host
      * @param string $username
      * @param string $password
+     * @param HttpClientInterface $httpClient
      * @param boolean $debug
      * @param \Closure|null $logger
      */
-    public function __construct($host, $username, $password, $debug = false, ?\Closure $logger = null)
+    public function __construct($host, $username, $password, private readonly HttpClientInterface $httpClient, $debug = false, ?\Closure $logger = null)
     {
         $this->host = $host;
         $this->debug = $debug;
@@ -71,17 +66,20 @@ class Api extends BaseClass
             // Set query
             $queryFields = $this->getQueryFields();
             if ($queryFields === false) return false;
-            $query = (new Query('getTradeDossier'))
-                ->setArguments(['id'=>$externalId])
-                ->setSelectionSet($queryFields);
+            $selectionSet = $this->buildSelectionSet($queryFields);
+            $query = "{ getTradeDossier(id: $externalId) $selectionSet }";
 
             // Get vehicle-data
-            if ($this->debug) $this->log("request", "GetVehicle", json_encode($query));
-            $response = $this->getClient($token)->runQuery($query);
-            $this->setOriginalResponse($response->getData());
-            if ($this->debug) $this->log("response", "GetVehicle", json_encode($response->getData()));
-            if ($maptoObject === false) return $response->getData()->getTradeDossier;
-            else return $this->mapVehicleResponse($response->getData()->getTradeDossier);
+            if ($this->debug) $this->log("request", "GetVehicle", $query);
+            $result = $this->executeQuery($query, [], $token);
+            if ($result === false) return false;
+
+            $this->setOriginalResponse($result);
+            if ($this->debug) $this->log("response", "GetVehicle", json_encode($result));
+
+            $data = $result->getTradeDossier;
+            if ($maptoObject === false) return $data;
+            else return $this->mapVehicleResponse($data);
         } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
             return false;
@@ -121,21 +119,87 @@ class Api extends BaseClass
             // Override bid, not possible to have 0 for bid, otherwise receive error-message "Unprocessable Entity")
             if ($amount === 0) $amount = 1;
             $comment = preg_replace('/\s+/', ' ', Format::trim($comment) ?? "");
-            $mutation = (new Mutation('createBidApi'))
-                ->setOperationName('createBidApi')
-                ->setVariables([
-                    new Variable('tradeDossierId', 'ID', true),
-                ])
-                ->setArguments(['tradeDossierId'=>'$tradeDossierId', 'bid'=>new RawObject("{amount: $amount, branch: \"$this->branch\", comment: \"$comment\"}")])
-                ->setSelectionSet(['id','amount','comment']);
+            $escapedComment = addslashes($comment);
+            $escapedBranch = addslashes($this->branch);
 
-            $response = $this->getClient($token)->runQuery($mutation, false, ['tradeDossierId'=>$tradeDossierId]);
+            $query = <<<GRAPHQL
+                mutation createBidApi(\$tradeDossierId: ID!) {
+                    createBidApi(tradeDossierId: \$tradeDossierId, bid: {amount: $amount, branch: "$escapedBranch", comment: "$escapedComment"}) {
+                        id
+                        amount
+                        comment
+                    }
+                }
+            GRAPHQL;
 
-            return $response->getData()->createBidApi;
-        } catch (QueryError $e) {
+            $result = $this->executeQuery($query, ['tradeDossierId' => $tradeDossierId], $token);
+            if ($result === false) return false;
+
+            return $result->createBidApi;
+        } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * Execute a GraphQL query/mutation via Symfony HttpClient
+     *
+     * @param string $query
+     * @param array $variables
+     * @param string|null $token
+     * @return object|false
+     */
+    private function executeQuery(string $query, array $variables = [], ?string $token = null)
+    {
+        $headers = ['Content-Type' => 'application/json'];
+        if (!empty($token)) {
+            $headers['Authorization'] = "Bearer $token";
+        }
+
+        $body = ['query' => $query];
+        if (!empty($variables)) {
+            $body['variables'] = $variables;
+        }
+
+        try {
+            $response = $this->httpClient->request('POST', $this->host, [
+                'headers' => $headers,
+                'json' => $body,
+            ]);
+
+            $data = json_decode($response->getContent(false));
+
+            if (isset($data->errors) && !empty($data->errors)) {
+                $errorMessages = array_map(fn($e) => $e->message, $data->errors);
+                $this->setMessages(implode('; ', $errorMessages));
+                return false;
+            }
+
+            return $data->data;
+        } catch (\Exception $e) {
+            $this->setMessages($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Build a GraphQL selection set string from a fields array
+     *
+     * @param array $fields
+     * @return string
+     */
+    private function buildSelectionSet(array $fields): string
+    {
+        $parts = [];
+        foreach ($fields as $field) {
+            if (is_string($field)) {
+                $parts[] = $field;
+            } elseif (is_array($field)) {
+                $parts[] = $field['name'] . ' ' . $this->buildSelectionSet($field['fields']);
+            }
+        }
+        return '{ ' . implode(' ', $parts) . ' }';
     }
 
     /**
@@ -171,7 +235,7 @@ class Api extends BaseClass
                 // Get fields of class
                 $subfields = $this->getQueryFields($className);
                 if ($subfields === false) return false;
-                $fields[] = (new Query($property->getName()))->setSelectionSet($subfields);
+                $fields[] = ['name' => $property->getName(), 'fields' => $subfields];
             }
         }
 
@@ -219,24 +283,6 @@ class Api extends BaseClass
     }
 
     /**
-     * Initialize GraphQl-client
-     *
-     * @param string|null $token
-     * @return Client
-     */
-    private function getClient($token = null)
-    {
-        if (!empty($token)) {
-            $client = new Client($this->host, ["Authorization" => "Bearer $token"]);
-        } else {
-            $client = new Client($this->host);
-        }
-
-        // Return
-        return $client;
-    }
-
-    /**
      * Get token
      *
      * @return string|false
@@ -247,15 +293,14 @@ class Api extends BaseClass
         if (!empty($this->token)) return $this->token;
 
         try {
-            // Get token
-            $mutation = (new Mutation('loginApiAccount'))
-                ->setArguments(['email'=>$this->username, 'password'=>$this->password])
-                ->setSelectionSet([
-                    'id', 'access_token', 'default_branch'
-                ]);
+            $query = sprintf(
+                'mutation { loginApiAccount(email: "%s", password: "%s") { id access_token default_branch } }',
+                addslashes($this->username),
+                addslashes($this->password)
+            );
 
-            $response = $this->getClient()->runQuery($mutation);
-            $result = $response->getData();
+            $result = $this->executeQuery($query);
+            if ($result === false) return false;
 
             // Set branch and token
             $this->branch = $result->loginApiAccount->default_branch;
@@ -263,9 +308,8 @@ class Api extends BaseClass
 
             // Return
             return $this->token;
-        } catch (ClientException $e) {
-            $this->setMessages($e->getResponse()->getBody()->getContents());
-            $this->setErrorData($e->getMessage());
+        } catch (\Exception $e) {
+            $this->setMessages($e->getMessage());
             return false;
         }
     }
