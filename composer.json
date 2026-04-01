@@ -36,7 +36,8 @@
         "unleash/client": "^v2.9",
         "ext-ftp": "*",
         "ext-libxml": "*",
-        "ext-simplexml": "*"
+        "ext-simplexml": "*",
+        "ext-soap": "*"
     },
     "autoload": {
         "psr-4": {
