@@ -12,10 +12,11 @@ use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Throwable;
 
-/**1
+/**
  * @template T of object
  */
 abstract class AbstractRepository extends BaseClass
@@ -320,16 +321,32 @@ abstract class AbstractRepository extends BaseClass
             $object = $this->prepareObjectData($object, true);
         }
 
-        // Validate object
+        // Validate input data against constraints (if defined in repository)
         if ($this->validator !== null) {
-            $violations = $this->validator->validate($object, null, $this->getValidationGroups());
-            if (count($violations) > 0) {
-                $messages = [];
-                foreach ($violations as $violation) {
-                    $path = $violation->getPropertyPath() ?: 'general';
-                    $messages[$path] = $violation->getMessage();
+            $constraints = $this->getConstraints();
+            if ($constraints !== null) {
+                $violations = $this->validator->validate($data, $constraints, $this->getValidationGroups());
+                if (count($violations) > 0) {
+                    $messages = [];
+                    foreach ($violations as $violation) {
+                        $path = $violation->getPropertyPath() ?: 'general';
+                        $messages[$path] = $violation->getMessage();
+                    }
+                    $this->addMessage($messages);
                 }
-                $this->addMessage($messages);
+            }
+
+            // Validate object (e.g. Assert attributes on entity)
+            if (empty($this->messages)) {
+                $violations = $this->validator->validate($object, null, $this->getValidationGroups());
+                if (count($violations) > 0) {
+                    $messages = [];
+                    foreach ($violations as $violation) {
+                        $path = $violation->getPropertyPath() ?: 'general';
+                        $messages[$path] = $violation->getMessage();
+                    }
+                    $this->addMessage($messages);
+                }
             }
         }
 
@@ -1242,6 +1259,18 @@ abstract class AbstractRepository extends BaseClass
     public function getInputData()
     {
         return $this->inputData;
+    }
+
+    /**
+     * Get constraints for input data validation
+     *
+     * Override in repository to define validation constraints.
+     *
+     * @return Constraint|array|null
+     */
+    protected function getConstraints(): Constraint|array|null
+    {
+        return null;
     }
 
     /**
