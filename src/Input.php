@@ -613,16 +613,14 @@ class Input
     private static function convertXMLValue($value)
     {
         // Check for null-value or empty object
-
         if ($value === null) return $value;
         elseif (is_object($value) && empty($value)) return null;
-        elseif (is_string($value)) $value = trim($value);
 
         $stringValue = (string) $value;
         $intValue = (int) $value;
         if ($stringValue === (string) $intValue && strlen($stringValue) == strlen($intValue)) {
             return $intValue;
         }
-        return $stringValue;
+        return trim($stringValue);
     }
 }
