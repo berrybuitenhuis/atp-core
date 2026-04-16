@@ -556,8 +556,12 @@ class Input
                     $output->$key = self::convertXMLData($value);
                 }
             } elseif (is_object($value) && !empty($value)) {
+                // If SimpleXMLElement has no child elements, treat as scalar value
+                if ($value instanceof \SimpleXMLElement && $value->count() === 0) {
+                    $output->$key = self::convertXMLValue($value);
+                }
                 // If element has only 1 property and this is not an array -> force it
-                if (count((array) $value) == 1) {
+                elseif (count((array) $value) == 1) {
                     // Force property to be an array for only 1 value
                     $properties = array_keys(get_object_vars($value));
                     if (count((array) $value->{$properties[0]}) == 1) $forceArray = true;
@@ -609,6 +613,7 @@ class Input
     private static function convertXMLValue($value)
     {
         // Check for null-value or empty object
+        $value = trim($value);
         if ($value === null) return $value;
         elseif (is_object($value) && empty($value)) return null;
 
