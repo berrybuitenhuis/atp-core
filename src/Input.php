@@ -613,9 +613,10 @@ class Input
     private static function convertXMLValue($value)
     {
         // Check for null-value or empty object
-        $value = trim($value);
+
         if ($value === null) return $value;
         elseif (is_object($value) && empty($value)) return null;
+        elseif (is_string($value)) $value = trim($value);
 
         $stringValue = (string) $value;
         $intValue = (int) $value;
