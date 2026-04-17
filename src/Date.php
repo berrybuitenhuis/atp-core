@@ -326,6 +326,51 @@ class Date extends BaseClass
         return (new DateTime())->format($format);
     }
 
+    public static function getSpecialDate($year, $type)
+    {
+        switch (Format::lowercase($type)) {
+            case "bevrijdingsdag":
+                $date = null;
+                if (($year % 5) == 0) {
+                    $date = new DateTime($year . "-05-05");
+                }
+                return $date;
+            case "hemelvaartsdag":
+                $easter = new DateTime();
+                $easter->setTimestamp(easter_date($year));
+                return $easter->add(new DateInterval('P39D'));
+            case "koningsdag":
+                $date = new DateTime($year . "-04-27");
+                if ($date->format('D') === 'Sun') {
+                    $date->sub(new DateInterval('P1D'));
+                }
+                return $date;
+            case "paaszondag":
+                $date = new DateTime();
+                return $date->setTimestamp(easter_date($year));
+            case "paasmaandag":
+                $easter = new DateTime();
+                $easter->setTimestamp(easter_date($year));
+                return $easter->add(new DateInterval('P49D'));
+            case "pinksterzondag":
+                $easter = new DateTime();
+                $easter->setTimestamp(easter_date($year));
+                return $easter->add(new DateInterval('P50D'));
+            case "pinkstermaandag":
+                $easter = new DateTime();
+                $easter->setTimestamp(easter_date($year));
+                return $easter->add(new DateInterval('P1D'));
+            case "eerste_kerstdag":
+                return new DateTime($year . "-12-25");
+            case "tweede_kerstdag":
+                return new DateTime($year . "-12-26");
+            case "nieuwjaarsdag":
+                return new DateTime($year . "-01-01");
+            default:
+                return new \AtpCore\Error(messages: ["Unknown special date type ($type)"]);
+        }
+    }
+
     /**
      * Subtract interval (minutes, hours, days) from date-time
      *
@@ -467,47 +512,37 @@ class Date extends BaseClass
             return true;
         } else {
             // Check Easter (Pasen)
-            $easter = new DateTime();
-            $easter->setTimestamp(easter_date($this->date->format("Y")));
+            $easter = $this->getSpecialDate($this->date->format("Y"), "paaszondag");
             if ($this->date->format("Y-m-d") == $easter->format("Y-m-d")) return true;
-            $easterMonday = clone $easter;
-            $easterMonday->add(new DateInterval('P1D'));
+            $easterMonday = $this->getSpecialDate($this->date->format("Y"), "paasmaandag");
             if ($this->date->format("Y-m-d") == $easterMonday->format("Y-m-d")) return true;
 
             // Check Ascension Day (Hemelvaartsdag)
-            $ascensionDay = clone $easter;
-            $ascensionDay->add(new DateInterval('P39D'));
+            $ascensionDay = $this->getSpecialDate($this->date->format("Y"), "hemelvaartsdag");
             if ($this->date->format("Y-m-d") == $ascensionDay->format("Y-m-d")) return true;
 
             // Check Pentecost (Pinksteren)
-            $pentecost = clone $ascensionDay;
-            $pentecost->add(new DateInterval('P10D'));
+            $pentecost = $this->getSpecialDate($this->date->format("Y"), "pinksterzondag");
             if ($this->date->format("Y-m-d") == $pentecost->format("Y-m-d")) return true;
-            $pentecostMonday = clone $pentecost;
-            $pentecostMonday->add(new DateInterval('P1D'));
+            $pentecostMonday = $this->getSpecialDate($this->date->format("Y"), "pinkstermaandag");
             if ($this->date->format("Y-m-d") == $pentecostMonday->format("Y-m-d")) return true;
 
             // Check Kingsday (Koningsdag)
-            $kingsDay = new DateTime($this->date->format("Y") . "-04-27");
-            if ($kingsDay->format('D') === 'Sun') {
-                $kingsDay->sub(new DateInterval('P1D'));
-            }
+            $kingsDay = $this->getSpecialDate($this->date->format("Y"), "koningsdag");
             if ($this->date->format("Y-m-d") == $kingsDay->format("Y-m-d")) return true;
 
             // Check Liberation Day (Bevrijdingsdag)
-            if (($this->date->format("Y") % 5) == 0) {
-                $liberationDay = new DateTime($this->date->format("Y") . "-05-05");
-                if ($this->date->format("Y-m-d") == $liberationDay->format("Y-m-d")) return true;
-            }
+            $liberationDay = $this->getSpecialDate($this->date->format("Y"), "bevrijdingsdag");
+            if ($liberationDay !== null && $this->date->format("Y-m-d") == $liberationDay->format("Y-m-d")) return true;
 
             // Check Christmas Days (Kerstmis)
-            $christmasDay = new DateTime($this->date->format("Y") . "-12-25");
+            $christmasDay = $this->getSpecialDate($this->date->format("Y"), "eerste_kerstdag");
             if ($this->date->format("Y-m-d") == $christmasDay->format("Y-m-d")) return true;
-            $christmasDaySecond = new DateTime($this->date->format("Y") . "-12-26");
+            $christmasDaySecond = $this->getSpecialDate($this->date->format("Y"), "tweede_kerstdag");
             if ($this->date->format("Y-m-d") == $christmasDaySecond->format("Y-m-d")) return true;
 
             // Check New Years Day(Nieuwjaarsdag)
-            $newYearsDay = new DateTime($this->date->format("Y") . "-01-01");
+            $newYearsDay = $this->getSpecialDate($this->date->format("Y"), "nieuwjaarsdag");
             if ($this->date->format("Y-m-d") == $newYearsDay->format("Y-m-d")) return true;
         }
 
