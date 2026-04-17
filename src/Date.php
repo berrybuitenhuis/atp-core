@@ -351,15 +351,15 @@ class Date extends BaseClass
             case "paasmaandag":
                 $easter = new DateTime();
                 $easter->setTimestamp(easter_date($year));
-                return $easter->add(new DateInterval('P49D'));
+                return $easter->add(new DateInterval('P1D'));
             case "pinksterzondag":
                 $easter = new DateTime();
                 $easter->setTimestamp(easter_date($year));
-                return $easter->add(new DateInterval('P50D'));
+                return $easter->add(new DateInterval('P49D'));
             case "pinkstermaandag":
                 $easter = new DateTime();
                 $easter->setTimestamp(easter_date($year));
-                return $easter->add(new DateInterval('P1D'));
+                return $easter->add(new DateInterval('P50D'));
             case "eerste_kerstdag":
                 return new DateTime($year . "-12-25");
             case "tweede_kerstdag":
