@@ -61,20 +61,20 @@ class CloudWatch extends BaseClass
     /**
      * Get query-results from CloudWatch Logs
      *
-     * @param string $logGroupName
+     * @param array $logGroupNames
      * @param \DateTime $startDate
      * @param \DateTime $endDate
      * @param string $queryString
      * @return false|array
      */
-    public function getQueryResults($logGroupName, $startDate, $endDate, $queryString)
+    public function getQueryResults($logGroupNames, $startDate, $endDate, $queryString)
     {
         try {
             $client = new CloudWatchLogsClient($this->config);
 
             // Start query (asynchronous)
             $query = $client->startQuery([
-                "logGroupName" => $logGroupName,
+                "logGroupNames" => $logGroupNames,
                 "startTime" => $startDate->getTimestamp() * 1000,
                 "endTime" => $endDate->getTimestamp() * 1000,
                 "queryString" => $queryString,
