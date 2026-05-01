@@ -200,8 +200,14 @@ class VehicleVariables
     public $testDriven;
     /** @var boolean|null */
     public $tradeInPriceApproved;
+    /** @var integer|null */
+    public $tradeInPriceCustomer;
     /** @var string|null */
     public $transmissionAutomatic;
+    /** @var string|null */
+    public $tradingConditions;
+    /** @var string|null */
+    public $transportOffers;
     /** @var boolean */
     public $trekhaakAanwezig;
     /** @var string|null */

@@ -7,6 +7,8 @@ class ValueData
     /** @var string */
     public $datumTaxatie;
     /** @var string|null */
+    public $highestReceivedBidByRight;
+    /** @var string|null */
     public $jato;
     /** @var ResidualValueData[]|null */
     public $restwaarden;
