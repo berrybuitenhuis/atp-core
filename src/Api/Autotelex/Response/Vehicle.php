@@ -32,6 +32,8 @@ class Vehicle
     public $status;
     /** @var string|null */
     public $tco;
+    /** @var string|null */
+    public $theftRiskData;
     /** @var ExtendedData */
     public $uitgebreideGegevens;
     /** @var VehicleVariables */
