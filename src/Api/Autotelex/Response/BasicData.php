@@ -28,6 +28,8 @@ class BasicData
     public $bouwmaand;
     /** @var string */
     public $brandstof;
+    /** @var integer|null */
+    public $brandstofId;
     /** @var integer */
     public $co2;
     /** @var integer|null */
@@ -134,6 +136,8 @@ class BasicData
     public $topsnelheid;
     /** @var string|null */
     public $transmissie;
+    /** @var integer|null */
+    public $transmissieId;
     /** @var boolean */
     public $turbo;
     /** @var integer */

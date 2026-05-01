@@ -112,6 +112,8 @@ class VehicleVariables
     public $isAdvertisable;
     /** @var boolean */
     public $isBtwVoertuigBlocked;
+    /** @var boolean|null */
+    public $isBidIncludingBPM;
     /** @var null */
     public $jatoVehiclePricelist;
     /** @var string|null */
