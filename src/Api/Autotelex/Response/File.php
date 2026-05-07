@@ -11,6 +11,8 @@ class File
     /** @var integer|null */
     public $advertentieId;
     /** @var string|null */
+    public $blurs;
+    /** @var string|null */
     public $fileName;
     /** @var integer */
     public $fotoIndex;

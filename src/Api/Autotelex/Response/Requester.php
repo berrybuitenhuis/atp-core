@@ -38,6 +38,8 @@ class Requester
     public $id;
     /** @var string|null */
     public $mobile;
+    /** @var string|null */
+    public $nationalRegisterNumber;
     /** @var string */
     public $name;
     /** @var string|null */

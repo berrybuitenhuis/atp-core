@@ -12,6 +12,6 @@ class Damage
     public $kosten;
     /** @var mixed|null */
     public $omschrijving;
-    /** @var Images */
+    /** @var Images|null */
     public $fotos;
 }
