@@ -6,6 +6,24 @@ class ValuateResponse
 {
     /** @var string */
     public $license_plate;
+    /** @var string|null */
+    public $make;
+    /** @var string|null */
+    public $model;
+    /** @var string|null */
+    public $gear;
+    /** @var string|null */
+    public $fuel;
+    /** @var string|null */
+    public $body;
+    /** @var integer|null */
+    public $build;
+    /** @var integer|null */
+    public $model_year;
+    /** @var integer|null */
+    public $hp;
+    /** @var boolean|null */
+    public $equipment_four_doors;
     /** @var integer|null */
     public $value;
     /** @var integer|null */
