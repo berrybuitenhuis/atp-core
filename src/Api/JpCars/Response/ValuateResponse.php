@@ -22,6 +22,8 @@ class ValuateResponse
     public $model_year;
     /** @var integer|null */
     public $hp;
+    /** @var boolean|null */
+    public $equipment_four_doors;
     /** @var integer|null */
     public $value;
     /** @var integer|null */
