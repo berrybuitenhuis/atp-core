@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /Users/wouterdoornbos/Desktop/ATP -type f -name \"ValuateService.php\" 2>/dev/null | head -5)",
+      "Read(//Users/wouterdoornbos/Desktop/ATP/**)"
+    ]
+  }
+}

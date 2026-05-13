@@ -6,6 +6,8 @@ class ValuateResponse
 {
     /** @var string */
     public $license_plate;
+    /** @var string|null */
+    public $make;
     /** @var integer|null */
     public $value;
     /** @var integer|null */
