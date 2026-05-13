@@ -188,16 +188,11 @@ class Api extends BaseClass
                 return false;
             }
         } catch (\Exception $e) {
+            $this->setMessages($e->getMessage());
             if (stristr($e->getMessage(), "JSON property") && stristr($e->getMessage(), "does not exist in object of type AtpCore\Api\JpCars\Response\ValuateResponse")) {
                 return $this->mapResponse($response, new ValuateResponse(), false);
             }
-            $this->setMessages($e->getMessage());
             return false;
-        }
-
-        // Forward any warnings collected by the mapper (e.g. unknown properties)
-        if (!empty($mapper->getMessages())) {
-            $this->setMessages($mapper->getMessages());
         }
 
         // Return
