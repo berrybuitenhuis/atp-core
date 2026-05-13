@@ -8,6 +8,8 @@ class ValuateResponse
     public $license_plate;
     /** @var string|null */
     public $make;
+    /** @var string|null */
+    public $model;
     /** @var integer|null */
     public $value;
     /** @var integer|null */
