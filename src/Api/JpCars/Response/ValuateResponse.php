@@ -19,6 +19,8 @@ class ValuateResponse
     /** @var integer|null */
     public $build;
     /** @var integer|null */
+    public $model_year;
+    /** @var integer|null */
     public $value;
     /** @var integer|null */
     public $value_exex;
