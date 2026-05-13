@@ -10,6 +10,8 @@ class ValuateResponse
     public $make;
     /** @var string|null */
     public $model;
+    /** @var string|null */
+    public $gear;
     /** @var integer|null */
     public $value;
     /** @var integer|null */
