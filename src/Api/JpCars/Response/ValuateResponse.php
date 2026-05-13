@@ -14,6 +14,8 @@ class ValuateResponse
     public $gear;
     /** @var string|null */
     public $fuel;
+    /** @var string|null */
+    public $body;
     /** @var integer|null */
     public $value;
     /** @var integer|null */
