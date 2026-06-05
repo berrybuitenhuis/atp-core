@@ -90,7 +90,7 @@ class ExtendedData
     public $rdwG3Installatie;
     /** @var boolean|null */
     public $rdwGestolenIndicator;
-    /** @var boolean */
+    /** @var boolean|null */
     public $rdwGoedkeuringsNummerVerwijderd;
     /** @var string|null */
     public $rdwHandelsbenaming;
