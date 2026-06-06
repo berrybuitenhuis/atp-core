@@ -10,6 +10,7 @@ use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
@@ -137,7 +138,7 @@ class Request
             nameConverter: new CamelCaseToSnakeCaseNameConverter(),
             defaultContext: [AbstractObjectNormalizer::ALLOW_EXTRA_ATTRIBUTES => false]
         );
-        self::$serializer = new Serializer(normalizers: [$normalizer], encoders: [new JsonEncoder()]);
+        self::$serializer = new Serializer(normalizers: [new DateTimeNormalizer(), $normalizer], encoders: [new JsonEncoder()]);
 
         // Return
         return self::$serializer;
