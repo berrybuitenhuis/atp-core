@@ -28,6 +28,7 @@ class S3 extends BaseClass
         $this->config = [
             'version' => $version,
             'region' => $region,
+            'retries' => ['mode' => 'adaptive', 'max_attempts' => 5],
         ];
         if (!empty($awsKey)) {
             $this->config['credentials'] = [
