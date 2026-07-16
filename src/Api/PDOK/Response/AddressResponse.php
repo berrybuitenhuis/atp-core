@@ -8,10 +8,10 @@ class AddressResponse
     public $numFound;
     /** @var integer */
     public $start;
-    /** @var float */
+    /** @var double */
     public $maxScore;
     /** @var boolean */
     public $numFoundExact;
-    /** @var AddressDocument[] */
+    /** @var AddressDocument[]|null */
     public $docs;
 }

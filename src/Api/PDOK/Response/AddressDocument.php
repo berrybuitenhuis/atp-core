@@ -15,7 +15,7 @@ class AddressDocument
     /** @var string */
     public $wijkCode;
     /** @var string */
-    public $huisNlt;
+    public $huis_nlt;
     /** @var string */
     public $openbareRuimteType;
     /** @var string */
@@ -23,15 +23,15 @@ class AddressDocument
     /** @var string */
     public $gemeenteCode;
     /** @var string */
-    public $rdfSeeAlso;
+    public $rdf_seeAlso;
     /** @var string */
     public $weergaveNaam;
     /** @var string */
-    public $straatnaamVerkort;
+    public $straatnaam_verkort;
     /** @var string */
     public $id;
     /** @var string[] */
-    public $gekoppeldPerceel;
+    public $gekoppeld_perceel;
     /** @var string */
     public $gemeenteNaam;
     /** @var string */
@@ -41,7 +41,7 @@ class AddressDocument
     /** @var string */
     public $identificatie;
     /** @var string */
-    public $openbareRuimteId;
+    public $openbareRuimte_id;
     /** @var string */
     public $waterschapsnaam;
     /** @var string */
@@ -51,21 +51,21 @@ class AddressDocument
     /** @var string */
     public $provincieNaam;
     /** @var string */
-    public $centroideLl;
+    public $centroide_ll;
     /** @var string */
-    public $nummerAanduidingId;
+    public $nummerAanduiding_id;
     /** @var string */
     public $waterschapscode;
     /** @var string */
-    public $adresseerbaarObjectId;
+    public $adresseerbaarObject_id;
     /** @var integer */
     public $huisnummer;
     /** @var string */
     public $provincieAfkorting;
     /** @var string */
-    public $centroideRd;
+    public $centroide_rd;
     /** @var string */
     public $straatnaam;
-    /** @var float */
+    /** @var double */
     public $score;
 }
