@@ -30,7 +30,7 @@ class AddressDocument
     public $straatnaam_verkort;
     /** @var string */
     public $id;
-    /** @var string[] */
+    /** @var string[]|null */
     public $gekoppeld_perceel;
     /** @var string */
     public $gemeenteNaam;
