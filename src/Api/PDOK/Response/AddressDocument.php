@@ -42,7 +42,7 @@ class AddressDocument
     public $identificatie;
     /** @var string */
     public $openbareRuimte_id;
-    /** @var string */
+    /** @var string|null */
     public $waterschapsnaam;
     /** @var string */
     public $provincieCode;
@@ -54,7 +54,7 @@ class AddressDocument
     public $centroide_ll;
     /** @var string */
     public $nummerAanduiding_id;
-    /** @var string */
+    /** @var string|null */
     public $waterschapscode;
     /** @var string */
     public $adresseerbaarObject_id;
