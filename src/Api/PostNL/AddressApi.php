@@ -7,7 +7,7 @@ use AtpCore\Error;
 use AtpCore\Extension\JsonMapperExtension;
 use GuzzleHttp\Client;
 
-class AdresApi
+class AddressApi
 {
 
     private $client;
