@@ -44,6 +44,49 @@ class Sqs extends BaseClass
     }
 
     /**
+     * Delete message from queue
+     *
+     * @param string $queueName
+     * @param string $receiptHandle
+     */
+    public function deleteQueueMessage($queueName, $receiptHandle)
+    {
+        $queueUrl = $this->getQueueUrl($queueName);
+        if ($queueUrl !== false) {
+            $this->client->deleteMessage(
+                [
+                    'QueueUrl' => $queueUrl,
+                    'ReceiptHandle' => $receiptHandle
+                ]
+            );
+        }
+    }
+
+    /**
+     * Get (approximate) total number of messages in a queue (visible + in-flight + delayed)
+     *
+     * @param string $queueName
+     * @return int|bool total number of messages, or false on failure
+     */
+    public function getMessageCount($queueName)
+    {
+        $result = $this->getQueueAttributes($queueName, [
+            "ApproximateNumberOfMessages",
+            "ApproximateNumberOfMessagesNotVisible",
+            "ApproximateNumberOfMessagesDelayed",
+        ]);
+        if ($result === false) {
+            return false;
+        }
+
+        // Return
+        $attributes = $result->get('Attributes');
+        return (int) ($attributes['ApproximateNumberOfMessages'] ?? 0)
+            + (int) ($attributes['ApproximateNumberOfMessagesNotVisible'] ?? 0)
+            + (int) ($attributes['ApproximateNumberOfMessagesDelayed'] ?? 0);
+    }
+
+    /**
      * Get list of queues
      *
      * @return \Aws\Result
@@ -143,25 +186,6 @@ class Sqs extends BaseClass
         $queue = $this->getQueue($queueName);
         if ($queue === false) return false;
         else return $queue->get("QueueUrl");
-    }
-
-    /**
-     * Delete message from queue
-     *
-     * @param string $queueName
-     * @param string $receiptHandle
-     */
-    public function deleteQueueMessage($queueName, $receiptHandle)
-    {
-        $queueUrl = $this->getQueueUrl($queueName);
-        if ($queueUrl !== false) {
-            $this->client->deleteMessage(
-                [
-                    'QueueUrl' => $queueUrl,
-                    'ReceiptHandle' => $receiptHandle
-                ]
-            );
-        }
     }
 
     /**
