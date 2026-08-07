@@ -54,14 +54,21 @@ class Sqs extends BaseClass
     {
         $queueUrl = $this->getQueueUrl($queueName);
         if ($queueUrl !== false) {
-            $this->client->changeMessageVisibility(
-                [
-                    'QueueUrl' => $queueUrl,
-                    'ReceiptHandle' => $receiptHandle,
-                    'VisibilityTimeout' => $visibilityTimeout,
-                ]
-            );
+            try {
+                $this->client->changeMessageVisibility(
+                    [
+                        'QueueUrl' => $queueUrl,
+                        'ReceiptHandle' => $receiptHandle,
+                        'VisibilityTimeout' => $visibilityTimeout,
+                    ]
+                );
+                return true;
+            } catch (Throwable $e) {
+                $this->setErrorData($e->getMessage());
+                return false;
+            }
         }
+        return false;
     }
 
     /**
