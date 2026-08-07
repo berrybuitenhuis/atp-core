@@ -44,6 +44,27 @@ class Sqs extends BaseClass
     }
 
     /**
+     * Change the visibility-timeout of a received message (e.g. 0 to release it back immediately)
+     *
+     * @param string $queueName
+     * @param string $receiptHandle
+     * @param int $visibilityTimeout duration (seconds) the message stays hidden; 0 makes it visible again
+     */
+    public function changeMessageVisibility($queueName, $receiptHandle, $visibilityTimeout)
+    {
+        $queueUrl = $this->getQueueUrl($queueName);
+        if ($queueUrl !== false) {
+            $this->client->changeMessageVisibility(
+                [
+                    'QueueUrl' => $queueUrl,
+                    'ReceiptHandle' => $receiptHandle,
+                    'VisibilityTimeout' => $visibilityTimeout,
+                ]
+            );
+        }
+    }
+
+    /**
      * Delete message from queue
      *
      * @param string $queueName
