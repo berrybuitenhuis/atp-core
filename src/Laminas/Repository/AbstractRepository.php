@@ -193,7 +193,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         // Iterate data
         $objects = [];
         $recordData = [];
-        foreach ($data AS $key => $value) {
+        foreach ($data as $key => $value) {
             // Create object instance
             $objects[$key] = new $this->objectName();
 
@@ -213,7 +213,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             if ($output == 'array') {
                 // Return results
                 $records = [];
-                foreach ($objects AS $key => $object) {
+                foreach ($objects as $key => $object) {
                     $record = $this->getHydrator()->extract($object);
                     if (method_exists($this, 'transformData')) $records[$key] = $this->transformData($record, $fields);
                     else $records[$key] = $record;
@@ -254,13 +254,13 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
 
         // return error if object not found
         if ($object == null) {
-            $this->setMessages(['notFound' => $this->objectName. ' not found']);
+            $this->setMessages(['notFound' => $this->objectName . ' not found']);
             return false;
         }
 
         // check if object really has to move of only update status
         if ($remove === false) {
-            $result = $this->update($id, ['status'=>false], 'array');
+            $result = $this->update($id, ['status' => false], 'array');
             return $result;
         } else {
             // remove the object from the repository or return error if something went wrong
@@ -364,7 +364,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     public function filterAndPersistBulk($records, &$objects)
     {
         // Iterate data
-        foreach ($records AS $key => $record) {
+        foreach ($records as $key => $record) {
             $res = $this->filterAndPersist($record, $objects[$key], false);
             if (!$res) break;
         }
@@ -400,7 +400,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     {
         // get object from the repository specified by primary key
         if ($output == 'array') {
-            $filter = ["AND"=>[["id", "eq", $id]]];
+            $filter = ["AND" => [["id", "eq", $id]]];
             $objects = $this->getByFilter($fields, null, $filter, null, null, null, 1, false);
             if ($objects === false) return false;
             $object = current($objects);
@@ -417,7 +417,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
 
         // return error if object not found
         if ($object == null || $object === false) {
-            $this->setMessages(['notFound' => $this->objectName. ' not found']);
+            $this->setMessages(['notFound' => $this->objectName . ' not found']);
             return false;
         }
 
@@ -482,7 +482,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
 
         // refresh entity (clear all local changes)
         if ($refresh === true) {
-            foreach ($objects AS $object) {
+            foreach ($objects as $object) {
                 $this->objectManager->refresh($object);
             }
         }
@@ -514,7 +514,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      * @param null|array $orderBy
      * @param null|array $limit
      * @param boolean $paginator
-     * @param boolean$debug
+     * @param boolean $debug
      * @return array|object|boolean
      * @throws Exception
      */
@@ -531,7 +531,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             }
         }
         // Set allowed operators (for custom/default filters)
-        $allowedOperators = ['eq','neq','like','lt','lte','gt','gte','isnull','isnotnull','in','notin'];
+        $allowedOperators = ['eq', 'neq', 'like', 'lt', 'lte', 'gt', 'gte', 'isnull', 'isnotnull', 'in', 'notin'];
 
         // Build query
         $query = $this->objectManager->createQueryBuilder();
@@ -561,7 +561,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         // Set joins (if available/needed)
         if ((!empty($filter) || !empty($clientFilter) || !empty($defaultFilter) || !empty($orderBy) || !empty($groupBy)) && !empty($this->getFilterAssociations())) {
             $joins = [];
-            foreach ($this->getFilterAssociations() AS $filterAssociation) {
+            foreach ($this->getFilterAssociations() as $filterAssociation) {
                 $match = false;
                 if (!empty($filter["AND"]) && !empty(preg_grep('/' . $filterAssociation['alias'] . "." . '/', array_column($filter["AND"], 0))) && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
@@ -584,13 +584,13 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                 } elseif (!empty($defaultFilter["filter"]) && stristr($defaultFilter["filter"], $filterAssociation['alias'] . ".") && !in_array($filterAssociation['alias'], $joins)) {
                     $match = true;
                 } elseif (!empty($orderBy)) {
-                    foreach ($orderBy AS $orderByField) {
+                    foreach ($orderBy as $orderByField) {
                         if (stristr($orderByField['field'], $filterAssociation['alias'] . ".") && !in_array($filterAssociation['alias'], $joins)) {
                             $match = true;
                         }
                     }
                 } elseif (!empty($groupBy)) {
-                    foreach ($groupBy AS $groupByField) {
+                    foreach ($groupBy as $groupByField) {
                         if (stristr($groupByField, $filterAssociation['alias'] . ".") && !in_array($filterAssociation['alias'], $joins)) {
                             $match = true;
                         }
@@ -613,7 +613,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     // Set filter-association-joins (reverse order), if available for filter-association
                     if (!empty($filterAssociationJoins)) {
                         krsort($filterAssociationJoins);
-                        foreach ($filterAssociationJoins AS $filterAssociationJoin) {
+                        foreach ($filterAssociationJoins as $filterAssociationJoin) {
                             if (array_key_exists('condition', $filterAssociationJoin) && !empty($filterAssociationJoin['condition'])) {
                                 $query->leftJoin($filterAssociationJoin['join'], $filterAssociationJoin['alias'], "WITH", $filterAssociationJoin['condition']);
                             } else {
@@ -637,7 +637,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             if (isset($filter['AND'])) {
                 $filterConditions = $query->expr()->andX();
                 // Iterate conditions
-                foreach ($filter['AND'] AS $k => $filterParams) {
+                foreach ($filter['AND'] as $k => $filterParams) {
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
                     $valueKey = "customAnd" . $this->sanitizeField($field) . $k;
@@ -655,7 +655,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             if (isset($filter['OR'])) {
                 $filterConditions = $query->expr()->orX();
                 // Iterate conditions
-                foreach ($filter['OR'] AS $k => $filterParams) {
+                foreach ($filter['OR'] as $k => $filterParams) {
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
                     $valueKey = "customOr" . $this->sanitizeField($field) . $k;
@@ -673,7 +673,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             if (isset($filter['OR_AND'])) {
                 $filterConditions = $query->expr()->andX();
                 // Iterate conditions
-                foreach ($filter['OR_AND'] AS $k => $filterParams) {
+                foreach ($filter['OR_AND'] as $k => $filterParams) {
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
                     $valueKey = "customOrAnd" . $this->sanitizeField($field) . $k;
@@ -691,7 +691,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             if (isset($filter['AND_OR'])) {
                 $filterConditions = $query->expr()->orX();
                 // Iterate conditions
-                foreach ($filter['AND_OR'] AS $k => $filterParams) {
+                foreach ($filter['AND_OR'] as $k => $filterParams) {
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
                     $valueKey = "customAndOr" . $this->sanitizeField($field) . $k;
@@ -712,7 +712,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             if (isset($defaultFilter['AND'])) {
                 $filterConditions = $query->expr()->andX();
                 // Iterate conditions
-                foreach ($defaultFilter['AND'] AS $k => $filterParams) {
+                foreach ($defaultFilter['AND'] as $k => $filterParams) {
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
                     $valueKey = "defaultAnd" . $this->sanitizeField($field) . $k;
@@ -730,7 +730,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             if (isset($defaultFilter['OR'])) {
                 $filterConditions = $query->expr()->andX();
                 // Iterate conditions
-                foreach ($defaultFilter['OR'] AS $k => $filterParams) {
+                foreach ($defaultFilter['OR'] as $k => $filterParams) {
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
                     $valueKey = "defaultOr" . $this->sanitizeField($field) . $k;
@@ -748,7 +748,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             if (isset($defaultFilter['OR_AND'])) {
                 $filterConditions = $query->expr()->andX();
                 // Iterate conditions
-                foreach ($defaultFilter['OR_AND'] AS $k => $filterParams) {
+                foreach ($defaultFilter['OR_AND'] as $k => $filterParams) {
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
                     $valueKey = "defaultOrAnd" . $this->sanitizeField($field) . $k;
@@ -766,7 +766,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             if (isset($defaultFilter['AND_OR'])) {
                 $filterConditions = $query->expr()->orX();
                 // Iterate conditions
-                foreach ($defaultFilter['AND_OR'] AS $k => $filterParams) {
+                foreach ($defaultFilter['AND_OR'] as $k => $filterParams) {
                     $field = (stristr($filterParams[0], ".")) ? $filterParams[0] : "f." . $filterParams[0];
                     $operator = $filterParams[1];
                     $valueKey = "defaultAndOr" . $this->sanitizeField($field) . $k;
@@ -793,7 +793,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         }
         // Set group-by (if available)
         if (!empty($groupBy)) {
-            foreach ($groupBy AS $groupByField) {
+            foreach ($groupBy as $groupByField) {
                 $groupByField = (stristr($groupByField, ".")) ? $groupByField : "f." . $groupByField;
                 $query->addGroupBy($groupByField);
             }
@@ -805,7 +805,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         }
         // Set order-by (if available)
         if (!empty($orderBy)) {
-            foreach ($orderBy AS $order) {
+            foreach ($orderBy as $order) {
                 $orderField = (stristr($order['field'], ".")) ? $order['field'] : "f." . $order['field'];
                 $direction = (!empty($order['direction'])) ? $order['direction'] : null;
                 $query->addOrderBy($orderField, $direction);
@@ -832,7 +832,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
 
         // Return DQL (in debug-mode)
         if ($debug) {
-            return ["results"=>["query"=>$query->getQuery()->getDQL(), "parameters"=>$parameters]];
+            return ["results" => ["query" => $query->getQuery()->getDQL(), "parameters" => $parameters]];
         }
 
         // Get results
@@ -845,14 +845,14 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             $paginatorQuery->resetDQLPart('orderBy');
             $paginatorResult = new Paginator($paginatorQuery, $fetchJoinCollection = true);
             $paginatorResult->setUseOutputWalkers(false);
-            $paginatorData['records'] = (int) $paginatorResult->count();
-            $paginatorData['pages'] = (int) ceil($paginatorData['records'] / $limit['limit']);
-            $paginatorData['currentPage'] = (int) (ceil($limit['offset'] / $limit['limit']) + 1);
-            $paginatorData['recordsPage'] = (int) $limit['limit'];
+            $paginatorData['records'] = (int)$paginatorResult->count();
+            $paginatorData['pages'] = (int)ceil($paginatorData['records'] / $limit['limit']);
+            $paginatorData['currentPage'] = (int)(ceil($limit['offset'] / $limit['limit']) + 1);
+            $paginatorData['recordsPage'] = (int)$limit['limit'];
 
             // Return if only paginator requested (fields set to false)
             if ($fields === false) {
-                return ["paginator"=>$paginatorData, "results"=>null];
+                return ["paginator" => $paginatorData, "results" => null];
             }
 
             // Get "page"-results (if any results found)
@@ -866,17 +866,17 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                 // Sometimes paginator is not showing correct values (for example: group-by queries)
                 $resultCount = count($results);
                 if ($resultCount < $limit['limit'] && $resultCount < $paginatorData['records'] && $paginatorData['currentPage'] == 1) {
-                    $paginatorData['records'] = (int) $resultCount;
-                    $paginatorData['pages'] = (int) ceil($paginatorData['records'] / $limit['limit']);
-                    $paginatorData['currentPage'] = (int) (ceil($limit['offset'] / $limit['limit']) + 1);
-                    $paginatorData['recordsPage'] = (int) $limit['limit'];
+                    $paginatorData['records'] = (int)$resultCount;
+                    $paginatorData['pages'] = (int)ceil($paginatorData['records'] / $limit['limit']);
+                    $paginatorData['currentPage'] = (int)(ceil($limit['offset'] / $limit['limit']) + 1);
+                    $paginatorData['recordsPage'] = (int)$limit['limit'];
                 }
             } else {
                 $results = [];
             }
 
             // Return
-            return ["paginator"=>$paginatorData, "results"=>$results];
+            return ["paginator" => $paginatorData, "results" => $results];
         } else {
             // Return
             return $query->getQuery()->getResult();
@@ -923,7 +923,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
 
         // Set filter
         $query->where($query->expr()->in('f.id', ':ids'));
-        foreach ($ids AS $id) {
+        foreach ($ids as $id) {
             $parameters['ids'][] = (is_array($id)) ? $id['id'] : $id->getId();
         }
 
@@ -932,9 +932,9 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             // Set joins (if available/needed)
             if (!empty($this->getFilterAssociations())) {
                 $joins = [];
-                foreach ($this->getFilterAssociations() AS $filterAssociation) {
+                foreach ($this->getFilterAssociations() as $filterAssociation) {
                     $match = false;
-                    foreach ($orderBy AS $orderByField) {
+                    foreach ($orderBy as $orderByField) {
                         if (stristr($orderByField['field'], $filterAssociation['alias'] . ".") && !in_array($filterAssociation['alias'], $joins)) {
                             $match = true;
                         }
@@ -956,7 +956,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                         // Set filter-association-joins (reverse order), if available for filter-association
                         if (!empty($filterAssociationJoins)) {
                             krsort($filterAssociationJoins);
-                            foreach ($filterAssociationJoins AS $filterAssociationJoin) {
+                            foreach ($filterAssociationJoins as $filterAssociationJoin) {
                                 if (array_key_exists('condition', $filterAssociationJoin) && !empty($filterAssociationJoin['condition'])) {
                                     $query->leftJoin($filterAssociationJoin['join'], $filterAssociationJoin['alias'], "WITH", $filterAssociationJoin['condition']);
                                 } else {
@@ -974,7 +974,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     }
                 }
             }
-            foreach ($orderBy AS $order) {
+            foreach ($orderBy as $order) {
                 $orderField = (stristr($order['field'], ".")) ? $order['field'] : "f." . $order['field'];
                 $direction = (!empty($order['direction'])) ? $order['direction'] : null;
                 $query->addOrderBy($orderField, $direction);
@@ -986,7 +986,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
 
         // Return DQL (in debug-mode)
         if ($debug) {
-            return ["results"=>["query"=>$query->getQuery()->getDQL(), "parameters"=>$parameters]];
+            return ["results" => ["query" => $query->getQuery()->getDQL(), "parameters" => $parameters]];
         }
 
         // Get results
@@ -1010,7 +1010,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
 
         // return error if object not found
         if ($objects == null) {
-            $this->setMessages(['notFound' => $this->objectName. ' not found']);
+            $this->setMessages(['notFound' => $this->objectName . ' not found']);
             return false;
         }
 
@@ -1065,7 +1065,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     public function getCount()
     {
         // Return count of objects from the repository
-        return (int) $this->objectManager->createQueryBuilder()
+        return (int)$this->objectManager->createQueryBuilder()
             ->select('count(f.id)')
             ->from($this->objectName, 'f')
             ->getQuery()
@@ -1092,14 +1092,14 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     {
         // Find records by field-value parameters
         $multiple = (is_array($id)) ? true : false;
-        $records = $this->getByParameters(['id'=>$id], "object", $multiple);
+        $records = $this->getByParameters(['id' => $id], "object", $multiple);
         if ($records === false) return null;
 
         // Return
         if (is_array($id)) {
             // Get multiple values
             $values = [];
-            foreach ($records AS $record) {
+            foreach ($records as $record) {
                 $values[] = $record->{'get' . ucfirst($field)}();
             }
 
@@ -1121,14 +1121,14 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     {
         // Find records by field-value parameters
         $multiple = (is_array($value)) ? true : false;
-        $records = $this->getByParameters([$searchField=>$value], "object", $multiple);
+        $records = $this->getByParameters([$searchField => $value], "object", $multiple);
         if ($records === false) return null;
 
         // Return
         if (is_array($value)) {
             // Get multiple values
             $values = [];
-            foreach ($records AS $record) {
+            foreach ($records as $record) {
                 $values[] = $record->{'get' . ucfirst($resultField)}();
             }
 
@@ -1184,14 +1184,14 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
     {
         // Find records by field-value parameters
         $multiple = (is_array($value)) ? true : false;
-        $records = $this->getByParameters([$field=>$value], "object", $multiple);
+        $records = $this->getByParameters([$field => $value], "object", $multiple);
         if ($records === false) return null;
 
         // Return
         if (is_array($value)) {
             // Get multiple ids
             $ids = [];
-            foreach ($records AS $record) {
+            foreach ($records as $record) {
                 $ids[] = $record->getId();
             }
 
@@ -1263,8 +1263,8 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      */
     public function getList($output = 'object', $fields = null, $defaultFilter = null, $filter = null, $groupBy = null, $having = null, $orderBy = null, $limitRecords = 25, $offset = 0, $paginator = false, $debug = false)
     {
-        if (!empty((int) $limitRecords)) {
-            $limit['limit'] = (int) $limitRecords;
+        if (!empty((int)$limitRecords)) {
+            $limit['limit'] = (int)$limitRecords;
         } else {
             $limit['limit'] = 25;
         }
@@ -1283,11 +1283,11 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
             if ($res === false) return false;
             $ids = ($paginator) ? $res["results"] : $res;
             if (empty($ids)) {
-                $records = ($paginator) ? ["paginator"=>$res["paginator"], "results"=>$ids] : $ids;
+                $records = ($paginator) ? ["paginator" => $res["paginator"], "results" => $ids] : $ids;
             } else {
                 $records = $this->getByIds($ids, $fields, $orderBy, $debug);
                 if ($paginator) {
-                    $records = ["paginator"=>$res["paginator"], "results"=>$records];
+                    $records = ["paginator" => $res["paginator"], "results" => $records];
                 }
             }
         } else {
@@ -1304,7 +1304,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
         if ($output == 'array') {
             $hydrator = $this->getHydrator();
             if ($paginator === true) {
-                foreach ($records['results'] AS $k => $v) {
+                foreach ($records['results'] as $k => $v) {
                     if (gettype($v) == 'array') {
                         $records['results'][$k] = $v;
                     } else {
@@ -1312,7 +1312,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     }
                 }
             } else {
-                foreach ($records AS $k => $v) {
+                foreach ($records as $k => $v) {
                     if (gettype($v) == 'array') {
                         $records[$k] = $v;
                     } else {
@@ -1359,14 +1359,14 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
      */
     public function getRequestedFields($dataFields, $customFields)
     {
-        $requestedFields = ["fields"=>[], "entities"=>[]];
-        foreach ($customFields AS $customField) {
+        $requestedFields = ["fields" => [], "entities" => []];
+        foreach ($customFields as $customField) {
             // Add specific fields of entity to requestedFields
             if (stristr($customField, "-")) {
                 // Get fields (explode by "-")
                 $fieldParts = explode("-", $customField);
                 $configuredFields = $dataFields["entities"];
-                foreach ($fieldParts AS $k => $v) {
+                foreach ($fieldParts as $k => $v) {
                     // Check if field-part is entity
                     if (isset($configuredFields[$v])) {
                         // Check if fieldPart is last, then set entity (array of properties) to fieldParts
@@ -1389,7 +1389,7 @@ abstract class AbstractRepository extends BaseClass implements InputFilterAwareI
                     krsort($fieldParts);
 
                     $tmpRequestedFields = [];
-                    foreach ($fieldParts AS $fieldPart) {
+                    foreach ($fieldParts as $fieldPart) {
                         if (empty($tmpRequestedFields)) {
                             // Set first values to array
                             $tmpRequestedFields = $fieldPart;

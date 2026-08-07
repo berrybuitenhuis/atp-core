@@ -99,22 +99,25 @@ class Sqs extends BaseClass
      *
      * @param string $queueName
      * @param int $maxMessages
+     * @param int|null $visibilityTimeout duration (seconds) the received messages stay hidden; null uses the queue-default
      * @return bool|array
      */
-    public function getQueueMessages($queueName, $maxMessages = 10)
+    public function getQueueMessages($queueName, $maxMessages = 10, $visibilityTimeout = null)
     {
         $queueUrl = $this->getQueueUrl($queueName);
         if ($queueUrl !== false) {
             try {
-                $result = $this->client->receiveMessage(
-                    [
-                        'AttributeNames' => ['SentTimestamp'],
-                        'MaxNumberOfMessages' => $maxMessages,
-                        'MessageAttributeNames' => ['All'],
-                        'QueueUrl' => $queueUrl,
-                        'WaitTimeSeconds' => 0,
-                    ]
-                );
+                $parameters = [
+                    'AttributeNames' => ['SentTimestamp'],
+                    'MaxNumberOfMessages' => $maxMessages,
+                    'MessageAttributeNames' => ['All'],
+                    'QueueUrl' => $queueUrl,
+                    'WaitTimeSeconds' => 0,
+                ];
+                if ($visibilityTimeout !== null) {
+                    $parameters['VisibilityTimeout'] = $visibilityTimeout;
+                }
+                $result = $this->client->receiveMessage($parameters);
 
                 // Return
                 return $result->get('Messages');
@@ -167,9 +170,10 @@ class Sqs extends BaseClass
      * @param string $queueName
      * @param string|array $message
      * @param int|null $delaySeconds
-     * @return string|false
+     * @param array|null $messageAttributes key-value pairs sent as (String) message-attributes
+     * @return bool
      */
-    public function sendMessage($queueName, $message, $delaySeconds = null)
+    public function sendMessage($queueName, $message, $delaySeconds = null, $messageAttributes = null)
     {
         $queueUrl = $this->getQueueUrl($queueName);
         if ($queueUrl !== false) {
@@ -177,9 +181,18 @@ class Sqs extends BaseClass
             $sqsMessage["QueueUrl"] = $queueUrl;
             $sqsMessage["MessageBody"] = (is_array($message)) ? json_encode($message) : $message;
             $sqsMessage["DelaySeconds"] = $delaySeconds ?: 0;
+            if (!empty($messageAttributes)) {
+                $sqsMessage["MessageAttributes"] = [];
+                foreach ($messageAttributes AS $name => $value) {
+                    $sqsMessage["MessageAttributes"][$name] = [
+                        'DataType' => 'String',
+                        'StringValue' => $value,
+                    ];
+                }
+            }
             try {
-                $result = $this->client->sendMessage($sqsMessage);
-                return $result->get('MessageId');
+                $this->client->sendMessage($sqsMessage);
+                return true;
             } catch (Throwable $e) {
                 $this->setErrorData($e->getMessage());
                 return false;
