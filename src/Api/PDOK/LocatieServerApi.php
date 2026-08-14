@@ -37,6 +37,47 @@ class LocatieServerApi
     }
 
     /**
+     * Get address information by postal-code
+     *
+     * @param string $postalCode
+     * @param int|null $offset
+     * @param AddressResult|null $previousData
+     * @return AddressResult|Error
+     */
+    public function getByPostalCode($postalCode, $offset = null, $previousData = null)
+    {
+        try {
+            // Initialize page-settings
+            $offset = $offset ?? "0";
+            $rows = 100;
+
+            // Get address-data
+            $params = ["q"=>"\"$postalCode\" and type:adres", "rows"=>$rows, "start"=>$offset];
+            if ($this->debug) $this->log("request", "free", json_encode($params));
+            $result = $this->client->get("search/v3_1/free", ["query"=>$params]);
+            if ($result->getStatusCode() != 200) {
+                return new Error(data: $result, messages: ["{$result->getStatusCode()}: {$result->getReasonPhrase()}"]);
+            }
+            $response = json_decode($result->getBody()->getContents());
+            $this->setOriginalResponse($response);
+            if ($this->debug) $this->log("response", "search/v3_1/free", json_encode($response));
+            $data = $this->mapAddressResponse($response);
+            if (!empty($previousData)) {
+                $data->response->docs = array_merge($previousData->response->docs, $data->response->docs);
+            }
+
+            // Check if more results available, else return
+            $offset += $rows;
+            if (Error::isNotError($data) && $offset < $data->response->numFound) {
+                return $this->getByPostalCode($postalCode, $offset, $data);
+            }
+            return $data;
+        } catch (\Exception $e) {
+            return new Error(data: $e, messages: [$e->getMessage()]);
+        }
+    }
+
+    /**
      * Get address information by postal-code and house-number
      *
      * @param string $postalCode
