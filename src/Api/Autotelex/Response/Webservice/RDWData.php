@@ -38,7 +38,7 @@ class RDWData
     public $maximumMassaAutonoomGeremd;
     /** @var integer|null */
     public $maximumMassaMiddenasGeremd;
-    /** @var string|null */
+    /** @var mixed|null */
     public $motorCode;
     /** @var integer|null */
     public $nieuwprijs;

@@ -46,7 +46,7 @@ class ExtendedData
     public $maximumMassaAutonoomGeremd;
     /** @var integer */
     public $maximumMassaMiddenasGeremd;
-    /** @var string|null */
+    /** @var mixed|null */
     public $motorCode;
     /** @var integer */
     public $nieuwprijs;
