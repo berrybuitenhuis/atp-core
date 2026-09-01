@@ -8,7 +8,7 @@ class AtlMmtInfo
     public $kenteken;
     /** @var string */
     public $merk;
-    /** @var string */
+    /** @var mixed */
     public $model;
     /** @var AtlUitvoeringen */
     public $uitvoeringen;

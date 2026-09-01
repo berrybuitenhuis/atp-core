@@ -38,7 +38,7 @@ class ImportReportData
     public $koetswerk;
     /** @var string|null */
     public $merk;
-    /** @var string|null */
+    /** @var mixed|null */
     public $model;
     /** @var string|null */
     public $offerteAangevraagd;

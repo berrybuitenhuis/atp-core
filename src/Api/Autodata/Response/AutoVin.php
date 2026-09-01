@@ -6,7 +6,7 @@ class AutoVin
 {
     /** @var string */
     public $make;
-    /** @var string */
+    /** @var mixed */
     public $model;
     /** @var string */
     public $trimPackage;

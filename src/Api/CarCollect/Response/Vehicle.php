@@ -64,7 +64,7 @@ class Vehicle
     public $mileage_exact;
     /** @var integer|null */
     public $mileage_expected;
-    /** @var string */
+    /** @var mixed */
     public $model;
     /** @var integer|null */
     public $nap_check;

@@ -20,7 +20,7 @@ class VehicleType
     public $id;
     /** @var integer|null */
     public $licenseplateLinkProbability;
-    /** @var string */
+    /** @var mixed */
     public $model;
     /** @var string|null */
     public $nieuwPrijs;

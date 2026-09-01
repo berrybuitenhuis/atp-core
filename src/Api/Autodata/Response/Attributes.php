@@ -66,7 +66,7 @@ class Attributes
     public $maxTowingWeightBreaked;
     /** @var string */
     public $brand;
-    /** @var string */
+    /** @var mixed */
     public $model;
     /** @var string */
     public $modelYear;

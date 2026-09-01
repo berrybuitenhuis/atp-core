@@ -138,7 +138,7 @@ class VehicleVariables
     public $make;
     /** @var integer|null */
     public $meldcode;
-    /** @var string|null */
+    /** @var mixed|null */
     public $model;
     /** @var boolean|null */
     public $motorManagementLampjeAan;

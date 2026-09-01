@@ -14,7 +14,7 @@ class MMT
     public $fotoURLRear;
     /** @var integer */
     public $id;
-    /** @var string */
+    /** @var mixed */
     public $model;
     /** @var string|null */
     public $type;

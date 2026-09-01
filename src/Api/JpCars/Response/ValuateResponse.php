@@ -8,7 +8,7 @@ class ValuateResponse
     public $license_plate;
     /** @var string|null */
     public $make;
-    /** @var string|null */
+    /** @var mixed|null */
     public $model;
     /** @var string|null */
     public $gear;
