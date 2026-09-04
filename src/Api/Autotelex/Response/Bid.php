@@ -40,7 +40,7 @@ class Bid
     public $status;
     /** @var string */
     public $statusNaam;
-    /** @var TmStatusHistoryData[] */
+    /** @var TmStatusHistoryData[]|null */
     public $tmStatusHistorieLijst;
     /** @var string */
     public $traderName;

@@ -76,10 +76,10 @@ class Api extends BaseClass
                 ->setSelectionSet($queryFields);
 
             // Get vehicle-data
-            if ($this->debug) $this->log("request", "GetVehicle", json_encode($query));
+            if ($this->debug) $this->log("request", "GetTradeDossier", json_encode($query));
             $response = $this->getClient($token)->runQuery($query);
             $this->setOriginalResponse($response->getData());
-            if ($this->debug) $this->log("response", "GetVehicle", json_encode($response->getData()));
+            if ($this->debug) $this->log("response", "GetTradeDossier", json_encode($response->getData()));
             if ($maptoObject === false) return $response->getData()->getTradeDossier;
             else return $this->mapVehicleResponse($response->getData()->getTradeDossier);
         } catch (\Exception $e) {
