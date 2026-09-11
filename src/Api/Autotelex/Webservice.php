@@ -173,6 +173,7 @@ class Webservice extends BaseClass
             }
         } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
+            $this->setOriginalResponse($e->getMessage());
             return false;
         }
     }
@@ -366,10 +367,12 @@ class Webservice extends BaseClass
             } else {
                 $this->token = null;
                 $this->setMessages($status->Message);
+                $this->setOriginalResponse($result);
                 return false;
             }
         } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
+            $this->setOriginalResponse($e->getMessage());
             return false;
         }
     }
