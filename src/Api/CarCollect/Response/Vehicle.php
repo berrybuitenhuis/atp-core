@@ -72,6 +72,8 @@ class Vehicle
     public $number_of_keys;
     /** @var Other */
     public $other;
+    /** @var PickupLocation */
+    public $pickup_location;
     /** @var integer */
     public $power;
     /** @var string|null */
