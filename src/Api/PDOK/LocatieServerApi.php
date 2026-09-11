@@ -52,7 +52,11 @@ class LocatieServerApi
             $rows = 100;
 
             // Get address-data
-            $params = ["q"=>"\"$postalCode\" and type:adres", "rows"=>$rows, "start"=>$offset];
+            $params = [
+                "fq" => sprintf('type:adres AND postcode:%s', $postalCode),
+                "rows" => $rows,
+                "start" => $offset
+            ];
             if ($this->debug) $this->log("request", "free", json_encode($params));
             $result = $this->client->get("search/v3_1/free", ["query"=>$params]);
             if ($result->getStatusCode() != 200) {
@@ -88,7 +92,9 @@ class LocatieServerApi
     {
         try {
             // Get address-data
-            $params = ["q"=>"\"$postalCode $houseNumber\" and type:adres"];
+            $params = [
+                "fq" => sprintf('type:adres AND postcode:%s AND huis_nlt:%s', $postalCode, $houseNumber),
+            ];
             if ($this->debug) $this->log("request", "free", json_encode($params));
             $result = $this->client->get("search/v3_1/free", ["query"=>$params]);
             if ($result->getStatusCode() != 200) {
