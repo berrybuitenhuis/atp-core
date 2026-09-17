@@ -32,6 +32,10 @@ class Other
     public $factory_options;
     /** @var string */
     public $first_registration;
+    /** @var boolean|null */
+    public $fully_dealer_maintained;
+    /** @var boolean|null */
+    public $fully_maintained;
     /** @var integer|null */
     public $gears;
     /** @var boolean|null */
