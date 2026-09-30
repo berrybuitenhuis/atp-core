@@ -75,6 +75,8 @@ class ValuateResponse
     /** @var string */
     public $window_url;
     /** @var string|null */
+    public $tiny_url;
+    /** @var string|null */
     public $url_gaspedaal;
     /** @var string|null */
     public $url_autoscout24;
