@@ -108,4 +108,6 @@ class ValuateResponse
     public $rank_target;
     /** @var double|null */
     public $currency_ratio;
+    /** @var double|null */
+    public $source_currency_ratio;
 }
