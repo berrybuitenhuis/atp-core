@@ -84,6 +84,8 @@ class ValuateResponse
     public $url_mobile;
     /** @var mixed|null */
     public $portals;
+    /** @var mixed[]|null */
+    public $top_dealers;
     /** @var string|null */
     public $specials_info;
     /** @var integer|null */
