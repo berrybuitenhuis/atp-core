@@ -70,6 +70,8 @@ class ValuateResponse
     public $url_autoscout24;
     /** @var string|null */
     public $url_mobile;
+    /** @var mixed|null */
+    public $portals;
     /** @var string|null */
     public $specials_info;
     /** @var integer|null */
