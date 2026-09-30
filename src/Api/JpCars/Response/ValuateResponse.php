@@ -7,6 +7,8 @@ class ValuateResponse
     /** @var string */
     public $license_plate;
     /** @var string|null */
+    public $vin;
+    /** @var string|null */
     public $reference_code;
     /** @var string|null */
     public $make;
