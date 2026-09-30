@@ -65,6 +65,8 @@ class ValuateResponse
     /** @var string */
     public $window_url;
     /** @var string|null */
+    public $url_gaspedaal;
+    /** @var string|null */
     public $specials_info;
     /** @var integer|null */
     public $apr;
