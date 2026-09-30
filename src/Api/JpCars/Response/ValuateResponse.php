@@ -82,6 +82,8 @@ class ValuateResponse
     public $error;
     /** @var string|null */
     public $error_message;
+    /** @var mixed|null */
+    public $percents;
     /** @var double|null */
     public $target_perc;
     /** @var integer|null */
