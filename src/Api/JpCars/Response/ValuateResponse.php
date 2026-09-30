@@ -80,6 +80,8 @@ class ValuateResponse
     public $apr_breakdown;
     /** @var string|null */
     public $country;
+    /** @var \stdClass|null */
+    public $countries;
     /** @var integer|null */
     public $own_supply_window_count;
     /** @var string|null */
