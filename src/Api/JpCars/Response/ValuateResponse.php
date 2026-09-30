@@ -31,6 +31,8 @@ class ValuateResponse
     /** @var integer|null */
     public $price_local_exex;
     /** @var integer|null */
+    public $price_local_inex;
+    /** @var integer|null */
     public $topdown_value;
     /** @var TopDownValueBreakdown|null */
     public $topdown_value_breakdown;
