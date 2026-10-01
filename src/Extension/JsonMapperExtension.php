@@ -12,6 +12,7 @@ class JsonMapperExtension extends JsonMapper {
         $this->resetErrors();
     }
 
+    public $fixIntegerAsString = false;
     public $bCastToExpectedType = false;
     protected $errorData = null;
     protected $messages = [];
@@ -113,9 +114,13 @@ class JsonMapperExtension extends JsonMapper {
             $key = $this->getSafeName($key);
             $providedProperties[$key] = true;
 
-            // Overwrite empty array into null
-            if (is_array($jvalue) && empty($jvalue)) {
+            // Overwrite data-values
+            if (is_array($jvalue) && empty($jvalue)) { // empty array into null
                 $jvalue = null;
+            } elseif (is_string($jvalue) && $jvalue == "") { // blank string into null
+                $jvalue = null;
+            } elseif ($this->fixIntegerAsString && is_string($jvalue) && (int) $jvalue == $jvalue) { // string-value is actually an integer
+                $jvalue = (int) $jvalue;
             }
 
             // Store the property inspection results so we don't have to do it

@@ -18,6 +18,6 @@ class Vehicle
     public $accessoires;
     /** @var Company */
     public $bedrijven;
-    /** @var Damage[] */
+    /** @var Damage[]|null */
     public $schades;
 }

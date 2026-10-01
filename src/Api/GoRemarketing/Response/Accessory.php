@@ -14,7 +14,7 @@ class Accessory
     public $omschrijving;
     /** @var string */
     public $omschrijving_lang;
-    /** @var string */
+    /** @var double */
     public $bedrag;
     /** @var integer */
     public $select;

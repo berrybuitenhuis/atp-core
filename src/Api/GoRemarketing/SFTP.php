@@ -139,6 +139,7 @@ class SFTP extends BaseClass
             // Setup JsonMapper
             $responseClass = new Vehicle();
             $mapper = new JsonMapperExtension();
+            $mapper->fixIntegerAsString = true;
             $mapper->bExceptionOnUndefinedProperty = true;
             $mapper->bStrictObjectTypeChecking = true;
             $mapper->bExceptionOnMissingData = true;
