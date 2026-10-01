@@ -50,7 +50,7 @@ class SFTP extends BaseClass
      *
      * @param string $directory
      * @param string $fileName
-     * @return Vehicle|false
+     * @return Vehicle|XMLVehicle|false
      */
     public function getVehicle($directory, $fileName)
     {
