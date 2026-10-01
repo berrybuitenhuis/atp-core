@@ -14,18 +14,18 @@ class Damage
     public $auto_id;
     /** @var integer */
     public $locatie_id;
-    /** @var integer */
+    /** @var integer|null */
     public $soort_id;
-    /** @var string */
+    /** @var mixed|null */
     public $omschrijving;
     /** @var integer */
     public $kosten;
     /** @var string|null */
     public $external_id;
-    /** @var string */
+    /** @var string|null */
     public $soort;
-    /** @var string */
+    /** @var string|null */
     public $locatie;
-    /** @var DamageImage[] */
+    /** @var DamageImage[]|null */
     public $images;
 }

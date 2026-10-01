@@ -8,53 +8,53 @@ class Environment
     public $id;
     /** @var integer */
     public $auto_id;
-    /** @var boolean */
+    /** @var integer|null */
     public $g3installatie;
-    /** @var string */
+    /** @var mixed|null */
     public $brandstofstad;
-    /** @var string */
+    /** @var mixed|null */
     public $brandstofbuitenweg;
-    /** @var string */
+    /** @var mixed|null */
     public $brandstofcombi;
-    /** @var integer */
+    /** @var integer|null */
     public $brandstoftank_inhoud;
-    /** @var string */
+    /** @var mixed|null */
     public $acceleratie;
-    /** @var string */
+    /** @var string|null */
     public $roetfilter;
-    /** @var string */
+    /** @var string|null */
     public $roetdeeltjes;
-    /** @var integer */
+    /** @var integer|null */
     public $co2uitstoot;
     /** @var string|null */
     public $co2_nedc;
     /** @var string|null */
     public $co2_wltp;
-    /** @var string */
+    /** @var mixed|null */
     public $euroklasse;
-    /** @var string */
+    /** @var string|null */
     public $zuinigheidslabel;
-    /** @var integer */
+    /** @var integer|null */
     public $gewicht;
-    /** @var integer */
+    /** @var integer|null */
     public $zitplaatsen;
-    /** @var integer */
+    /** @var integer|null */
     public $staanplaatsen;
-    /** @var integer */
+    /** @var integer|null */
     public $laadvermogen;
-    /** @var integer */
+    /** @var integer|null */
     public $maximummassa;
-    /** @var integer */
+    /** @var integer|null */
     public $massarijklaar;
-    /** @var integer */
+    /** @var integer|null */
     public $maxmassaongeremd;
-    /** @var integer */
+    /** @var integer|null */
     public $maxmassageremd;
-    /** @var integer */
+    /** @var integer|null */
     public $maxmassaopleggergeremd;
-    /** @var integer */
+    /** @var integer|null */
     public $maxmassaautonoomgeremd;
-    /** @var integer */
+    /** @var integer|null */
     public $maxmassamiddenasgeremd;
     /** @var string */
     public $voertuigsoort;

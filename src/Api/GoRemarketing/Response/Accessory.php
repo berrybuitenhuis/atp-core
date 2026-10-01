@@ -16,7 +16,7 @@ class Accessory
     public $omschrijving_lang;
     /** @var string */
     public $bedrag;
-    /** @var boolean */
+    /** @var integer */
     public $select;
     /** @var mixed|null */
     public $mancode;
@@ -26,6 +26,6 @@ class Accessory
     public $et_groupcode;
     /** @var mixed|null */
     public $et_package;
-    /** @var boolean */
+    /** @var integer */
     public $highlight;
 }

@@ -8,11 +8,11 @@ class Motor
     public $id;
     /** @var null */
     public $model_jaar;
-    /** @var boolean */
+    /** @var integer|null */
     public $cosignatie;
     /** @var integer */
     public $auto_id;
-    /** @var integer */
+    /** @var integer|null */
     public $zitplaatsen;
     /** @var integer|null */
     public $brandstoftank_inhoud;

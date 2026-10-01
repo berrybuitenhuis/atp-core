@@ -4,7 +4,7 @@ namespace AtpCore\Api\GoRemarketing\Response;
 
 class Car
 {
-    /** @var string */
+    /** @var mixed */
     public $id;
     /** @var string */
     public $kenteken;
@@ -22,15 +22,15 @@ class Car
     public $id_vestiging;
     /** @var string */
     public $merk;
-    /** @var string */
+    /** @var mixed */
     public $type;
-    /** @var string */
+    /** @var mixed */
     public $modelserie;
     /** @var string */
     public $modelvan;
     /** @var string */
     public $modeltot;
-    /** @var string */
+    /** @var string|null */
     public $carrosserie;
     /** @var integer */
     public $jaardeel1;
@@ -38,25 +38,25 @@ class Car
     public $maanddeel1;
     /** @var integer */
     public $km_tax;
-    /** @var integer */
+    /** @var integer|null */
     public $deuren;
-    /** @var string */
+    /** @var string|null */
     public $kleur;
     /** @var string|null */
     public $fabkleur;
-    /** @var boolean */
+    /** @var integer|null */
     public $metallic;
     /** @var string */
     public $brandstof;
     /** @var string */
     public $schakeling;
-    /** @var integer */
+    /** @var integer|null */
     public $cylinder;
-    /** @var integer */
+    /** @var integer|null */
     public $cylinderinhoud;
-    /** @var integer */
+    /** @var integer|null */
     public $vermogenkw;
-    /** @var integer */
+    /** @var integer|null */
     public $vermogenpk;
     /** @var integer|null */
     public $versnelling;
@@ -78,15 +78,15 @@ class Car
     public $afleverdatum;
     /** @var integer */
     public $km_binnen;
-    /** @var string */
+    /** @var string|null */
     public $toelating;
-    /** @var string */
+    /** @var string|null */
     public $deel1;
     /** @var string|null */
     public $deel2;
-    /** @var string */
+    /** @var string|null */
     public $apk;
-    /** @var integer */
+    /** @var integer|null */
     public $bpm;
     /** @var integer|null */
     public $restbpm_lopend;
@@ -120,15 +120,15 @@ class Car
     public $exbtwprijs;
     /** @var integer|null */
     public $verkoopprijs_fin;
-    /** @var integer */
+    /** @var integer|null */
     public $kostenrijklaar;
-    /** @var string */
+    /** @var string|null */
     public $transport;
-    /** @var string */
+    /** @var string|null */
     public $poets;
     /** @var string|null */
     public $chassisnr;
-    /** @var boolean */
+    /** @var integer|null */
     public $vkmelden;
     /** @var string|null */
     public $sleutelnr;
@@ -136,7 +136,7 @@ class Car
     public $sleutels;
     /** @var string */
     public $updated;
-    /** @var boolean */
+    /** @var integer|null */
     public $extern;
     /** @var mixed|null */
     public $natcode;
@@ -166,11 +166,11 @@ class Car
     public $carshare_externe_partij;
     /** @var string|null */
     public $carshare_geldig_tot;
-    /** @var boolean */
+    /** @var integer|null */
     public $is_archived;
     /** @var string|null */
     public $carshare_status;
-    /** @var boolean */
+    /** @var integer|null */
     public $once_in_rdw;
     /** @var integer */
     public $tellerstand;

@@ -20,29 +20,29 @@ class Company
     public $plaats;
     /** @var string */
     public $email;
-    /** @var string */
+    /** @var string|null */
     public $email2;
-    /** @var string */
+    /** @var string|null */
     public $email3;
-    /** @var string */
+    /** @var string|null */
     public $emailmelding1;
-    /** @var string */
+    /** @var string|null */
     public $emailmelding2;
-    /** @var string */
+    /** @var string|null */
     public $emailmelding3;
-    /** @var string */
+    /** @var string|null */
     public $emailmelding4;
-    /** @var string */
+    /** @var string|null */
     public $emailmelding5;
-    /** @var string */
+    /** @var string|null */
     public $emailmelding6;
-    /** @var string */
+    /** @var string|null */
     public $www;
-    /** @var string */
+    /** @var string|null */
     public $shortlink;
-    /** @var string */
+    /** @var string|null */
     public $mkt_deeplink_type;
-    /** @var string */
+    /** @var string|null */
     public $mkt_deeplink_data;
     /** @var string|null */
     public $opmerkingen;
@@ -50,7 +50,7 @@ class Company
     public $nr_telefoon;
     /** @var string|null */
     public $nr_fax;
-    /** @var integer */
+    /** @var integer|null */
     public $aantalfoto;
     /** @var string|null */
     public $foto;
@@ -62,37 +62,37 @@ class Company
     public $hoogte;
     /** @var integer|null */
     public $breedte;
-    /** @var integer */
+    /** @var integer|null */
     public $rijklaar;
-    /** @var string */
+    /** @var string|null */
     public $hexon_kltnr;
-    /** @var string */
+    /** @var string|null */
     public $hexon_client_id;
-    /** @var string */
+    /** @var string|null */
     public $hexon_password;
-    /** @var string */
+    /** @var string|null */
     public $hexon_directlink;
-    /** @var integer */
+    /** @var integer|null */
     public $rdw_bedrijfsnr;
-    /** @var string */
+    /** @var string|null */
     public $rdw_kltnr;
-    /** @var string */
+    /** @var string|null */
     public $rdw_password;
-    /** @var string */
+    /** @var string|null */
     public $bk;
-    /** @var integer */
+    /** @var integer|null */
     public $rdcnummer;
-    /** @var string */
+    /** @var string|null */
     public $prijskaart;
-    /** @var integer */
+    /** @var integer|null */
     public $restwaarde;
-    /** @var boolean */
+    /** @var integer|null */
     public $disabled;
-    /** @var boolean */
+    /** @var integer|null */
     public $meldverkocht;
-    /** @var boolean */
+    /** @var integer|null */
     public $hideinkoop;
-    /** @var integer */
+    /** @var integer|null */
     public $zoekengine;
     /** @var string */
     public $updated;
@@ -124,6 +124,6 @@ class Company
     public $vkdoc_btwnummer;
     /** @var string */
     public $vkdoc_rekeningnummer;
-    /** @var boolean */
+    /** @var integer|null */
     public $rdw_voertuigrapport;
 }

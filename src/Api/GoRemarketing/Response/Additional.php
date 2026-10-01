@@ -16,15 +16,15 @@ class Additional
     public $airco;
     /** @var string */
     public $bandensoort;
-    /** @var boolean */
+    /** @var integer|null */
     public $dierengeur;
-    /** @var boolean */
+    /** @var integer|null */
     public $distributieriem;
     /** @var string */
     public $exterieur;
     /** @var string */
     public $extrabanden;
-    /** @var boolean */
+    /** @var integer|null */
     public $instructieboekjes;
     /** @var string */
     public $interieur;
@@ -38,18 +38,18 @@ class Additional
     public $motorisch;
     /** @var string */
     public $onderhoud;
-    /** @var boolean */
+    /** @var integer|null */
     public $storingsvrij;
-    /** @var boolean */
+    /** @var integer|null */
     public $onderhoudboekjes;
-    /** @var string */
+    /** @var mixed|null */
     public $opmerkingen;
-    /** @var integer */
+    /** @var integer|null */
     public $restbpm;
-    /** @var boolean */
+    /** @var integer|null */
     public $rookgeur;
     /** @var string */
     public $staat;
-    /** @var string */
+    /** @var string|null */
     public $roetfilterverwijderd;
 }
