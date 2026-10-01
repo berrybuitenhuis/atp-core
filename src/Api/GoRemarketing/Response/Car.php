@@ -58,7 +58,7 @@ class Car
     public $vermogenkw;
     /** @var integer */
     public $vermogenpk;
-    /** @var string */
+    /** @var integer|null */
     public $versnelling;
     /** @var string|null */
     public $aandrijving;
