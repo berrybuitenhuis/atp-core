@@ -2,11 +2,12 @@
 
 namespace AtpCore\Api\GoRemarketing;
 
-use AtpCore\Api\GoRemarketing\Response\XML\Vehicle;
+use AtpCore\Api\GoRemarketing\Response\Vehicle;
+use AtpCore\Api\GoRemarketing\Response\XML\Vehicle as XMLVehicle;
 use AtpCore\BaseClass;
 use AtpCore\Extension\JsonMapperExtension;
 
-class Xml extends BaseClass
+class SFTP extends BaseClass
 {
 
     private $debug;
@@ -59,19 +60,26 @@ class Xml extends BaseClass
 
             // Get vehicle-data
             if ($this->debug) $this->log("request", "GetVehicle", "$directory/$fileName");
-            $xmlData = $sftp->getFileContent($directory, $fileName);
-            if ($xmlData === false) {
+            $data = $sftp->getFileContent($directory, $fileName);
+            if ($data === false) {
                 $this->setMessages($sftp->getMessages());
                 return false;
-            } elseif (\AtpCore\Input::isXml($xmlData) === false) {
-                $this->setMessages("No (valid) XML-file found");
-                return false;
             }
-            if ($this->debug) $this->log("response", "GetVehicle", $xmlData);
-            $this->setOriginalResponse($xmlData);
-            $response = \AtpCore\Input::convertXML(simplexml_load_string($xmlData));
-            if ($this->debug) $this->log("converted response", "GetVehicle", json_encode($response));
-            return $this->mapVehicleResponse($response);
+            if (\AtpCore\Input::isXml($data) === true) {
+                if ($this->debug) $this->log("response", "GetVehicle", $data);
+                $this->setOriginalResponse($data);
+                $response = \AtpCore\Input::convertXML(simplexml_load_string($data));
+                if ($this->debug) $this->log("converted response", "GetVehicle", json_encode($response));
+                return $this->mapVehicleXmlResponse($response);
+            }
+            if (\AtpCore\Input::isJson($data) === true) {
+                if ($this->debug) $this->log("response", "GetVehicle", $data);
+                $this->setOriginalResponse($data);
+                if ($this->debug) $this->log("converted response", "GetVehicle", $data);
+                return $this->mapVehicleResponse(json_decode($data));
+            }
+            $this->setMessages("No (valid) XML-file found");
+            return false;
         } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
             return false;
@@ -130,6 +138,40 @@ class Xml extends BaseClass
         try {
             // Setup JsonMapper
             $responseClass = new Vehicle();
+            $mapper = new JsonMapperExtension();
+            $mapper->bExceptionOnUndefinedProperty = true;
+            $mapper->bStrictObjectTypeChecking = true;
+            $mapper->bExceptionOnMissingData = true;
+            $mapper->bStrictNullTypes = true;
+            $mapper->bCastToExpectedType = false;
+
+            // Map response to internal object
+            $object = $mapper->map($response, $responseClass);
+            $valid = $mapper->isValid($object, get_class($responseClass));
+            if ($valid === false) {
+                $this->setMessages($mapper->getMessages());
+                return false;
+            }
+        } catch (\Exception $e) {
+            $this->setMessages($e->getMessage());
+            return false;
+        }
+
+        // Return
+        return $object;
+    }
+
+    /**
+     * Map response to (internal) XML Vehicle-object
+     *
+     * @param object $response
+     * @return XMLVehicle|false
+     */
+    private function mapVehicleXmlResponse($response)
+    {
+        try {
+            // Setup JsonMapper
+            $responseClass = new XMLVehicle();
             $mapper = new JsonMapperExtension();
             $mapper->bExceptionOnUndefinedProperty = true;
             $mapper->bStrictObjectTypeChecking = true;
