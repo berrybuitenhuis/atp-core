@@ -174,4 +174,6 @@ class Car
     public $once_in_rdw;
     /** @var integer */
     public $tellerstand;
+    /** @var string */
+    public $tellersoort;
 }
