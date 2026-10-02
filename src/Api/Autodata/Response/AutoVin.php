@@ -4,17 +4,17 @@ namespace AtpCore\Api\Autodata\Response;
 
 class AutoVin
 {
-    /** @var string */
+    /** @var string|null */
     public $make;
-    /** @var mixed */
+    /** @var mixed|null */
     public $model;
-    /** @var string */
+    /** @var string|null */
     public $trimPackage;
-    /** @var string */
+    /** @var string|null */
     public $paintCode;
-    /** @var string */
+    /** @var string|null */
     public $paintDescription;
-    /** @var string */
+    /** @var string|null */
     public $paintRendering;
     /** @var AutoVinOptions|null */
     public $options;

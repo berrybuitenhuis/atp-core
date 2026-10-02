@@ -38,13 +38,13 @@ class Attributes
     public $datePart1b;
     /** @var string */
     public $firstAdmission;
-    /** @var string */
+    /** @var string|null */
     public $exLease;
-    /** @var string */
+    /** @var string|null */
     public $preOwnedByDrivingSchool;
-    /** @var string */
+    /** @var string|null */
     public $exTaxi;
-    /** @var string */
+    /** @var string|null */
     public $manufacturerColor;
     /** @var string */
     public $recalculatedCostprice;
@@ -54,11 +54,11 @@ class Attributes
     public $licenseplate;
     /** @var string */
     public $mileage;
-    /** @var string */
+    /** @var string|null */
     public $countryOfOrigin;
-    /** @var string */
+    /** @var string|null */
     public $lease;
-    /** @var string */
+    /** @var string|null */
     public $ownedByDrivingSchool;
     /** @var string */
     public $kerbMass;
@@ -98,7 +98,7 @@ class Attributes
     public $numberOfSeats;
     /** @var string */
     public $paintType;
-    /** @var string */
+    /** @var string|null */
     public $interiorColor;
     /** @var string */
     public $upholstery;
@@ -112,33 +112,33 @@ class Attributes
     public $numberOfDoors;
     /** @var string */
     public $airconWorking;
-    /** @var string */
+    /** @var string|null */
     public $treadLBWinter;
-    /** @var string */
+    /** @var string|null */
     public $treadLBSummer;
-    /** @var string */
+    /** @var string|null */
     public $treadLFWinter;
-    /** @var string */
+    /** @var string|null */
     public $treadLFSummer;
-    /** @var string */
+    /** @var string|null */
     public $treadRBWinter;
-    /** @var string */
+    /** @var string|null */
     public $treadRBSummer;
-    /** @var string */
+    /** @var string|null */
     public $treadResSummer;
-    /** @var string */
+    /** @var string|null */
     public $treadRFWinter;
-    /** @var string */
+    /** @var string|null */
     public $treadRFSummer;
     /** @var string */
     public $distributionReplaced;
     /** @var string */
     public $maintanceNeeded;
-    /** @var string */
+    /** @var string|null */
     public $lastService;
-    /** @var string */
+    /** @var string|null */
     public $winterTiresPresent;
-    /** @var string */
+    /** @var string|null */
     public $summerTiresAvailable;
     /** @var string|null */
     public $dateOfLastService;
@@ -154,7 +154,7 @@ class Attributes
     public $maintenanceHistory;
     /** @var string */
     public $refundableBpm;
-    /** @var string */
+    /** @var string|null */
     public $type;
     /** @var string */
     public $napStatus;
@@ -162,7 +162,7 @@ class Attributes
     public $autoVin;
     /** @var string */
     public $driveType;
-    /** @var string */
+    /** @var string|null */
     public $relocationExemption;
     /** @var string|null */
     public $napInfo;
@@ -170,19 +170,19 @@ class Attributes
     public $smokeFree;
     /** @var string */
     public $dealerId;
-    /** @var string */
+    /** @var string|null */
     public $paintTone;
     /** @var string */
     public $status;
     /** @var string */
     public $vehicleType;
-    /** @var string */
+    /** @var string|null */
     public $tradeComments;
-    /** @var string */
+    /** @var string|null */
     public $occasionManagerComments;
-    /** @var string */
+    /** @var string|null */
     public $vehicleOrigin;
-    /** @var string */
+    /** @var string|null */
     public $vin;
     /** @var string */
     public $numberOwners;

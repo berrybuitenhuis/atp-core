@@ -6,6 +6,6 @@ class State
 {
     /** @var string */
     public $state;
-    /** @var string */
+    /** @var string|null */
     public $reason;
 }

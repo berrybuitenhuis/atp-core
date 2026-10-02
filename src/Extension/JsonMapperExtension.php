@@ -215,8 +215,7 @@ class JsonMapperExtension extends JsonMapper {
                 );
             } else if (strpos($type, '|')) {
                 throw new \JsonMapper_Exception(
-                    'Cannot decide which of the union types shall be used: '
-                    . $type
+                    "Cannot decide which of the union types shall be used ($strClassName::$$key): $type"
                 );
             }
 

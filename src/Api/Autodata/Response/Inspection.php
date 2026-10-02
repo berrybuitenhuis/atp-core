@@ -4,11 +4,11 @@ namespace AtpCore\Api\Autodata\Response;
 
 class Inspection
 {
-    /** @var string */
+    /** @var string|null */
     public $detachableTowbarCheck;
-    /** @var string */
+    /** @var string|null */
     public $extraTiresetTradeinCar;
-    /** @var string */
+    /** @var string|null */
     public $tireProfileOverall;
     /** @var string */
     public $smell;
