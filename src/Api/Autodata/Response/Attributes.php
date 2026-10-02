@@ -12,7 +12,7 @@ class Attributes
     public $wokHistory;
     /** @var string */
     public $amountOfCilinders;
-    /** @var string */
+    /** @var string|null */
     public $transmissionCount;
     /** @var Dealer */
     public $dealer;
@@ -30,7 +30,7 @@ class Attributes
     public $vatMargin;
     /** @var string */
     public $engineCapacity;
-    /** @var string */
+    /** @var string|null */
     public $consumerPrice;
     /** @var string|null */
     public $datePart1a;
@@ -46,7 +46,7 @@ class Attributes
     public $exTaxi;
     /** @var string|null */
     public $manufacturerColor;
-    /** @var string */
+    /** @var string|null */
     public $recalculatedCostprice;
     /** @var string */
     public $imported;
@@ -78,9 +78,9 @@ class Attributes
     public $taxi;
     /** @var string */
     public $topSpeed;
-    /** @var string */
+    /** @var string|null */
     public $transmission;
-    /** @var string */
+    /** @var string|null */
     public $trimPackage;
     /** @var string */
     public $averageConsumption;
@@ -96,7 +96,7 @@ class Attributes
     public $wok;
     /** @var string */
     public $numberOfSeats;
-    /** @var string */
+    /** @var string|null */
     public $paintType;
     /** @var string|null */
     public $interiorColor;
@@ -108,7 +108,7 @@ class Attributes
     public $numberOfKeyRemotes;
     /** @var string */
     public $paintColor;
-    /** @var string */
+    /** @var string|null */
     public $numberOfDoors;
     /** @var string */
     public $airconWorking;
@@ -150,7 +150,7 @@ class Attributes
     public $distributionReplacedMileage;
     /** @var string */
     public $body;
-    /** @var string */
+    /** @var string|null */
     public $maintenanceHistory;
     /** @var string */
     public $refundableBpm;
@@ -160,7 +160,7 @@ class Attributes
     public $napStatus;
     /** @var AutoVin */
     public $autoVin;
-    /** @var string */
+    /** @var string|null */
     public $driveType;
     /** @var string|null */
     public $relocationExemption;
