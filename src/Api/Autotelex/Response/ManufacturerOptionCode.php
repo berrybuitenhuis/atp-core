@@ -4,7 +4,7 @@ namespace AtpCore\Api\Autotelex\Response;
 
 class ManufacturerOptionCode
 {
-    /** @var string */
+    /** @var string|null */
     public $code;
     /** @var string */
     public $name;

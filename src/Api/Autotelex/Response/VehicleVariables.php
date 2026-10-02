@@ -46,7 +46,7 @@ class VehicleVariables
     public $chargingCableTypes;
     /** @var boolean|null */
     public $chargingCablesPresent;
-    /** @var string */
+    /** @var string|null */
     public $chassisnummer;
     /** @var string */
     public $conditieExterieur;
