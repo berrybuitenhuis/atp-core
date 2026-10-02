@@ -100,7 +100,7 @@ class Attributes
     public $paintType;
     /** @var string|null */
     public $interiorColor;
-    /** @var string */
+    /** @var string|null */
     public $upholstery;
     /** @var string */
     public $numberOfKeys;
@@ -130,9 +130,9 @@ class Attributes
     public $treadRFWinter;
     /** @var string|null */
     public $treadRFSummer;
-    /** @var string */
+    /** @var string|null */
     public $distributionReplaced;
-    /** @var string */
+    /** @var string|null */
     public $maintanceNeeded;
     /** @var string|null */
     public $lastService;
