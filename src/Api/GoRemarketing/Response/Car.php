@@ -94,7 +94,7 @@ class Car
     public $restbpm_binnen;
     /** @var integer|null */
     public $restbpm_verkocht;
-    /** @var string */
+    /** @var string|null */
     public $btw;
     /** @var string|null */
     public $interieur;

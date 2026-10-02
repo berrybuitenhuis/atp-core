@@ -26,9 +26,9 @@ class Environment
     public $roetdeeltjes;
     /** @var integer|null */
     public $co2uitstoot;
-    /** @var string|null */
+    /** @var integer|null */
     public $co2_nedc;
-    /** @var string|null */
+    /** @var integer|null */
     public $co2_wltp;
     /** @var mixed|null */
     public $euroklasse;
@@ -56,11 +56,11 @@ class Environment
     public $maxmassaautonoomgeremd;
     /** @var integer|null */
     public $maxmassamiddenasgeremd;
-    /** @var string */
+    /** @var string|null */
     public $voertuigsoort;
     /** @var integer */
     public $wielen;
-    /** @var string|null */
+    /** @var integer|null */
     public $emissiecode;
     /** @var integer */
     public $wielbasis;
