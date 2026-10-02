@@ -18,7 +18,7 @@ class TmStatusHistoryData
     public $inclExclBTW;
     /** @var integer */
     public $internBod;
-    /** @var string */
+    /** @var string|null */
     public $opmerking;
     /** @var integer */
     public $soortInternBod;

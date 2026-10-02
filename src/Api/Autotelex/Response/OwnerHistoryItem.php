@@ -8,7 +8,7 @@ class OwnerHistoryItem
     public $aantalDagen;
     /** @var string|null */
     public $datum;
-    /** @var string */
+    /** @var string|null */
     public $extraInfo;
     /** @var string|null */
     public $typeEigenaar;

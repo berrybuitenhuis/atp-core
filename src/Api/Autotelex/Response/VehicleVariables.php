@@ -146,7 +146,7 @@ class VehicleVariables
     public $myPurchasePriceRequired;
     /** @var string */
     public $onderhoudsboekjes;
-    /** @var string */
+    /** @var string|null */
     public $opmerking;
     /** @var string|null */
     public $opmerkingen;
