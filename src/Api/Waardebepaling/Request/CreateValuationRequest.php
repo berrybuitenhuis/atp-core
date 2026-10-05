@@ -16,4 +16,5 @@ class CreateValuationRequest extends BaseRequest
     public ?array $images = null;
     public ?Rules $rules = null;
     public ?Config $config = null;
+    public ?Callback $callback = null;
 }

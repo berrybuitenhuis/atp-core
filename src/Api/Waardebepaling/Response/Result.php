@@ -24,9 +24,9 @@ class Result
     public $review_required;
     /** @var object|null */
     public $market;
-    /** @var array|null */
+    /** @var object|null */
     public $adjustments;
-    /** @var array|null */
+    /** @var mixed|null */
     public $signals;
     /** @var array|null */
     public $warnings;
