@@ -26,7 +26,7 @@ class Attributes
     public $bpm;
     /** @var string */
     public $fuelType;
-    /** @var string */
+    /** @var string|null */
     public $vatMargin;
     /** @var string */
     public $engineCapacity;
@@ -102,15 +102,15 @@ class Attributes
     public $interiorColor;
     /** @var string|null */
     public $upholstery;
-    /** @var string */
+    /** @var string|null */
     public $numberOfKeys;
-    /** @var string */
+    /** @var string|null */
     public $numberOfKeyRemotes;
     /** @var string */
     public $paintColor;
     /** @var string|null */
     public $numberOfDoors;
-    /** @var string */
+    /** @var string|null */
     public $airconWorking;
     /** @var string|null */
     public $treadLBWinter;
@@ -166,13 +166,13 @@ class Attributes
     public $relocationExemption;
     /** @var string|null */
     public $napInfo;
-    /** @var string */
+    /** @var string|null */
     public $smokeFree;
     /** @var string */
     public $dealerId;
     /** @var string|null */
     public $paintTone;
-    /** @var string */
+    /** @var string|null */
     public $status;
     /** @var string */
     public $vehicleType;

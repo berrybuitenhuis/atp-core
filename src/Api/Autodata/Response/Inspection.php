@@ -10,6 +10,6 @@ class Inspection
     public $extraTiresetTradeinCar;
     /** @var string|null */
     public $tireProfileOverall;
-    /** @var string */
+    /** @var string|null */
     public $smell;
 }
