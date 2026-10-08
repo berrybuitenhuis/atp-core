@@ -1,6 +1,6 @@
 <?php
 
-namespace AtpCore\Api\Waardebepaling\Response;
+namespace AtpCore\Api\ATP\Waardebepaling\Response;
 
 class Result
 {

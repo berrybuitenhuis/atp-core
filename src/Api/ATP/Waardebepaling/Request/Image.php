@@ -1,6 +1,6 @@
 <?php
 
-namespace AtpCore\Api\Waardebepaling\Request;
+namespace AtpCore\Api\ATP\Waardebepaling\Request;
 
 class Image extends BaseRequest
 {

@@ -3,13 +3,13 @@
 /**
  * API-information: API_INTEGRATION.md in atp-waardebepaling repository
  */
-namespace AtpCore\Api\Waardebepaling;
+namespace AtpCore\Api\ATP\Waardebepaling;
 
-use AtpCore\Api\Waardebepaling\Request\CreateValuationRequest;
-use AtpCore\Api\Waardebepaling\Request\FeedbackRequest;
-use AtpCore\Api\Waardebepaling\Response\CreateValuationResponse;
-use AtpCore\Api\Waardebepaling\Response\Feedback;
-use AtpCore\Api\Waardebepaling\Response\Valuation;
+use AtpCore\Api\ATP\Waardebepaling\Request\CreateValuationRequest;
+use AtpCore\Api\ATP\Waardebepaling\Request\FeedbackRequest;
+use AtpCore\Api\ATP\Waardebepaling\Response\CreateValuationResponse;
+use AtpCore\Api\ATP\Waardebepaling\Response\Feedback;
+use AtpCore\Api\ATP\Waardebepaling\Response\Valuation;
 use AtpCore\Error;
 use AtpCore\Extension\JsonMapperExtension;
 use GuzzleHttp\Client;
