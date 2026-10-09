@@ -14,7 +14,6 @@
     "require": {
         "php": "^8.2",
         "aws/aws-sdk-php": "^3.300",
-        "cache/filesystem-adapter": "^1.2",
         "dompdf/dompdf": "^v2.0",
         "elasticsearch/elasticsearch": "^8.12",
         "gmostafa/php-graphql-client": "^v1.13",
