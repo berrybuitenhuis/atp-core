@@ -14,7 +14,7 @@ class Vehicle
     public $additional;
     /** @var Image[] */
     public $carimages;
-    /** @var Accessory[] */
+    /** @var Accessory[]|null */
     public $accessoires;
     /** @var Company */
     public $bedrijven;
