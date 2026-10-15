@@ -62,7 +62,7 @@ class Car
     public $versnelling;
     /** @var string|null */
     public $aandrijving;
-    /** @var string */
+    /** @var string|null */
     public $datum_binnen;
     /** @var string|null */
     public $datum_lead;
@@ -154,9 +154,9 @@ class Car
     public $svid_kleur_interieur;
     /** @var integer */
     public $svid_schakeling;
-    /** @var integer */
+    /** @var integer|null */
     public $last_updated_by_gebruikers_id;
-    /** @var string */
+    /** @var string|null */
     public $datasource;
     /** @var integer|null */
     public $altcode;

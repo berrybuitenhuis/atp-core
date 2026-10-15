@@ -60,7 +60,7 @@ class Environment
     public $voertuigsoort;
     /** @var integer */
     public $wielen;
-    /** @var integer|null */
+    /** @var mixed|null */
     public $emissiecode;
     /** @var integer */
     public $wielbasis;
