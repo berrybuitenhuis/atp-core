@@ -80,7 +80,7 @@ class Environment
     public $btwwaarde;
     /** @var integer */
     public $nettocatalogusprijs;
-    /** @var integer */
+    /** @var integer|null */
     public $nettocatalogusprijs_init;
     /** @var integer */
     public $teruggerekendecatalogusprijs;

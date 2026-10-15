@@ -100,7 +100,7 @@ class Car
     public $interieur;
     /** @var string|null */
     public $kleur_interieur;
-    /** @var string */
+    /** @var string|null */
     public $nap;
     /** @var string|null */
     public $soort;
