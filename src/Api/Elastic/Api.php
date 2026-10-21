@@ -82,32 +82,58 @@ class Api extends BaseClass
     }
 
     /**
-     * Update index
-     *     
+     * Delete action
+     *
      * @param string $index
      * @param string $id
-     * @param array $body
      * @return bool
      */
-    public function update($index, $id, $body)
+    public function delete($index, $id)
     {
         try {
             $params = [
                 'index' => $index,
-                'id' => $id,
-                'body'  => $body
+                'id'    => $id
             ];
 
-            $res = $this->client->update($params);
-            if (isset($res['result']) && in_array($res['result'], ['created', 'updated', 'noop'])) {
+            $res = ($this->client->delete($params));
+            if (isset($res['result']) && in_array($res['result'], ['deleted', 'not_found'])) {
                 return true;
             } else {
-                $this->setMessages("Update action failed");
+                $this->setMessages("Delete action failed");
                 $this->setErrorData($res);
                 return false;
             }
         } catch (Throwable $e) {
-            $this->setMessages("Update action failed");
+            $this->setMessages("Delete action failed");
+            $this->setErrorData($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Get action (real-time GET by id)
+     *
+     * @param string $index
+     * @param string $id
+     * @return array|false
+     */
+    public function get($index, $id)
+    {
+        try {
+            $params = [
+                'index' => $index,
+                'id'    => $id
+            ];
+
+            $result = $this->client->get($params);
+            return $result->asArray();
+        } catch (Throwable $e) {
+            // A missing document yields a 404; treat that as "not found" rather than an error
+            if ($e->getCode() === 404) {
+                return [];
+            }
+            $this->setMessages("Get action failed");
             $this->setErrorData($e->getMessage());
             return false;
         }
@@ -170,30 +196,32 @@ class Api extends BaseClass
     }
 
     /**
-     * Delete action
-     *     
+     * Update index
+     *
      * @param string $index
      * @param string $id
+     * @param array $body
      * @return bool
      */
-    public function delete($index, $id)
+    public function update($index, $id, $body)
     {
         try {
             $params = [
                 'index' => $index,
-                'id'    => $id
+                'id' => $id,
+                'body'  => $body
             ];
 
-            $res = ($this->client->delete($params));
-            if (isset($res['result']) && in_array($res['result'], ['deleted', 'not_found'])) {
+            $res = $this->client->update($params);
+            if (isset($res['result']) && in_array($res['result'], ['created', 'updated', 'noop'])) {
                 return true;
             } else {
-                $this->setMessages("Delete action failed");
+                $this->setMessages("Update action failed");
                 $this->setErrorData($res);
                 return false;
             }
         } catch (Throwable $e) {
-            $this->setMessages("Delete action failed");
+            $this->setMessages("Update action failed");
             $this->setErrorData($e->getMessage());
             return false;
         }
