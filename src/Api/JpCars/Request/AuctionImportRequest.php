@@ -14,14 +14,13 @@ class AuctionImportRequest
     public ?string $body;
     public string $build_date;
     public string $end_time;
-    public string $equipment;
     public ?string $fuel;
     public ?string $gear;
     public string $image;
     public string $make;
     public string $model;
     public string $license_plate;
-    public string $reference;
-    public string $specials_info;
+    public string $options;
+    public string $reference_code;
     public string $url;
 }
