@@ -40,6 +40,8 @@ class Vehicle extends BaseRequest
     public ?int $rest_bpm_export = null;
     public ?string $vat_margin = null;
     public ?bool $is_import = null;
+    public ?string $expected_delivery_date = null;
+    public ?int $expected_delivery_mileage = null;
     /** @var string[]|null */
     public ?array $options = null;
 }
