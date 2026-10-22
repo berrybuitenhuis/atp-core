@@ -6,7 +6,7 @@ class AuctionImportRequest
 {
     public int $build;
     public int $co2;
-    public int $four_doors;
+    public bool $four_doors;
     public int $hp;
     public int $maturity_months;
     public int $mileage;
