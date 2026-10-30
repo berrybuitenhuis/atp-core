@@ -76,7 +76,7 @@ class Car
     public $datum_internet_checked;
     /** @var string|null */
     public $afleverdatum;
-    /** @var integer */
+    /** @var integer|null */
     public $km_binnen;
     /** @var string|null */
     public $toelating;
