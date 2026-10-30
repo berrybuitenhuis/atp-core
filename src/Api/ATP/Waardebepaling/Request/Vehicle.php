@@ -14,6 +14,8 @@ class Vehicle extends BaseRequest
     public ?string $type = null;
     public ?string $type_commercial = null;
     public ?int $build_year = null;
+    public ?string $model_year_start = null;
+    public ?string $model_year_end = null;
     public ?string $date_first_admission = null;
     public ?string $date_last_registration = null;
     public ?string $apk_expires_at = null;
