@@ -17,6 +17,8 @@ class BasicData
     /** @var integer|null */
     public $accucapaciteit;
     /** @var integer|null */
+    public $accutypeId;
+    /** @var integer|null */
     public $actieradius;
     /** @var integer|null */
     public $afleverkosten;
@@ -60,6 +62,8 @@ class BasicData
     public $importDate;
     /** @var double|null */
     public $importPurchaseValueDeviation;
+    /** @var boolean|null */
+    public $importPurchaseValueDeviationAlertIsValidated;
     /** @var boolean|null */
     public $importPurchaseValueDeviationShowAlert;
     /** @var integer|null */

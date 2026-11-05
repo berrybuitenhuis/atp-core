@@ -32,6 +32,8 @@ class ExtendedData
     public $importPurchaseValueDeviation;
     /** @var boolean|null */
     public $importPurchaseValueDeviationAlert;
+    /** @var boolean|null */
+    public $importPurchaseValueDeviationAlertIsValidated;
     /** @var integer|null */
     public $importPurchaseValueLicensePlate;
     /** @var integer|null */
