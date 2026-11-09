@@ -212,4 +212,6 @@ class Attributes
     public $damagePhotos;
     /** @var string|null */
     public $damageVideos;
+    /** @var mixed|null */
+    public $documents;
 }
