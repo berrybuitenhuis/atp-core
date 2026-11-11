@@ -39,6 +39,8 @@ class ValuateResponse
     /** @var integer|null */
     public $price_local_inin;
     /** @var integer|null */
+    public $vat;
+    /** @var integer|null */
     public $topdown_value;
     /** @var TopDownValueBreakdown|null */
     public $topdown_value_breakdown;
