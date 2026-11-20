@@ -18,6 +18,6 @@ class Company
     public $plaats;
     /** @var string */
     public $email;
-    /** @var string */
+    /** @var mixed */
     public $nr_telefoon;
 }

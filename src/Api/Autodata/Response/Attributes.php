@@ -188,7 +188,7 @@ class Attributes
     public $numberOwners;
     /** @var string */
     public $co2EmissionsAverage;
-    /** @var string */
+    /** @var string|null */
     public $emission;
     /** @var OwnerHistory[]|null */
     public $ownerHistory;
