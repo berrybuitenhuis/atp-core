@@ -44,6 +44,77 @@ class Sqs extends BaseClass
     }
 
     /**
+     * Change the visibility-timeout of a received message (e.g. 0 to release it back immediately)
+     *
+     * @param string $queueName
+     * @param string $receiptHandle
+     * @param int $visibilityTimeout duration (seconds) the message stays hidden; 0 makes it visible again
+     */
+    public function changeMessageVisibility($queueName, $receiptHandle, $visibilityTimeout)
+    {
+        $queueUrl = $this->getQueueUrl($queueName);
+        if ($queueUrl !== false) {
+            try {
+                $this->client->changeMessageVisibility(
+                    [
+                        'QueueUrl' => $queueUrl,
+                        'ReceiptHandle' => $receiptHandle,
+                        'VisibilityTimeout' => $visibilityTimeout,
+                    ]
+                );
+                return true;
+            } catch (Throwable $e) {
+                $this->setErrorData($e->getMessage());
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Delete message from queue
+     *
+     * @param string $queueName
+     * @param string $receiptHandle
+     */
+    public function deleteQueueMessage($queueName, $receiptHandle)
+    {
+        $queueUrl = $this->getQueueUrl($queueName);
+        if ($queueUrl !== false) {
+            $this->client->deleteMessage(
+                [
+                    'QueueUrl' => $queueUrl,
+                    'ReceiptHandle' => $receiptHandle
+                ]
+            );
+        }
+    }
+
+    /**
+     * Get (approximate) total number of messages in a queue (visible + in-flight + delayed)
+     *
+     * @param string $queueName
+     * @return int|bool total number of messages, or false on failure
+     */
+    public function getMessageCount($queueName)
+    {
+        $result = $this->getQueueAttributes($queueName, [
+            "ApproximateNumberOfMessages",
+            "ApproximateNumberOfMessagesNotVisible",
+            "ApproximateNumberOfMessagesDelayed",
+        ]);
+        if ($result === false) {
+            return false;
+        }
+
+        // Return
+        $attributes = $result->get('Attributes');
+        return (int) ($attributes['ApproximateNumberOfMessages'] ?? 0)
+            + (int) ($attributes['ApproximateNumberOfMessagesNotVisible'] ?? 0)
+            + (int) ($attributes['ApproximateNumberOfMessagesDelayed'] ?? 0);
+    }
+
+    /**
      * Get list of queues
      *
      * @return \Aws\Result
@@ -99,22 +170,25 @@ class Sqs extends BaseClass
      *
      * @param string $queueName
      * @param int $maxMessages
+     * @param int|null $visibilityTimeout duration (seconds) the received messages stay hidden; null uses the queue-default
      * @return bool|array
      */
-    public function getQueueMessages($queueName, $maxMessages = 10)
+    public function getQueueMessages($queueName, $maxMessages = 10, $visibilityTimeout = null)
     {
         $queueUrl = $this->getQueueUrl($queueName);
         if ($queueUrl !== false) {
             try {
-                $result = $this->client->receiveMessage(
-                    [
-                        'AttributeNames' => ['SentTimestamp'],
-                        'MaxNumberOfMessages' => $maxMessages,
-                        'MessageAttributeNames' => ['All'],
-                        'QueueUrl' => $queueUrl,
-                        'WaitTimeSeconds' => 0,
-                    ]
-                );
+                $parameters = [
+                    'AttributeNames' => ['SentTimestamp'],
+                    'MaxNumberOfMessages' => $maxMessages,
+                    'MessageAttributeNames' => ['All'],
+                    'QueueUrl' => $queueUrl,
+                    'WaitTimeSeconds' => 0,
+                ];
+                if ($visibilityTimeout !== null) {
+                    $parameters['VisibilityTimeout'] = $visibilityTimeout;
+                }
+                $result = $this->client->receiveMessage($parameters);
 
                 // Return
                 return $result->get('Messages');
@@ -143,33 +217,15 @@ class Sqs extends BaseClass
     }
 
     /**
-     * Delete message from queue
-     *
-     * @param string $queueName
-     * @param string $receiptHandle
-     */
-    public function deleteQueueMessage($queueName, $receiptHandle)
-    {
-        $queueUrl = $this->getQueueUrl($queueName);
-        if ($queueUrl !== false) {
-            $this->client->deleteMessage(
-                [
-                    'QueueUrl' => $queueUrl,
-                    'ReceiptHandle' => $receiptHandle
-                ]
-            );
-        }
-    }
-
-    /**
      * Send message to queue
      *
      * @param string $queueName
      * @param string|array $message
      * @param int|null $delaySeconds
+     * @param array|null $messageAttributes key-value pairs sent as (String) message-attributes
      * @return bool
      */
-    public function sendMessage($queueName, $message, $delaySeconds = null)
+    public function sendMessage($queueName, $message, $delaySeconds = null, $messageAttributes = null)
     {
         $queueUrl = $this->getQueueUrl($queueName);
         if ($queueUrl !== false) {
@@ -177,6 +233,15 @@ class Sqs extends BaseClass
             $sqsMessage["QueueUrl"] = $queueUrl;
             $sqsMessage["MessageBody"] = (is_array($message)) ? json_encode($message) : $message;
             $sqsMessage["DelaySeconds"] = $delaySeconds ?: 0;
+            if (!empty($messageAttributes)) {
+                $sqsMessage["MessageAttributes"] = [];
+                foreach ($messageAttributes AS $name => $value) {
+                    $sqsMessage["MessageAttributes"][$name] = [
+                        'DataType' => 'String',
+                        'StringValue' => $value,
+                    ];
+                }
+            }
             try {
                 $this->client->sendMessage($sqsMessage);
                 return true;

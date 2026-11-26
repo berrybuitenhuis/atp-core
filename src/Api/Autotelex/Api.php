@@ -159,7 +159,7 @@ class Api extends BaseClass
             $this->setOriginalResponse($response);
             if ($this->debug) $this->log("response", "GetVehicle", json_encode($response));
             $status = $response->status;
-            if (property_exists($status, "code") && $status->code == 0) {
+            if (!empty($status) && property_exists($status, "code") && $status->code == 0) {
                 if (count($response->vehicles) > 1) {
                     $this->setMessages("Found " . count($response->vehicles) . " vehicles in response, but expected 1");
                     return false;
@@ -171,6 +171,10 @@ class Api extends BaseClass
                     return $vehicle;
                 }
             } else {
+                if (property_exists($response, "vehicles") && empty($response->vehicles)) {
+                    $this->setMessages("No vehicle found in response");
+                    return false;
+                }
                 $this->setErrorData($status);
                 $this->setMessages($status->message);
                 return false;

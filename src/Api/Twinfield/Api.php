@@ -110,8 +110,27 @@ class Api extends BaseClass
             $purchaseTransaction->setDestiny(\PhpTwinfield\Enums\Destiny::TEMPORARY());
             $purchaseTransaction->setCurrency(new \Money\Currency("EUR"));
             $purchaseTransaction->setLines($purchaseTransactionLines);
-            $res = $connector->send($purchaseTransaction);
-            $output = $res->getNumber();
+            try {
+                $res = $connector->send($purchaseTransaction);
+                $output = $res->getNumber();
+            } catch (\Exception $e) {
+                // When Twinfield rejects the transaction it returns an empty <period>, which
+                // makes the default send()-mapping throw a misleading "Period must be in
+                // YYYY/PP format" error that hides the real reason. Only in that case, re-send
+                // the document and assert success first, so Twinfield's actual error/warning
+                // messages surface instead. Any other exception is rethrown unchanged.
+                if (!str_contains($e->getMessage(), "Period must be in YYYY/PP format")) {
+                    throw $e;
+                }
+                $document = new \PhpTwinfield\DomDocuments\TransactionsDocument();
+                $document->addTransaction($purchaseTransaction);
+                $response = $connector->sendXmlDocument($document);
+                $response->assertSuccessful();
+                // assertSuccessful() should have thrown on the reject; if the re-send somehow
+                // succeeded, map the response as usual.
+                $transaction = \PhpTwinfield\Mappers\TransactionMapper::map(\PhpTwinfield\PurchaseTransaction::class, $response);
+                $output = $transaction->getNumber();
+            }
         } catch (\Exception $e) {
             $this->setMessages($e->getMessage());
             $this->setErrorData($e->getTrace());

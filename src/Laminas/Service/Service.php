@@ -112,11 +112,13 @@ class Service extends BaseClass
     /**
      * @param array $parameters
      * @param array|null $orderBy
+     * @param int|null $limit
+     * @param int|null $offset
      * @return \AtpCore\Laminas\Doctrine\EntityCollection<T>
      */
-    public function getByParametersNew($parameters, $orderBy = null)
+    public function getByParametersNew($parameters, $orderBy = null, $limit = null, $offset = null)
     {
-        return $this->repository->getByParametersNew($parameters, $orderBy);
+        return $this->repository->getByParametersNew($parameters, $orderBy, $limit, $offset);
     }
 
     /**

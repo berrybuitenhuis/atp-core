@@ -7,8 +7,12 @@ class ValuateResponse
     /** @var string */
     public $license_plate;
     /** @var string|null */
-    public $make;
+    public $vin;
     /** @var string|null */
+    public $reference_code;
+    /** @var string|null */
+    public $make;
+    /** @var mixed|null */
     public $model;
     /** @var string|null */
     public $gear;
@@ -28,6 +32,14 @@ class ValuateResponse
     public $value;
     /** @var integer|null */
     public $value_exex;
+    /** @var integer|null */
+    public $price_local_exex;
+    /** @var integer|null */
+    public $price_local_inex;
+    /** @var integer|null */
+    public $price_local_inin;
+    /** @var integer|null */
+    public $vat;
     /** @var integer|null */
     public $topdown_value;
     /** @var TopDownValueBreakdown|null */
@@ -65,6 +77,18 @@ class ValuateResponse
     /** @var string */
     public $window_url;
     /** @var string|null */
+    public $tiny_url;
+    /** @var string|null */
+    public $url_gaspedaal;
+    /** @var string|null */
+    public $url_autoscout24;
+    /** @var string|null */
+    public $url_mobile;
+    /** @var mixed|null */
+    public $portals;
+    /** @var mixed[]|null */
+    public $top_dealers;
+    /** @var string|null */
     public $specials_info;
     /** @var integer|null */
     public $apr;
@@ -72,6 +96,8 @@ class ValuateResponse
     public $apr_breakdown;
     /** @var string|null */
     public $country;
+    /** @var \stdClass|null */
+    public $countries;
     /** @var integer|null */
     public $own_supply_window_count;
     /** @var string|null */
@@ -82,10 +108,14 @@ class ValuateResponse
     public $error;
     /** @var string|null */
     public $error_message;
+    /** @var mixed|null */
+    public $percents;
     /** @var double|null */
     public $target_perc;
     /** @var integer|null */
     public $rank_target;
     /** @var double|null */
     public $currency_ratio;
+    /** @var double|null */
+    public $source_currency_ratio;
 }

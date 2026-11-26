@@ -120,9 +120,10 @@ class SFTP extends BaseClass
      *
      * @param string $currentFilePath
      * @param string $newFilePath
+     * @param boolean $overwrite
      * @return bool
      */
-    public function moveFile($currentFilePath, $newFilePath)
+    public function moveFile($currentFilePath, $newFilePath, $overwrite = false)
     {
         // Setup connection
         $client = $this->connect();
@@ -138,8 +139,16 @@ class SFTP extends BaseClass
         // Check if new file-path already exists
         $exists = $client->file_exists($newFilePath);
         if ($exists === true) {
-            $this->setMessages("New file-path already exists ($newFilePath)");
-            return false;
+            if ($overwrite === true) {
+                $res = $client->delete($newFilePath, false);
+                if ($res === false) {
+                    $this->setMessages("Failed deleting to replace file in target-folder ($newFilePath)");
+                    return false;
+                }
+            } else {
+                $this->setMessages("New file-path already exists ($newFilePath)");
+                return false;
+            }
         }
 
         // Move/rename file

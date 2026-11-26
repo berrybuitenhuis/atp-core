@@ -10,7 +10,7 @@ class VehicleInterest extends Base
     public $fuelType;
     /** @var string */
     public $make;
-    /** @var string */
+    /** @var mixed */
     public $model;
     /** @var string */
     public $registration;

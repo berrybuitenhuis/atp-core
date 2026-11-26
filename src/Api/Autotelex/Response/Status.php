@@ -8,6 +8,6 @@ class Status
     public $code;
     /** @var integer */
     public $genericCode;
-    /** @var string */
+    /** @var string|null */
     public $message;
 }

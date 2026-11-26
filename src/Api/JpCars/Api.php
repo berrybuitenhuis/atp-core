@@ -70,6 +70,41 @@ class Api extends BaseClass
     }
 
     /**
+     * Map response to (internal) response-object
+     */
+    public function mapResponse(object $response, mixed $responseClass, $failOnUndefinedProperty = true): ValuateResponse|false
+    {
+        $response = $this->fixDataTypes($response);
+
+        try {
+            // Setup JsonMapper
+            $mapper = new JsonMapperExtension();
+            $mapper->bExceptionOnUndefinedProperty = $failOnUndefinedProperty;
+            $mapper->bStrictObjectTypeChecking = true;
+            $mapper->bExceptionOnMissingData = true;
+            $mapper->bStrictNullTypes = true;
+            $mapper->bCastToExpectedType = false;
+
+            // Map response to internal object
+            $object = $mapper->map($response, $responseClass);
+            $valid = $mapper->isValid($object, get_class($responseClass));
+            if ($valid === false) {
+                $this->setMessages($mapper->getMessages());
+                return false;
+            }
+        } catch (\Exception $e) {
+            $this->setMessages($e->getMessage());
+            if (stristr($e->getMessage(), "JSON property") && stristr($e->getMessage(), "does not exist in object of type AtpCore\Api\JpCars\Response\ValuateResponse")) {
+                return $this->mapResponse($response, new ValuateResponse(), false);
+            }
+            return false;
+        }
+
+        // Return
+        return $object;
+    }
+
+    /**
      * Valuate single vehicle
      */
     public function valuate(ValuateRequest $request): ValuateResponse|false
@@ -162,41 +197,6 @@ class Api extends BaseClass
     {
         $logger = $this->logger;
         return $logger($message);
-    }
-
-    /**
-     * Map response to (internal) response-object
-     */
-    private function mapResponse(object $response, mixed $responseClass, $failOnUndefinedProperty = true): ValuateResponse|false
-    {
-        $response = $this->fixDataTypes($response);
-
-        try {
-            // Setup JsonMapper
-            $mapper = new JsonMapperExtension();
-            $mapper->bExceptionOnUndefinedProperty = $failOnUndefinedProperty;
-            $mapper->bStrictObjectTypeChecking = true;
-            $mapper->bExceptionOnMissingData = true;
-            $mapper->bStrictNullTypes = true;
-            $mapper->bCastToExpectedType = false;
-
-            // Map response to internal object
-            $object = $mapper->map($response, $responseClass);
-            $valid = $mapper->isValid($object, get_class($responseClass));
-            if ($valid === false) {
-                $this->setMessages($mapper->getMessages());
-                return false;
-            }
-        } catch (\Exception $e) {
-            $this->setMessages($e->getMessage());
-            if (stristr($e->getMessage(), "JSON property") && stristr($e->getMessage(), "does not exist in object of type AtpCore\Api\JpCars\Response\ValuateResponse")) {
-                return $this->mapResponse($response, new ValuateResponse(), false);
-            }
-            return false;
-        }
-
-        // Return
-        return $object;
     }
 
     /**

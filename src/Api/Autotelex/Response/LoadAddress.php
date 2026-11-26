@@ -8,6 +8,8 @@ class LoadAddress
     public $city;
     /** @var string|null */
     public $country;
+    /** @var integer|null */
+    public $countryId;
     /** @var string|null */
     public $emailaddress;
     /** @var string|null */

@@ -52,6 +52,10 @@ class Api extends BaseClass
             // Return
             if ($result->getStatusCode() === 200) {
                 $data = json_decode((string) $result->getBody());
+                if (empty($data)) {
+                    $this->setMessages("No RDW-data found for $licensePlate");
+                    return false;
+                }
                 return current($data);
             } else {
                 $this->setErrorData((string) $result->getBody());

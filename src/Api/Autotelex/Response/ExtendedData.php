@@ -32,6 +32,8 @@ class ExtendedData
     public $importPurchaseValueDeviation;
     /** @var boolean|null */
     public $importPurchaseValueDeviationAlert;
+    /** @var boolean|null */
+    public $importPurchaseValueDeviationAlertIsValidated;
     /** @var integer|null */
     public $importPurchaseValueLicensePlate;
     /** @var integer|null */
@@ -46,7 +48,7 @@ class ExtendedData
     public $maximumMassaAutonoomGeremd;
     /** @var integer */
     public $maximumMassaMiddenasGeremd;
-    /** @var string|null */
+    /** @var mixed|null */
     public $motorCode;
     /** @var integer */
     public $nieuwprijs;
@@ -90,7 +92,7 @@ class ExtendedData
     public $rdwG3Installatie;
     /** @var boolean|null */
     public $rdwGestolenIndicator;
-    /** @var boolean */
+    /** @var boolean|null */
     public $rdwGoedkeuringsNummerVerwijderd;
     /** @var string|null */
     public $rdwHandelsbenaming;

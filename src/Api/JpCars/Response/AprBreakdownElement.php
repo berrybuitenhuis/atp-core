@@ -6,6 +6,6 @@ class AprBreakdownElement
 {
     /** @var string|null */
     public $bound;
-    /** @var integer */
+    /** @var double */
     public $points;
 }

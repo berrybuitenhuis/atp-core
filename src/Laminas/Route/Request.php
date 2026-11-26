@@ -10,6 +10,7 @@ use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
@@ -22,9 +23,11 @@ class Request
      * Initialize (custom) request-model from data
      *
      * @param mixed $data
+     * @param bool $safe
+     * @param object|null $currentObject
      * @return static|Error|\stdClass
      */
-    public static function fromData(mixed $data, bool $safe = true): static|Error|array
+    public static function fromData(mixed $data, bool $safe = true, ?object $currentObject = null): static|Error|array
     {
         // Parse data into array
         if (is_string($data)) {
@@ -39,7 +42,7 @@ class Request
         }
 
         // Return
-        $result = self::deserialize($requestData);
+        $result = self::deserialize($requestData, $currentObject);
         if (Error::isError($result)) {
             if ($safe === true) {
                 trigger_error("Invalid request body: {$result->getData()->getMessage()}", E_USER_WARNING);
@@ -56,9 +59,11 @@ class Request
      * Initialize (custom) request-model from HTTP-request
      *
      * @param LaminasRequest $request
+     * @param bool $safe
+     * @param object|null $currentObject
      * @return static|Error|\stdClass
      */
-    public static function fromHttpRequest(LaminasRequest $request, bool $safe = true): static|Error|\stdClass
+    public static function fromHttpRequest(LaminasRequest $request, bool $safe = true, ?object $currentObject = null): static|Error|\stdClass
     {
         $data = $request->getContent();
         if (Input::isJson($data)) {
@@ -70,7 +75,7 @@ class Request
         }
 
         // Return
-        $result = self::deserialize($requestData);
+        $result = self::deserialize($requestData, $currentObject);
         if (Error::isError($result)) {
             if ($safe === true) {
                 trigger_error("Invalid request body: {$result->getData()->getMessage()}", E_USER_WARNING);
@@ -105,10 +110,19 @@ class Request
         return $data;
     }
 
-    private static function deserialize(array $data): static|Error
+    private static function deserialize(array $data, ?object $currentObject = null): static|Error
     {
         // Transform camel-case key-names (to snake-case key-names)
         $content = Input::toSnakeCaseKeyNames($data);
+
+        // Set context
+        $context = [];
+        if (!empty($currentObject)) {
+            if (method_exists(static::class, 'fromObject') === false) {
+                return new Error(messages: ["Method 'fromObject' not implemented for " . static::class]);
+            }
+            $context[AbstractObjectNormalizer::OBJECT_TO_POPULATE] = static::fromObject($currentObject);
+        }
 
         // Deserialize request-model
         $serializer = self::getSerializer();
@@ -117,6 +131,7 @@ class Request
                 data: json_encode($content),
                 type: static::class,
                 format: 'json',
+                context: $context,
             );
         } catch (\Throwable $e) {
             return new Error(data: $e, messages: ["Invalid request body: {$e->getMessage()}"]);
@@ -137,7 +152,7 @@ class Request
             nameConverter: new CamelCaseToSnakeCaseNameConverter(),
             defaultContext: [AbstractObjectNormalizer::ALLOW_EXTRA_ATTRIBUTES => false]
         );
-        self::$serializer = new Serializer(normalizers: [$normalizer], encoders: [new JsonEncoder()]);
+        self::$serializer = new Serializer(normalizers: [new DateTimeNormalizer(), $normalizer], encoders: [new JsonEncoder()]);
 
         // Return
         return self::$serializer;

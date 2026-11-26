@@ -126,11 +126,11 @@ class Vehicle
     public $datumDeel2;
     /** @var mixed|null */
     public $emissieklasse;
-    /** @var string|null */
+    /** @var mixed|null */
     public $verbruik;
-    /** @var string|null */
+    /** @var mixed|null */
     public $verbruik_stad;
-    /** @var string|null */
+    /** @var mixed|null */
     public $verbruik_snelweg;
     /** @var integer|null */
     public $trekgewicht_geremd;

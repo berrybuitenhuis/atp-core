@@ -8,6 +8,7 @@ namespace AtpCore\Api\Unleash;
 
 use AtpCore\BaseClass;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\Psr16Cache;
 use Unleash\Client\Unleash;
 use Unleash\Client\UnleashBuilder;
 use Unleash\Client\Configuration\UnleashContext;
@@ -42,7 +43,9 @@ class Api extends BaseClass
                 ->withAppUrl($appUrl)
                 ->withGitlabEnvironment($environment)
                 ->withCacheHandler(
-                    new FilesystemAdapter('unleash', 0, $cacheFolder)
+                    new Psr16Cache(
+                        new FilesystemAdapter(directory: $cacheFolder)
+                    )
                 )
                 ->withCacheTimeToLive($cacheTTL)
                 ->build();

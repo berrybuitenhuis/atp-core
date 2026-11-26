@@ -46,7 +46,7 @@ class VehicleVariables
     public $chargingCableTypes;
     /** @var boolean|null */
     public $chargingCablesPresent;
-    /** @var string */
+    /** @var string|null */
     public $chassisnummer;
     /** @var string */
     public $conditieExterieur;
@@ -138,7 +138,7 @@ class VehicleVariables
     public $make;
     /** @var integer|null */
     public $meldcode;
-    /** @var string|null */
+    /** @var mixed|null */
     public $model;
     /** @var boolean|null */
     public $motorManagementLampjeAan;
@@ -146,7 +146,7 @@ class VehicleVariables
     public $myPurchasePriceRequired;
     /** @var string */
     public $onderhoudsboekjes;
-    /** @var string */
+    /** @var string|null */
     public $opmerking;
     /** @var string|null */
     public $opmerkingen;

@@ -4,8 +4,8 @@ namespace AtpCore\Api\Autodata\Response;
 
 class State
 {
-    /** @var string */
+    /** @var string|null */
     public $state;
-    /** @var string */
+    /** @var string|null */
     public $reason;
 }
