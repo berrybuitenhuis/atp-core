@@ -2,6 +2,7 @@
 
 namespace AtpCore\Symfony\Request;
 
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -22,8 +23,11 @@ final readonly class RequestParams
 
     public static function fromRequest(Request $request): self
     {
-        $query = $request->query;
+        return self::fromQuery($request->query);
+    }
 
+    public static function fromQuery(InputBag $query): self
+    {
         // Decode JSON-parameters (invalid JSON becomes null)
         $fields = self::decode($query->get('fields'));
         $defaultFilter = self::decode($query->get('defaultFilter'));
