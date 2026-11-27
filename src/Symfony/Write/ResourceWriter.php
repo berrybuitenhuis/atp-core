@@ -30,7 +30,7 @@ final class ResourceWriter
 
             // Create
             $object = $repository->create($data);
-            if (!is_object($object)) return $this->repositoryError($repository);
+            if (Error::isError($object)) return $object;
 
             // Return
             return $this->response($resource, $object->getId(), $context);
@@ -51,7 +51,8 @@ final class ResourceWriter
             if ($error !== null) return $error;
 
             // Update
-            if ($repository->update($id, $data, true) === false) return $this->repositoryError($repository);
+            $result = $repository->update($id, $data, true);
+            if (Error::isError($result)) return $result;
 
             // Return
             return $this->response($resource, $id, $context);
@@ -72,7 +73,8 @@ final class ResourceWriter
             if ($error !== null) return $error;
 
             // Delete
-            if ($repository->delete($id, $remove) === false) return $this->repositoryError($repository);
+            $result = $repository->delete($id, $remove);
+            if (Error::isError($result)) return $result;
 
             // Return
             return true;
@@ -100,10 +102,5 @@ final class ResourceWriter
     private function response(string $resource, int $id, ClientContext $context): array|Error
     {
         return $this->queries->create($resource, $context)->unscoped()->byId($id)->get(null);
-    }
-
-    private function repositoryError(AbstractRepository $repository): Error
-    {
-        return new Error(data: $repository->getErrorData(), messages: $repository->getMessages());
     }
 }

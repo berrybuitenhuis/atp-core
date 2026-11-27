@@ -161,14 +161,14 @@ abstract class AbstractRepository
             ->getRepository($this->objectName)
             ->find($id);
 
-        // refresh entity (clear all local changes)
-        if ($refresh === true) {
-            $this->objectManager->refresh($object);
-        }
-
         // return error if object not found
         if ($object == null) {
             return new Error(messages: [$this->objectName. ' not found']);
+        }
+
+        // refresh entity (clear all local changes)
+        if ($refresh === true) {
+            $this->objectManager->refresh($object);
         }
 
         // check if object really has to move of only update status
@@ -312,14 +312,14 @@ abstract class AbstractRepository
             ->getRepository($this->objectName)
             ->find($id);
 
-        // Refresh entity (clear all local changes)
-        if ($refresh === true) {
-            $this->objectManager->refresh($object);
-        }
-
         // Check if object found
         if ($object == null) {
             return new Error(messages: ["No results found for $this->objectName (id: $id)"], stackTrace: debug_backtrace());
+        }
+
+        // Refresh entity (clear all local changes)
+        if ($refresh === true) {
+            $this->objectManager->refresh($object);
         }
 
         // Return
@@ -748,12 +748,13 @@ abstract class AbstractRepository
                 ->getRepository($this->getObjectName())
                 ->find($id);
 
+            if ($object == null) {
+                return new Error(messages: [$this->objectName. ' not found']);
+            }
+
             // Refresh entity (clear all local changes)
             if ($refresh === true) {
                 $this->objectManager->refresh($object);
-            }
-            if ($object == null) {
-                return new Error(messages: [$this->objectName. ' not found']);
             }
 
             // Prepare data
