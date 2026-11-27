@@ -2,7 +2,6 @@
 
 namespace AtpCore\Symfony\Repository;
 
-use AtpCore\BaseClass;
 use AtpCore\Error;
 use AtpCore\Symfony\Hydrator\DoctrineHydrator;
 use AtpCore\Symfony\Write\UpdatableFields;
@@ -10,14 +9,14 @@ use DateTime;
 use Doctrine\ORM\EntityManager;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
-use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Service\Attribute\Required;
 use Throwable;
 
 /**
  * @template T of object
  */
-abstract class AbstractRepository extends BaseClass
+abstract class AbstractRepository
 {
     /**
      * @var array
@@ -73,42 +72,6 @@ abstract class AbstractRepository extends BaseClass
             $this->objectManager = $objectManager;
         }
         $this->validator = $validator;
-        $this->resetErrors();
-    }
-
-    /**
-     * Create a new object
-     *
-     * @param $data
-     * @param $overrule
-     * @return T|false
-     */
-    public function create($data, $overrule = [])
-    {
-        // Set operation
-        $this->operation = __FUNCTION__;
-
-        // Reset errors
-        $this->resetErrors();
-
-        // Create object-instance
-        $object = new $this->objectName();
-
-        // Prepare data
-        $this->prepareInputDataDefault($data, $overrule);
-        $this->prepareInputData();
-
-        // Set default data (if not available)
-        if (property_exists($object, 'created')) $this->inputData['created'] = new DateTime();
-        if (property_exists($object, 'status')) $this->inputData['status'] = true;
-        if (property_exists($object, 'deleted')) $this->inputData['deleted'] = false;
-
-        // Hydrate object, apply inputfilter, and save it
-        if ($this->filterAndPersist($this->inputData, $object)) {
-            return $object;
-        } else {
-            return false;
-        }
     }
 
     /**
@@ -118,13 +81,10 @@ abstract class AbstractRepository extends BaseClass
      * @param $overrule
      * @return T|Error
      */
-    public function createNew($data, $overrule = [])
+    public function create($data, $overrule = [])
     {
         // Set operation
         $this->operation = __FUNCTION__;
-
-        // Reset errors
-        $this->resetErrors();
 
         // Create object-instance
         $object = new $this->objectName();
@@ -139,11 +99,11 @@ abstract class AbstractRepository extends BaseClass
         if (property_exists($object, 'deleted')) $this->inputData['deleted'] = false;
 
         // Hydrate object, apply inputfilter, and save it
-        if ($this->filterAndPersist($this->inputData, $object)) {
-            return $object;
-        } else {
-            return new Error(messages: ["Record creation failed for $this->objectName"], stackTrace: debug_backtrace());
+        $result = $this->filterAndPersist($this->inputData, $object);
+        if (Error::isError($result)) {
+            return $result;
         }
+        return $object;
     }
 
     /**
@@ -151,15 +111,12 @@ abstract class AbstractRepository extends BaseClass
      *
      * @param $data
      * @param $overrule
-     * @return array<T>|false
+     * @return array<T>|Error
      */
     public function createBulk($data, $overrule = [])
     {
         // Set operation
         $this->operation = __FUNCTION__;
-
-        // Reset errors
-        $this->resetErrors();
 
         // Iterate data
         $objects = [];
@@ -180,11 +137,13 @@ abstract class AbstractRepository extends BaseClass
         }
 
         // Hydrate object, apply inputfilter, and save it
-        if ($this->filterAndPersistBulk($recordData, $objects)) {
-            return $objects;
-        } else {
-            return false;
+        $res = $this->filterAndPersistBulk($recordData, $objects);
+        if (Error::isError($res)) {
+            return $res;
         }
+
+        // Return
+        return $objects;
     }
 
     /**
@@ -193,13 +152,10 @@ abstract class AbstractRepository extends BaseClass
      * @param $id
      * @param $remove
      * @param $refresh
-     * @return T|bool
+     * @return true|Error
      */
     public function delete($id, $remove = false, $refresh = false)
     {
-        // Reset errors
-        $this->resetErrors();
-
         // get object from the repository specified by primary key
         $object = $this->objectManager
             ->getRepository($this->objectName)
@@ -212,14 +168,16 @@ abstract class AbstractRepository extends BaseClass
 
         // return error if object not found
         if ($object == null) {
-            $this->setMessages(['notFound' => $this->objectName. ' not found']);
-            return false;
+            return new Error(messages: [$this->objectName. ' not found']);
         }
 
         // check if object really has to move of only update status
         if ($remove === false) {
-            $result = $this->update($id, ['status'=>false]);
-            return $result;
+            $res = $this->update($id, ['status'=>false]);
+            if (Error::isError($res)) {
+                return $res;
+            }
+            return true;
         } else {
             // remove the object from the repository or return error if something went wrong
             try {
@@ -227,8 +185,7 @@ abstract class AbstractRepository extends BaseClass
                 $this->objectManager->flush();
                 return true;
             } catch (Throwable $e) {
-                $this->setMessages($e->getMessage());
-                return false;
+                return new Error(messages: [$e->getMessage()]);
             }
         }
     }
@@ -260,10 +217,32 @@ abstract class AbstractRepository extends BaseClass
      * @param mixed $data
      * @param $object
      * @param bool $flush
-     * @return bool
+     * @return true|Error
      */
     public function filterAndPersist($data, &$object, $flush = true)
     {
+        // Validate the record as it will be saved: current values of the object overwritten by the input, dates in input-format
+        // Before hydration, so invalid values never reach typed setters
+        if ($this->validator !== null) {
+            $constraints = $this->getConstraints();
+            if ($constraints !== null) {
+                $current = $this->getHydrator()->extract(($data instanceof $object) ? $data : $object);
+                $record = array_map(
+                    fn ($value) => ($value instanceof \DateTimeInterface) ? $value->format('Y-m-d H:i:s') : $value,
+                    ($data instanceof $object) ? $current : array_merge($current, $data),
+                );
+                $violations = $this->validator->validate($record, $constraints, $this->getValidationGroups());
+                if (count($violations) > 0) {
+                    $messages = [];
+                    foreach ($violations as $violation) {
+                        $path = $violation->getPropertyPath() ?: 'general';
+                        $messages[$path] = $violation->getMessage();
+                    }
+                    return new Error(messages: $messages);
+                }
+            }
+        }
+
         // Hydrate data to object (if applicable)
         if ($data instanceof $object) {
             $object = $data;
@@ -271,67 +250,26 @@ abstract class AbstractRepository extends BaseClass
             $this->getHydrator()->hydrate($data, $object);
         }
 
-        // Convert object-data to prepare for validation (if function available in repository)
-        if (method_exists($this, 'prepareObjectData')) {
-            $object = $this->prepareObjectData($object, true);
-        }
-
-        // Validate input data against constraints (if defined in repository)
-        if ($this->validator !== null) {
-            $constraints = $this->getConstraints();
-            if ($constraints !== null) {
-                $violations = $this->validator->validate($data, $constraints, $this->getValidationGroups());
-                if (count($violations) > 0) {
-                    $messages = [];
-                    foreach ($violations as $violation) {
-                        $path = $violation->getPropertyPath() ?: 'general';
-                        $messages[$path] = $violation->getMessage();
-                    }
-                    $this->addMessage($messages);
-                }
+        // Persist and flush object
+        try {
+            // Convert object-data (if function available in repository)
+            if (method_exists($this, 'prepareObjectData')) {
+                $object = $this->prepareObjectData($object);
             }
 
-            // Validate object (e.g. Assert attributes on entity)
-            if (empty($this->messages)) {
-                $violations = $this->validator->validate($object, null, $this->getValidationGroups());
-                if (count($violations) > 0) {
-                    $messages = [];
-                    foreach ($violations as $violation) {
-                        $path = $violation->getPropertyPath() ?: 'general';
-                        $messages[$path] = $violation->getMessage();
-                    }
-                    $this->addMessage($messages);
-                }
+            // Persist object to database
+            $this->getObjectManager()->persist($object);
+
+            // Only flush (if permitted, used for bulk mutations)
+            if ($flush === true) {
+                $this->getObjectManager()->flush();
             }
+        } catch (Throwable $e) {
+            return new Error(messages: ["flushException: {$e->getMessage()}"]);
         }
 
-        // If no problems found, continue to save it
-        if (empty($this->messages)) {
-            // Persist and flush object
-            try {
-                // Convert object-data (if function available in repository)
-                if (method_exists($this, 'prepareObjectData')) {
-                    $object = $this->prepareObjectData($object);
-                }
-
-                // Persist object to database
-                $this->getObjectManager()->persist($object);
-
-                // Only flush (if permitted, used for bulk mutations)
-                if ($flush === true) {
-                    $this->getObjectManager()->flush();
-                }
-            } catch (Throwable $e) {
-                $this->addMessage(['flushException' => $e->getMessage()]);
-            }
-        }
-
-        // Return false if errors were found
-        if (empty($this->messages)) {
-            return true;
-        } else {
-            return false;
-        }
+        // Return
+        return true;
     }
 
     /**
@@ -339,60 +277,25 @@ abstract class AbstractRepository extends BaseClass
      *
      * @param $records
      * @param $objects
-     * @return bool
+     * @return true|Error
      */
     public function filterAndPersistBulk($records, &$objects)
     {
         // Iterate data
         foreach ($records AS $key => $record) {
             $res = $this->filterAndPersist($record, $objects[$key], false);
-            if (!$res) break;
+            if (Error::isError($res)) return $res;
         }
 
         // Flush prepared records
-        if (empty($this->messages)) {
-            try {
-                $this->getObjectManager()->flush();
-            } catch (Throwable $e) {
-                $this->addMessage(['flushException' => $e->getMessage()]);
-            }
+        try {
+            $this->getObjectManager()->flush();
+        } catch (Throwable $e) {
+            return new Error(messages: ["flushException: {$e->getMessage()}"]);
         }
 
-        // Return false if errors were found
-        if (empty($this->messages)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Return a single object from the repository
-     *
-     * @param int $id
-     * @param boolean $refresh
-     * @return T|false
-     */
-    public function get($id, $refresh = false)
-    {
-        // get object from the repository specified by primary key
-        $object = $this->objectManager
-            ->getRepository($this->objectName)
-            ->find($id);
-
-        // return error if object not found
-        if ($object == null) {
-            $this->setMessages(['notFound' => $this->objectName. ' not found']);
-            return false;
-        }
-
-        // refresh entity (clear all local changes)
-        if ($refresh === true) {
-            $this->objectManager->refresh($object);
-        }
-
-        // return
-        return $object;
+        // Return
+        return true;
     }
 
     /**
@@ -402,7 +305,7 @@ abstract class AbstractRepository extends BaseClass
      * @param boolean $refresh
      * @return T|Error
      */
-    public function getNew($id, $refresh = false)
+    public function get($id, $refresh = false)
     {
         // Get object by primary key
         $object = $this->objectManager
@@ -447,36 +350,6 @@ abstract class AbstractRepository extends BaseClass
         return $objects;
     }
 
-
-
-    /**
-     * Return all objects from the repository with parameters
-     *
-     * @param array $parameters
-     * @param boolean $multiple
-     * @return ($multiple is true ? list<T>|false : T|false)
-     */
-    public function getByParameters($parameters, $multiple = true)
-    {
-        // get object from the repository specified by primary key
-        $objects = $this->objectManager
-            ->getRepository($this->objectName)
-            ->findBy($parameters);
-
-        // return error if object not found
-        if ($objects == null) {
-            $this->setMessages(['notFound' => $this->objectName. ' not found']);
-            return false;
-        }
-
-        // return
-        if ($multiple === false) {
-            return current($objects);
-        } else {
-            return $objects;
-        }
-    }
-
     /**
      * Return collection of objects with parameters
      *
@@ -484,7 +357,7 @@ abstract class AbstractRepository extends BaseClass
      * @param array|null $orderBy
      * @return \AtpCore\Symfony\Doctrine\EntityCollection<T>
      */
-    public function getByParametersNew($parameters, $orderBy = null)
+    public function getByParameters($parameters, $orderBy = null)
     {
         // Get object(s) by filter
         $objects = $this->objectManager
@@ -516,26 +389,31 @@ abstract class AbstractRepository extends BaseClass
      *
      * @param string $field
      * @param int|array $id
-     * @return string|array
+     * @return string|array|Error
      */
     public function getFieldById($field, $id)
     {
         // Find records by field-value parameters
-        $multiple = (is_array($id)) ? true : false;
-        $records = $this->getByParameters(['id'=>$id], $multiple);
-        if ($records === false) return null;
+        $multiple = is_array($id);
+        $records = $this->getByParameters(['id'=>$id]);
+        if ($records->notExists()) {
+            return new Error(messages: ["No results found for $this->objectName (by id: $id)"], stackTrace: debug_backtrace());
+        }
 
         // Return
-        if (is_array($id)) {
+        if ($multiple) {
             // Get multiple values
             $values = [];
-            foreach ($records AS $record) {
+            foreach ($records->results() AS $record) {
                 $values[] = $record->{'get' . ucfirst($field)}();
             }
-
             return $values;
         } else {
-            return $records->{'get' . ucfirst($field)}();
+            $record = $records->single();
+            if (Error::isError($record)) {
+                return $record;
+            }
+            return $record->{'get' . ucfirst($field)}();
         }
     }
 
@@ -545,29 +423,33 @@ abstract class AbstractRepository extends BaseClass
      * @param string $searchField
      * @param string|array $value
      * @param string $resultField
-     * @return string|array
+     * @return string|array|Error
      */
     public function getFieldByValue($searchField, $value, $resultField)
     {
         // Find records by field-value parameters
-        $multiple = (is_array($value)) ? true : false;
-        $records = $this->getByParameters([$searchField=>$value], $multiple);
-        if ($records === false) return null;
+        $multiple = is_array($value);
+        $records = $this->getByParameters([$searchField=>$value]);
+        if ($records->notExists()) {
+            return new Error(messages: ["No results found for $this->objectName (by $searchField: $value)"], stackTrace: debug_backtrace());
+        }
 
         // Return
-        if (is_array($value)) {
+        if ($multiple) {
             // Get multiple values
             $values = [];
-            foreach ($records AS $record) {
+            foreach ($records->results() AS $record) {
                 $values[] = $record->{'get' . ucfirst($resultField)}();
             }
-
             return $values;
         } else {
-            return $records->{'get' . ucfirst($resultField)}();
+            $record = $records->single();
+            if (Error::isError($record)) {
+                return $record;
+            }
+            return $record->{'get' . ucfirst($resultField)}();
         }
     }
-
 
     /**
      * @param ContainerInterface $serviceManager
@@ -598,26 +480,31 @@ abstract class AbstractRepository extends BaseClass
      *
      * @param string $field
      * @param string|array $value
-     * @return string|array
+     * @return int|array|Error
      */
     public function getIdByField($field, $value)
     {
         // Find records by field-value parameters
-        $multiple = (is_array($value)) ? true : false;
-        $records = $this->getByParameters([$field=>$value], $multiple);
-        if ($records === false) return null;
+        $multiple = is_array($value);
+        $records = $this->getByParameters([$field=>$value]);
+        if ($records->notExists()) {
+            return new Error(messages: ["No results found for $this->objectName (by $field: $value)"], stackTrace: debug_backtrace());
+        }
 
         // Return
-        if (is_array($value)) {
+        if ($multiple) {
             // Get multiple ids
             $ids = [];
-            foreach ($records AS $record) {
+            foreach ($records->results() AS $record) {
                 $ids[] = $record->getId();
             }
-
             return $ids;
         } else {
-            return $records->getId();
+            $record = $records->single();
+            if (Error::isError($record)) {
+                return $record;
+            }
+            return $record->getId();
         }
     }
 
@@ -788,62 +675,6 @@ abstract class AbstractRepository extends BaseClass
         $this->serviceManager = $container;
     }
 
-
-
-
-
-    /**
-     * Update an existing object
-     *
-     * @param $id
-     * @param $data
-     * @param $refresh
-     * @return T|false
-     */
-    public function update($id, $data, $refresh = false)
-    {
-        // Set operation
-        $this->operation = __FUNCTION__;
-
-        // Reset errors
-        $this->resetErrors();
-
-        // Get existing object
-        $object = $this->getObjectManager()
-            ->getRepository($this->getObjectName())
-            ->find($id);
-
-        if ($object == null) {
-            $this->setMessages(['notFound' => $this->objectName. ' not found']);
-            return false;
-        }
-
-        // Refresh entity (clear all local changes)
-        if ($refresh === true) {
-            $this->objectManager->refresh($object);
-        }
-
-        // Prepare data
-        $this->prepareInputDataDefault($data);
-        $this->prepareInputData();
-
-        // Set default data (if not available)
-        if (property_exists($object, 'lastUpdated') || property_exists($this->getObjectName(), 'lastUpdated')) {
-            $this->inputData['lastUpdated'] = new DateTime();
-        }
-
-        // Verify data-fields for update
-        $res = $this->verifyDataFields(__FUNCTION__);
-        if ($res === false) return false;
-
-        // hydrate object, apply inputfilter, save it, and return result
-        if ($this->filterAndPersist($this->inputData, $object)) {
-            return $object;
-        } else {
-            return false;
-        }
-    }
-
     /**
      * Update an existing object
      *
@@ -852,13 +683,10 @@ abstract class AbstractRepository extends BaseClass
      * @param $refresh
      * @return T|Error
      */
-    public function updateNew($id, $data, $refresh = false)
+    public function update($id, $data, $refresh = false)
     {
         // Set operation
         $this->operation = __FUNCTION__;
-
-        // Reset errors
-        $this->resetErrors();
 
         // Get existing object
         $object = $this->getObjectManager()
@@ -885,16 +713,18 @@ abstract class AbstractRepository extends BaseClass
 
         // Verify data-fields for update
         $res = $this->verifyDataFields(__FUNCTION__);
-        if ($res === false) {
-            return new Error(messages: ["Invalid data/fields provided for $this->objectName (id: $id)"], stackTrace: debug_backtrace());
+        if (Error::isError($res)) {
+            return $res;
         }
 
         // hydrate object, apply inputfilter, save it, and return result
-        if ($this->filterAndPersist($this->inputData, $object)) {
-            return $object;
-        } else {
-            return new Error(messages: ["Record update failed for $this->objectName (id: $id)"], stackTrace: debug_backtrace());
+        $res = $this->filterAndPersist($this->inputData, $object);
+        if (Error::isError($res)) {
+            return $res;
         }
+
+        // Return
+        return $object;
     }
 
     /**
@@ -902,15 +732,12 @@ abstract class AbstractRepository extends BaseClass
      *
      * @param $data
      * @param $refresh
-     * @return array<T>|false
+     * @return array<T>|Error
      */
     public function updateBulk($data, $refresh = false)
     {
         // Set operation
         $this->operation = __FUNCTION__;
-
-        // Reset errors
-        $this->resetErrors();
 
         // Iterate data
         $objects = [];
@@ -925,10 +752,8 @@ abstract class AbstractRepository extends BaseClass
             if ($refresh === true) {
                 $this->objectManager->refresh($object);
             }
-
             if ($object == null) {
-                $this->setMessages(['notFound' => $this->objectName. ' not found']);
-                return false;
+                return new Error(messages: [$this->objectName. ' not found']);
             }
 
             // Prepare data
@@ -941,17 +766,22 @@ abstract class AbstractRepository extends BaseClass
             }
 
             // Verify data-fields for update
-            if ($this->verifyDataFields(__FUNCTION__) === false) return false;
+            $res = $this->verifyDataFields(__FUNCTION__);
+            if (Error::isError($res)) {
+                return $res;
+            }
             $recordData[$id] = $this->inputData;
             $objects[$id] = $object;
         }
 
         // Hydrate object, apply inputfilter, and save it
-        if ($this->filterAndPersistBulk($recordData, $objects)) {
-            return $objects;
-        } else {
-            return false;
+        $res = $this->filterAndPersistBulk($recordData, $objects);
+        if (Error::isError($res)) {
+            return $res;
         }
+
+        // Return
+        return $objects;
     }
 
     public function verifyDataFields($operation = "update") {
@@ -963,8 +793,7 @@ abstract class AbstractRepository extends BaseClass
         if ($updatable !== null) {
             $fields = array_intersect_key($this->inputData, array_flip($updatable));
             if (empty($fields)) {
-                $this->setMessages(["invalidInput"=>"No data for $operation ($this->objectName)"]);
-                return false;
+                return new Error(messages: ["No data for $operation ($this->objectName)"]);
             }
             if (array_key_exists('lastUpdated', $this->inputData)) $fields['lastUpdated'] = $this->inputData['lastUpdated'];
             $this->inputData = $fields;
@@ -973,5 +802,4 @@ abstract class AbstractRepository extends BaseClass
         // Return
         return $this->inputData;
     }
-
 }
