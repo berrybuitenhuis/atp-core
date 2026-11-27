@@ -8,6 +8,7 @@ class Error
         private array|object|null $data = null,
         private array $messages = [],
         private array $stackTrace = [],
+        private ?int $statusCode = null,
     ) {}
 
     /**
@@ -47,6 +48,14 @@ class Error
     public function getStackTrace(): array
     {
         return $this->stackTrace;
+    }
+
+    /**
+     * Get HTTP status-code of error (null = not specified)
+     */
+    public function getStatusCode(): ?int
+    {
+        return $this->statusCode;
     }
 
     /**

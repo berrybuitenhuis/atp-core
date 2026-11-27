@@ -17,13 +17,12 @@ class Service extends BaseClass
 
     /**
      * @param array $data
-     * @param string $output
      * @param array $overrule
-     * @return mixed
+     * @return T|false
      */
-    public function create($data, $output = 'object', $overrule = [])
+    public function create($data, $overrule = [])
     {
-        $res = $this->repository->create($data, $output, $overrule);
+        $res = $this->repository->create($data, $overrule);
         if ($res === false) {
             $this->setMessages($this->repository->getMessages());
             $this->setErrorData($this->repository->getErrorData());
@@ -68,14 +67,12 @@ class Service extends BaseClass
 
     /**
      * @param int $id
-     * @param string $output
      * @param bool $refresh
-     * @param null $fields
-     * @return T|array|bool
+     * @return T|false
      */
-    public function get($id, $output = 'object', $refresh = false, $fields = NULL)
+    public function get($id, $refresh = false)
     {
-        $res = $this->repository->get($id, $output, $refresh, $fields);
+        $res = $this->repository->get($id, $refresh);
         if ($res === false) {
             $this->setMessages($this->repository->getMessages());
             $this->setErrorData($this->repository->getErrorData());
@@ -95,13 +92,12 @@ class Service extends BaseClass
 
     /**
      * @param array $parameters
-     * @param string $output
      * @param bool $multiple
      * @return mixed
      */
-    public function getByParameters($parameters, $output = 'object', $multiple = true)
+    public function getByParameters($parameters, $multiple = true)
     {
-        $res = $this->repository->getByParameters($parameters, $output, $multiple);
+        $res = $this->repository->getByParameters($parameters, $multiple);
         if ($res === false) {
             $this->setMessages($this->repository->getMessages());
             $this->setErrorData($this->repository->getErrorData());
@@ -120,15 +116,6 @@ class Service extends BaseClass
     }
 
     /**
-     * @return array
-     */
-    public function getDefaultFilterOptions()
-    {
-        $res = $this->repository->getDefaultFilterOptions();
-        return $res;
-    }
-
-    /**
      * @param \Psr\Container\ContainerInterface $serviceManager
      * @return static
      */
@@ -136,31 +123,6 @@ class Service extends BaseClass
     {
         return $serviceManager->get(static::class);
     }
-
-    /**
-     * @param string $output
-     * @param null|false|array $fields
-     * @param null|array $defaultFilter
-     * @param null|array $filter
-     * @param null|array $groupBy
-     * @param null|array $having
-     * @param null|array $orderBy
-     * @param int $limitRecords
-     * @param int $offset
-     * @param bool $paginator
-     * @param bool $debug
-     * @return mixed
-     */
-    public function getList($output = 'object', $fields = NULL, $defaultFilter = NULL, $filter = NULL, $groupBy = null, $having = null, $orderBy = NULL, $limitRecords = 25, $offset = 0, $paginator = false, $debug = false)
-    {
-        $res = $this->repository->getList($output, $fields, $defaultFilter, $filter, $groupBy, $having, $orderBy, $limitRecords, $offset, $paginator, $debug);
-        if ($res === false) {
-            $this->setMessages($this->repository->getMessages());
-            $this->setErrorData($this->repository->getErrorData());
-        }
-        return $res;
-    }
-
 
     /**
      * Get repository of service
@@ -175,13 +137,12 @@ class Service extends BaseClass
     /**
      * @param int $id
      * @param array $data
-     * @param string $output
      * @param bool $refresh
-     * @return mixed
+     * @return T|false
      */
-    public function patch($id, $data, $output = 'object', $refresh = false)
+    public function patch($id, $data, $refresh = false)
     {
-        $res = $this->repository->update($id, $data, $output, $refresh);
+        $res = $this->repository->update($id, $data, $refresh);
         if ($res === false) {
             $this->setMessages($this->repository->getMessages());
             $this->setErrorData($this->repository->getErrorData());
@@ -192,13 +153,12 @@ class Service extends BaseClass
     /**
      * @param int $id
      * @param array $data
-     * @param string $output
      * @param bool $refresh
-     * @return mixed
+     * @return T|false
      */
-    public function update($id, $data, $output = 'object', $refresh = false)
+    public function update($id, $data, $refresh = false)
     {
-        $res = $this->repository->update($id, $data, $output, $refresh);
+        $res = $this->repository->update($id, $data, $refresh);
         if ($res === false) {
             $this->setMessages($this->repository->getMessages());
             $this->setErrorData($this->repository->getErrorData());
